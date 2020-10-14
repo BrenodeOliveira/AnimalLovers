@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">AnimalLovers</string>
+    <string name="txt_login_button">Inscrever-se</string>
+    <string name="content_app_logo">Logo do APP AnimaLovers</string>
+    <string name="txt_have_account">Já possui uma conta?</string>
+    <string name="txt_login_btn">Login</string>
 </resources>
