@@ -9,4 +9,9 @@
     <string name="txt_password_again">Repita sua senha</string>
     <string name="txt_password">Digite sua senha</string>
     <string name="txt_create">Criar</string>
+    <string name="txt_realize_login">Para continuar, realize o login.</string>
+    <string name="txt_email_login">Digite seu e-mail ou usuário</string>
+    <string name="txt_password_login">Digite sua senha</string>
+    <string name="txt_create_account">Criar conta</string>
+    <string name="txt_remember_me">Lembrar de mim</string>
 </resources>
