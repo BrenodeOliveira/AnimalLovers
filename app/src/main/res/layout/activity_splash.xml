@@ -8,7 +8,7 @@
     tools:context=".ui.activity.SplashActivity">
 
     <ImageView
-        android:id="@+id/logo_animaLovers"
+        android:id="@+id/logo_animaLovers_splash"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
@@ -29,7 +29,7 @@
         android:layout_marginStart="150dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="126dp"
-        android:background="@drawable/background_button_red_login"
+        android:background="@drawable/background_button_red"
         android:elevation="10dp"
         android:text="@string/txt_login_button"
         android:textAllCaps="false"
@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="@id/txt_possui_conta"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo_animaLovers"
+        app:layout_constraintTop_toBottomOf="@id/logo_animaLovers_splash"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView

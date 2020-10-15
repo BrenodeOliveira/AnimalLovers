@@ -13,16 +13,10 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         btn_inscrever.setOnClickListener {
-            Toast.makeText(this,
-                "Botão Inscrever-se Pressionado", Toast.LENGTH_LONG)
-                .show()
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         btn_login.setOnClickListener {
-            Toast.makeText(this,
-                "Botão Login Pressionado", Toast.LENGTH_LONG)
-                .show()
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
