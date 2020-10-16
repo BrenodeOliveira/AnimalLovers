@@ -99,7 +99,7 @@
         android:background="@drawable/background_button_red"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/txt_login_btn"
-        android:textColor="@color/colorLogin"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toEndOf="@id/cb_lembrar"
         app:layout_constraintTop_toBottomOf="@id/btn_criar_conta_login" />
 
