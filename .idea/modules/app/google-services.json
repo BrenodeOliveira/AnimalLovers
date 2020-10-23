@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "167534897168",
+    "firebase_url": "https://animallovers-fa713.firebaseio.com",
+    "project_id": "animallovers-fa713",
+    "storage_bucket": "animallovers-fa713.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167534897168:android:1c58e01d7fd732bdb08295",
+        "android_client_info": {
+          "package_name": "br.com.breno.animallovers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167534897168-jlvnej0mhanp3priuo5edkh5aj9ta5nl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.breno.animallovers",
+            "certificate_hash": "f84fcfe443a0e7ca940ec44d5001ed7fc40af084"
+          }
+        },
+        {
+          "client_id": "167534897168-jk70tebaq7v25kbqlcu4tcinfrmcl5ef.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTKcxI3c7cOTGsZlHWpTmS0_AnXETU_m4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167534897168-jk70tebaq7v25kbqlcu4tcinfrmcl5ef.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

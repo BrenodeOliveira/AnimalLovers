@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
 import kotlinx.android.synthetic.main.activity_first_feed.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlin.system.exitProcess
 
 class FirstFeedActivity : AppCompatActivity() {
 
@@ -46,7 +47,10 @@ class FirstFeedActivity : AppCompatActivity() {
                     "Combinar pets", Toast.LENGTH_SHORT).show()
                 R.id.clinics_pets -> Toast.makeText(applicationContext,
                     "Clínica veterinária", Toast.LENGTH_SHORT).show()
-                R.id.get_out -> startActivity(Intent(this, LoginActivity::class.java))
+                R.id.get_out -> {
+                    finish()
+                    exitProcess(0)
+                }
             }
             true
         }
