@@ -47,7 +47,8 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         if (!et_ag_password.text.toString().equals(et_password.text.toString()) or
-            et_ag_password.text.toString().isEmpty()) {
+            et_ag_password.text.toString().isEmpty()
+        ) {
             et_ag_password.error = "Senhas incompativeis"
             et_ag_password.requestFocus()
             return
@@ -56,12 +57,26 @@ class RegisterActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(et_email.text.toString(), et_password.text.toString())
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                   startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
+                    val user = auth.currentUser
+
+                    user?.sendEmailVerification()
+                        ?.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(
+                                    baseContext,
+                                    "Conta registrada com sucesso, verifique seu e-mail",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                startActivity(Intent(this, LoginActivity::class.java))
+                                finish()
+                            }
+                        }
                 } else {
-                    Toast.makeText(baseContext,
+                    Toast.makeText(
+                        baseContext,
                         "Registro falho, tente novamente depois de um tempo",
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             }
