@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/btn_foryou"
+        android:icon="@drawable/ic_baseline_favorite_24"
+        android:title="@string/txt_foryou" />
+
+    <item android:title="@string/txt_add"
+        android:id="@+id/btn_add"
+        android:icon="@drawable/ic_baseline_add_circle_24" />
+
+    <item android:id="@+id/btn_search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="@string/txt_search" />
+</menu>

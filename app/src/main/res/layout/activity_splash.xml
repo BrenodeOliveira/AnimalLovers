@@ -34,7 +34,7 @@
         android:elevation="10dp"
         android:text="@string/txt_login_button"
         android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorWhite"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/txt_possui_conta"
         app:layout_constraintEnd_toEndOf="parent"

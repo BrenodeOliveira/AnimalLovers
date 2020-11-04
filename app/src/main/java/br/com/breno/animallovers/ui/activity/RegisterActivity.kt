@@ -60,8 +60,8 @@ class RegisterActivity : AppCompatActivity() {
                     val user = auth.currentUser
 
                     user?.sendEmailVerification()
-                        ?.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
+                        ?.addOnCompleteListener { userAuth ->
+                            if (userAuth.isSuccessful) {
                                 Toast.makeText(
                                     baseContext,
                                     "Conta registrada com sucesso, verifique seu e-mail",
