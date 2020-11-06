@@ -3,16 +3,12 @@ package br.com.breno.animallovers.ui.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
-import android.view.WindowManager
 import android.widget.Toast
 import br.com.breno.animallovers.R
-import br.com.breno.animallovers.ui.activity.extensions.FeedActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_register.*
 
 class LoginActivity : AppCompatActivity() {
 
