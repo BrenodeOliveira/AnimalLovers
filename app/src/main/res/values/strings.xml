@@ -5,15 +5,15 @@
     <string name="txt_have_account">Já possui uma conta?</string>
     <string name="txt_login_btn">Login</string>
     <string name="txt_realize_register">Para continuar, realize o seu cadastro.</string>
-    <string name="txt_email_user">Digite seu e-mail ou usuário</string>
+    <string name="txt_email_user">Digite seu e-mail</string>
     <string name="txt_password_again">Repita sua senha</string>
     <string name="txt_password">Digite sua senha</string>
     <string name="txt_create">Criar</string>
     <string name="txt_realize_login">Para continuar, realize o login.</string>
-    <string name="txt_email_login">Digite seu e-mail ou usuário</string>
+    <string name="txt_email_login">Digite seu e-mail</string>
     <string name="txt_password_login">Digite sua senha</string>
     <string name="txt_create_account">Criar conta</string>
-    <string name="txt_remember_me">Lembrar de mim</string>
+    <string name="txt_forget_password">Esqueci minha senha</string>
     <string name="title_activity_feed">FeedActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -41,4 +41,9 @@
     <string name="txt_logo_feed">Logo AnimaLovers</string>
     <string name="txt_procurar">Botão Procurar</string>
     <string name="txt_dehaze_feed">Botão abrir barra lateral</string>
+    <string name="txt_what_do_you_think">No que você está pensando ?</string>
+    <string name="txt_publishment">Publicar</string>
+    <string name="txt_gui_taka">Guilherme Takahashi</string>
+    <string name="txt_summary">Resumo</string>
+    <string name="txt_animal_name">Nome do animal</string>
 </resources>

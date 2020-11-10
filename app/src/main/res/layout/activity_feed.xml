@@ -37,59 +37,28 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/img_anima"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/txt_logo_feed"
-                    android:src="@drawable/animalovers_logo_simples"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/et_descobrir"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginEnd="16dp"
-                    android:hint="@string/txt_descobrir"
-                    android:importantForAutofill="no"
-                    android:inputType="text"
-                    android:padding="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/iv_search"
-                    app:layout_constraintStart_toEndOf="@id/iv_dehaze"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5" />
-
-                <ImageView
                     android:id="@+id/iv_dehaze"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="24dp"
                     android:clickable="true"
-                    android:contentDescription="@string/txt_dehaze_feed"
                     android:focusable="true"
+                    android:contentDescription="@string/txt_dehaze_feed"
                     android:src="@drawable/ic_baseline_dehaze_24"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/et_descobrir"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/iv_search"
+                    android:id="@+id/iv_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:clickable="true"
-                    android:contentDescription="@string/txt_procurar"
                     android:focusable="true"
-                    android:src="@drawable/ic_baseline_search_48"
+                    android:src="@drawable/ic_baseline_person_24"
+                    android:layout_marginEnd="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/img_anima"
-                    app:layout_constraintStart_toEndOf="@id/et_descobrir"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

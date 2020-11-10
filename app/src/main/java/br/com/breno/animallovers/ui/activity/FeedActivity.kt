@@ -1,15 +1,15 @@
 package br.com.breno.animallovers.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_feed.*
-import kotlinx.android.synthetic.main.activity_feed.view.*
 import kotlin.system.exitProcess
 
 class FeedActivity : AppCompatActivity() {
@@ -20,10 +20,13 @@ class FeedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feed)
         inicializaNavDrawer()
+        inicializaBottomNav()
 
         clickNavBottom()
         clickNavDrawer()
         clickOpenNavDrawer()
+        clickUserPage()
+
 
     }
 
@@ -37,9 +40,13 @@ class FeedActivity : AppCompatActivity() {
     private fun clickNavBottom() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
+                R.id.btn_chat -> mostraToast("Chat")
                 R.id.btn_foryou -> mostraToast("4 vc")
-                R.id.btn_add -> mostraToast("Camera")
-                R.id.btn_search -> mostraToast("Procura")
+                R.id.btn_add -> {
+                    startActivity(Intent(this, PublishActivity::class.java))
+                }
+                R.id.btn_notification -> mostraToast("Notificação")
+                R.id.btn_search -> mostraToast("Procurar")
             }
             true
         }
@@ -57,6 +64,19 @@ class FeedActivity : AppCompatActivity() {
                 }
             }
             true
+        }
+    }
+
+    private fun inicializaBottomNav() {
+        bottomNavigationView.apply {
+            setOnNavigationItemSelectedListener (BottomNavigationView.OnNavigationItemSelectedListener { true })
+            selectedItemId = R.id.btn_foryou
+        }
+    }
+
+    private fun clickUserPage() {
+        iv_user.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 

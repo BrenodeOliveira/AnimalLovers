@@ -4,8 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Patterns
-import android.widget.Toast
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.ui.activity.extensions.mostraSnack
+import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
@@ -45,7 +46,10 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        auth.signInWithEmailAndPassword(et_email_login.text.toString(), et_password_login.text.toString())
+        auth.signInWithEmailAndPassword(
+            et_email_login.text.toString(),
+            et_password_login.text.toString()
+        )
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
@@ -61,17 +65,14 @@ class LoginActivity : AppCompatActivity() {
         if (currentUser != null) {
             if (currentUser.isEmailVerified) {
                 startActivity(Intent(this, FeedActivity::class.java))
-                Toast.makeText(this, "Seja bem vindo", Toast.LENGTH_SHORT)
-                    .show()
+                mostraToast("Seja bem vindo")
                 finish()
             } else {
-                Toast.makeText(baseContext, "Por favor, verifique seu e-mail",
-                    Toast.LENGTH_SHORT).show()
+                mostraSnack("Por favor, verifique seu e-mail", login_constraint, this)
             }
         } else {
             // If sign in fails, display a message to the user.
-            Toast.makeText(baseContext, "Falha ao acessar sua conta",
-                Toast.LENGTH_SHORT).show()
+            mostraSnack("Falha ao acessar sua conta", login_constraint, this)
         }
     }
 
