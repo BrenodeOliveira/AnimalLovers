@@ -67,6 +67,9 @@ class RegisterActivity : AppCompatActivity() {
                                     "Conta registrada com sucesso, verifique seu e-mail",
                                     Toast.LENGTH_SHORT
                                 ).show()
+
+
+
                                 startActivity(Intent(this, LoginActivity::class.java))
                                 finish()
                             }
