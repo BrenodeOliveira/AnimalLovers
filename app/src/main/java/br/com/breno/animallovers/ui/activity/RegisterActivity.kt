@@ -9,6 +9,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Conta
+import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
@@ -66,11 +67,7 @@ class RegisterActivity : AppCompatActivity() {
                     user?.sendEmailVerification()
                         ?.addOnCompleteListener { userAuth ->
                             if (userAuth.isSuccessful) {
-                                Toast.makeText(
-                                    baseContext,
-                                    "Conta registrada com sucesso, verifique seu e-mail",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                mostraToast("Conta registrada com sucesso, verifique seu e-mail")
 
                                 val database = Firebase.database.reference
                                 val conta = Conta()
