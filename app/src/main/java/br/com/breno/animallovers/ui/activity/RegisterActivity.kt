@@ -8,7 +8,11 @@ import android.util.Patterns
 import android.view.WindowManager
 import android.widget.Toast
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.model.Conta
+import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -67,6 +71,16 @@ class RegisterActivity : AppCompatActivity() {
                                     "Conta registrada com sucesso, verifique seu e-mail",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                val database = Firebase.database.reference
+                                val conta = Conta()
+
+                                conta.email = et_email.text.toString()
+                                conta.senha = et_password.text.toString()
+                                conta.usuario = et_email.text.toString()
+                                conta.id = "user.uid"
+
+                                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(conta.id).setValue(conta)
+
                                 startActivity(Intent(this, LoginActivity::class.java))
                                 finish()
                             }
