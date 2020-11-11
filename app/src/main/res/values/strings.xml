@@ -5,6 +5,8 @@
     <string name="txt_have_account">Já possui uma conta?</string>
     <string name="txt_login_btn">Login</string>
     <string name="txt_realize_register">Para continuar, realize o seu cadastro.</string>
+    <string name="txt_realize_reset_senha">Informe seu e-mail, e nele receberá um link para redefinição de senha</string>
+    <string name="txt_btn_reset_senha">Enviar link de redefinição</string>
     <string name="txt_email_user">Digite seu e-mail</string>
     <string name="txt_password_again">Repita sua senha</string>
     <string name="txt_password">Digite sua senha</string>

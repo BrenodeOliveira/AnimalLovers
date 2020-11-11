@@ -13,14 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.ProfileActivity"></activity>
+        <activity android:name=".ui.activity.RedefinirSenhaActivity"></activity>
+        <activity android:name=".ui.activity.ProfileActivity" />
         <activity android:name=".ui.activity.PublishActivity" />
-        <activity android:name=".ui.activity.FeedActivity">
-
-        </activity>
+        <activity android:name=".ui.activity.FeedActivity"></activity>
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.RegisterActivity" />
-        <activity android:name=".ui.activity.SplashActivity" >
+        <activity android:name=".ui.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

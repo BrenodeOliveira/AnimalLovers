@@ -25,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
         //Ação dos click dos botões
         clickBotaoCriarConta()
         clickBotaoLogarUser()
+        clickEsqueciSenha()
     }
 
     private fun doLogin() {
@@ -87,5 +88,16 @@ class LoginActivity : AppCompatActivity() {
         btn_logon.setOnClickListener {
             doLogin()
         }
+    }
+
+    private fun clickEsqueciSenha() {
+        btn_esqueci.setOnClickListener {
+            esqueciSenha()
+        }
+    }
+
+    private fun esqueciSenha() {
+        startActivity(Intent(this, RedefinirSenhaActivity::class.java))
+        finish()
     }
 }
