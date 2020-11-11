@@ -85,11 +85,7 @@ class RegisterActivity : AppCompatActivity() {
                             }
                         }
                 } else {
-                    Toast.makeText(
-                        baseContext,
-                        "Registro falho, tente novamente depois de um tempo",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    mostraToast("Registro falho, tente novamente depois de um tempo")
                 }
 
             }
