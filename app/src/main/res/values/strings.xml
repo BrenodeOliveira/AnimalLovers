@@ -37,7 +37,6 @@
     <string name="txt_foryou">Para Você</string>
     <string name="txt_add">Adicionar</string>
     <string name="txt_search">Pesquisar</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="txt_descobrir">Descobrir</string>
     <string name="txt_logo_feed">Logo AnimaLovers</string>
@@ -48,4 +47,7 @@
     <string name="txt_gui_taka">Guilherme Takahashi</string>
     <string name="txt_summary">Resumo</string>
     <string name="txt_animal_name">Nome do animal</string>
+    <string name="txt_add_publi">Adicione sua publicação</string>
+    <string name="txt_demonstrate">Demonstre o carinho por seu pet...</string>
+    <string name="txt_space_to_publicate">Espaço para a imagem da publicação</string>
 </resources>
