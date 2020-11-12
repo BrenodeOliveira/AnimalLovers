@@ -5,12 +5,13 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.os.Build
-import android.os.Build.*
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import br.com.breno.animallovers.R
@@ -32,13 +33,22 @@ class PublishActivity : AppCompatActivity() {
         clickButtonCamera()
         clickButtonGallery()
 
+        setSupportActionBar(toolbar_publi)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 
     private fun clickButtonGallery() {
         btn_galery.setOnClickListener {
             if (VERSION.SDK_INT >= VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_DENIED) {
+                    PackageManager.PERMISSION_DENIED
+                ) {
                     //denied
                     val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
                     requestPermissions(permissions, STORAGE_RQ)
@@ -83,8 +93,7 @@ class PublishActivity : AppCompatActivity() {
         }
         if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
             iv_photo_to_publish.setImageURI(data?.data)
-        }
-        else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
@@ -92,8 +101,9 @@ class PublishActivity : AppCompatActivity() {
     private fun checkForPermission(permission: String, name: String, requestCode: Int) {
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             when {
-               ContextCompat.checkSelfPermission(applicationContext, permission) ==
-                       PackageManager.PERMISSION_GRANTED -> {}
+                ContextCompat.checkSelfPermission(applicationContext, permission) ==
+                        PackageManager.PERMISSION_GRANTED -> {
+                }
 
                 shouldShowRequestPermissionRationale(permission) ->
                     showDialogPermissions(permission, name, requestCode)
@@ -102,11 +112,12 @@ class PublishActivity : AppCompatActivity() {
                     .requestPermissions(this, arrayOf(permission), requestCode)
             }
         }
-
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-        grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         fun innerCheck(name: String) {
             if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 mostraToast("Permissão negada")
@@ -130,8 +141,10 @@ class PublishActivity : AppCompatActivity() {
             setTitle("Requisição de permissão")
             setPositiveButton("Ok") { _, _ ->
                 ActivityCompat
-                    .requestPermissions(this@PublishActivity,
-                        arrayOf(permission), requestCode)
+                    .requestPermissions(
+                        this@PublishActivity,
+                        arrayOf(permission), requestCode
+                    )
             }
         }
         val dialog = builder.create()
