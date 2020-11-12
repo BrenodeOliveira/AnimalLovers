@@ -10,10 +10,10 @@
         android:id="@+id/toolbar_publi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="Nova publicação"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Nova publicação" />
 
     <ImageView
         android:id="@+id/iv_user_photo"
@@ -32,7 +32,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:background="@drawable/background_button_to_publish"
+        android:fontFamily="sans-serif"
         android:text="Publicar"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="@+id/iv_user_photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
@@ -50,7 +52,7 @@
         app:layout_constraintTop_toTopOf="@id/iv_user_photo" />
 
     <EditText
-        android:id="@+id/textView"
+        android:id="@+id/et_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -61,29 +63,23 @@
         android:inputType="text"
         android:padding="16dp"
         android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_user_photo" />
 
     <ImageView
         android:id="@+id/iv_photo_to_publish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_margin="16dp"
         android:contentDescription="@string/txt_space_to_publicate"
-        android:paddingStart="96dp"
-        android:paddingTop="124dp"
-        android:paddingEnd="96dp"
-        android:paddingBottom="124dp"
-        android:src="@mipmap/ic_launcher"
-        app:layout_constraintBottom_toTopOf="@+id/btn_camera"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0" />
+        app:layout_constraintTop_toBottomOf="@+id/et_comment"
+        app:layout_constraintVertical_bias="0.5" />
 
     <Button
         android:id="@+id/btn_camera"
@@ -110,6 +106,7 @@
         android:drawableStart="@drawable/ic_baseline_photo_library_24"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
+        android:layout_marginStart="8dp"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
