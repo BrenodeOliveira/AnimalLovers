@@ -1,9 +1,8 @@
 package br.com.breno.animallovers.viewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
-class LoginActivityViewModel(application: Application) : AndroidViewModel(application) {
+class LoginActivityViewModel : ViewModel() {
 
 
 

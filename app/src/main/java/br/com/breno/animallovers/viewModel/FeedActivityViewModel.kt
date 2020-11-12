@@ -1,11 +1,7 @@
 package br.com.breno.animallovers.viewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
-class FeedActivityViewModel(application: Application): AndroidViewModel(application) {
-
-
-
+class FeedActivityViewModel: ViewModel() {
+    
 }
