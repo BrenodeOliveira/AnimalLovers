@@ -73,9 +73,8 @@ class RegisterActivity : AppCompatActivity() {
                                 val conta = Conta()
 
                                 conta.email = et_email.text.toString()
-                                conta.senha = et_password.text.toString()
                                 conta.usuario = et_email.text.toString()
-                                conta.id = "user.uid"
+                                conta.id = user.uid
 
                                 database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
                                     .child(conta.id).setValue(conta)

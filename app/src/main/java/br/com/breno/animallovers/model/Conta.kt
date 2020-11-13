@@ -4,5 +4,4 @@ class Conta {
     var id: String = ""
     var email: String = ""
     var usuario: String = ""
-    var senha: String = ""
 }
