@@ -66,7 +66,6 @@ class LoginActivity : AppCompatActivity() {
         if (currentUser != null) {
             if (currentUser.isEmailVerified) {
                 startActivity(Intent(this, FeedActivity::class.java))
-                mostraToast("Seja bem vindo")
                 finish()
             } else {
                 mostraSnack("Por favor, verifique seu e-mail", login_constraint, this)

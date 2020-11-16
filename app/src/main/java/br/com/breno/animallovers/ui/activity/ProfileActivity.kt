@@ -6,7 +6,7 @@ import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.utils.AnimalLoversConstants
-import br.com.breno.animallovers.utils.PetUtils
+import br.com.breno.animallovers.service.PetService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,7 +22,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
 
-    private val petUtils = PetUtils()
+    private val petService = PetService()
     private var petInfo = Pet()
     private var idPet: Int = 0
     private var accountInfo = Conta()
@@ -42,10 +42,9 @@ class ProfileActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 accountInfo = dataSnapshot.getValue<Conta>()!!
 
-                idPet = petUtils.idFirstPet(dataSnapshot)
-                println(idPet.toString() + "PROFILE")
+                idPet = petService.idFirstPet(dataSnapshot)
                 if (idPet > 0) {
-                    petInfo = petUtils.retrievePetInfo(idPet, dataSnapshot)
+                    petInfo = petService.retrievePetInfo(idPet, dataSnapshot)
                 }
 
                 tv_animal_name.text = petInfo.nome

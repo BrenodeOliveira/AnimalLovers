@@ -1,14 +1,18 @@
-package br.com.breno.animallovers.utils
+package br.com.breno.animallovers.service
 
+import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.storage.FirebaseStorage
 
-class PetUtils {
+class PetService : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
+    private lateinit var storage: FirebaseStorage
     private var pet = Pet()
 
     fun idFirstPet(dataSnapshot: DataSnapshot): Int {
@@ -23,7 +27,7 @@ class PetUtils {
     }
 
     fun retrievePetInfo (id: Int, dataSnapshot: DataSnapshot): Pet {
-        pet = dataSnapshot.child("pet$id").getValue<Pet>()!!
+        pet = dataSnapshot.child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id).getValue<Pet>()!!
         return pet
     }
 }
