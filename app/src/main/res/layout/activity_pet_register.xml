@@ -7,50 +7,99 @@
     android:background="@drawable/imagemfundo"
     tools:context=".ui.activity.PetRegisterActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_pet_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="CADASTRO DE PET" />
+
     <EditText
         android:id="@+id/nome_pet_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/background_login_input"
-        android:hint="Nome do pet"
+        android:hint="Nome"
         android:inputType="text"
         android:padding="12dp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar_pet_register" />
 
     <EditText
         android:id="@+id/idade_pet_register"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
         android:background="@drawable/background_login_input"
-        android:hint="Idade do pet"
+        android:hint="Idade"
         android:inputType="text"
         android:padding="12dp"
+        android:paddingStart="70dp"
+        android:paddingEnd="70dp"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@id/idade_pet_register"
-        app:layout_constraintStart_toStartOf="@id/idade_pet_register"
+        app:layout_constraintStart_toEndOf="@id/guideline_start"
         app:layout_constraintTop_toBottomOf="@id/nome_pet_register" />
 
     <EditText
         android:id="@+id/peso_pet_register"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
         android:background="@drawable/background_login_input"
-        android:hint="Peso do pet"
+        android:hint="Peso"
         android:inputType="text"
         android:padding="12dp"
+        android:paddingStart="72dp"
+        android:paddingEnd="72dp"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintTop_toBottomOf="@id/nome_pet_register" />
+
+    <EditText
+        android:id="@+id/tipo_pet_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_login_input"
+        android:hint="Tipo"
+        android:padding="12dp"
+        android:paddingStart="75dp"
+        android:paddingEnd="75dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/idade_pet_register" />
+
+    <EditText
+        android:id="@+id/raca_pet_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_login_input"
+        android:hint="Raça"
+        android:padding="12dp"
+        android:paddingStart="72dp"
+        android:paddingEnd="72dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintTop_toBottomOf="@id/idade_pet_register" />
 
     <EditText
@@ -61,54 +110,24 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/background_login_input"
-        android:hint="Resumo sobre seu pet"
-        android:padding="12dp"
+        android:hint="Descrição"
+        android:padding="32dp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/peso_pet_register" />
-
-    <EditText
-        android:id="@+id/tipo_pet_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/background_login_input"
-        android:hint="Tipo do pet"
-        android:padding="12dp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/resumo_pet_register" />
-
-    <EditText
-        android:id="@+id/raca_pet_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/background_login_input"
-        android:hint="Raça do pet"
-        android:padding="12dp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tipo_pet_register" />
+        app:layout_constraintTop_toBottomOf="@id/raca_pet_register" />
 
     <TextView
         android:id="@+id/tv_sex_pet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Sexo do pet"
+        android:text="Sexo"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/raca_pet_register" />
+        app:layout_constraintTop_toBottomOf="@id/resumo_pet_register" />
 
     <RadioGroup
         android:id="@+id/radio_sexo_animal"
