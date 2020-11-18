@@ -23,7 +23,6 @@ import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.service.PostService
-import br.com.breno.animallovers.ui.activity.extensions.mostraToastyWarning
 import br.com.breno.animallovers.utils.DateUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -100,7 +99,6 @@ class PublishActivity : AppCompatActivity() {
                             postService.persistNewPetPost(idPet, dataPicture, post)
                         }
                         else {
-                            mostraToastyWarning("Você não selecionou nenhuma imagem")
                             //Como não há foto/vídeo, a data/hora da pub será definida aqui, se houvesse seria a data/hora de upload
                             post.dataHora = DateUtils.dataFormatWithMilliseconds()
                             post.pathPub = ""

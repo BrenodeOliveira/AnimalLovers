@@ -6,6 +6,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,7 +28,6 @@ class FeedActivity : AppCompatActivity() {
         clickNavDrawer()
         clickOpenNavDrawer()
         clickUserPage()
-
 
     }
 

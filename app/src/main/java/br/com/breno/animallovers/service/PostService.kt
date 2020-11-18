@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.ui.activity.extensions.mostraToastyError
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import com.google.firebase.auth.FirebaseAuth
@@ -41,7 +40,6 @@ class PostService : AppCompatActivity() {
         uploadTask.addOnFailureListener {
             //Printa a stack em caso de erro, e não fará o novo post
             println(uploadTask.exception.toString())
-            mostraToastyError("Erro ao realizar novo post")
         }.addOnSuccessListener { taskSnapshot ->
             post.dataHora = dateTimePost
             post.pathPub = storageRef.toString()
