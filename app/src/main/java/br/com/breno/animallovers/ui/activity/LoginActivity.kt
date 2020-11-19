@@ -1,23 +1,30 @@
 package br.com.breno.animallovers.ui.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
-import br.com.breno.animallovers.ui.activity.extensions.mostraSnack
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
+import br.com.breno.animallovers.viewModel.LoginActivityViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private val viewModel:LoginActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        progress_login.visibility = GONE
 
 //      Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
@@ -29,19 +36,25 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun doLogin() {
+
+        disableButtonLogin()
+
         if (et_email_login.text.toString().isEmpty()) {
+            buttonEnablingLogin()
             et_email_login.error = "Insira um e-mail"
             et_email_login.requestFocus()
             return
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(et_email_login.text.toString()).matches()) {
+            buttonEnablingLogin()
             et_email_login.error = "Insira um e-mail válido para prosseguir"
             et_email_login.requestFocus()
             return
         }
 
         if (et_password_login.text.toString().isEmpty()) {
+            buttonEnablingLogin()
             et_password_login.error = "Insira uma senha"
             et_password_login.requestFocus()
             return
@@ -65,14 +78,22 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUI(currentUser: FirebaseUser?) {
         if (currentUser != null) {
             if (currentUser.isEmailVerified) {
+                progress_login.visibility = GONE
                 startActivity(Intent(this, FeedActivity::class.java))
                 finish()
             } else {
-                mostraSnack("Por favor, verifique seu e-mail", login_constraint, this)
+                buttonEnablingLogin()
+                mostraToast("Por favor, verifique seu e-mail")
+                progress_login.visibility = GONE
             }
         } else {
+            buttonEnablingLogin()
             // If sign in fails, display a message to the user.
-            mostraSnack("Falha ao acessar sua conta", login_constraint, this)
+            mostraToast("Falha ao acessar sua conta")
+            progress_login.visibility = GONE
+            et_email_login.text.clear()
+            et_email_login.requestFocus()
+            et_password_login.text.clear()
         }
     }
 
@@ -98,5 +119,17 @@ class LoginActivity : AppCompatActivity() {
     private fun esqueciSenha() {
         startActivity(Intent(this, RedefinirSenhaActivity::class.java))
         finish()
+    }
+
+    private fun buttonEnablingLogin() {
+        btn_logon.isEnabled = true
+        btn_logon.setBackgroundResource(R.drawable.background_button_red)
+        progress_login.visibility = GONE
+    }
+
+    private fun disableButtonLogin() {
+        progress_login.visibility = VISIBLE
+        btn_logon.isEnabled = false
+        btn_logon.setBackgroundResource(R.drawable.background_button_login_disable)
     }
 }
