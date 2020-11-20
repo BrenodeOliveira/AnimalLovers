@@ -19,7 +19,7 @@ Release TCC (previsão jun/2021)
 - Chat
 - Integração API Vision AI
 - Match de Perfis
-- Marketpalce
+- Busca de clínicas
 
 Time Quarteto Fantástico
 > Breno Rocha
