@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
+import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +24,6 @@ class PostService : AppCompatActivity() {
         storage = FirebaseStorage.getInstance()
 
         //Pega a data/hora do post com millisegundos, define como nome da imagem, para ser única
-//        val dateTimePost = SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSSSSS").format(Date())
         val dateTimePost = DateUtils.dataFormatWithMilliseconds()
 
         //Referência de caminho às pastas filhas (Ex.: images/posts/{id do user}/{id do pet do user}/{foto.jpeg}
@@ -57,8 +57,9 @@ class PostService : AppCompatActivity() {
             .child(AnimalLoversConstants.STORAGE_ROOT_POSTS.nome)
             .child(post.dataHora)
             .setValue(post)
+        println("Sucesso em realizar novo post")
 
 
-//        mostraToastySuccess("Sucesso em realizar novo post")
+        mostraToastySuccess("Sucesso em realizar novo post")
     }
 }
