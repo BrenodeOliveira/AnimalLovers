@@ -1,13 +1,21 @@
 package br.com.breno.animallovers.service
 
 import androidx.appcompat.app.AppCompatActivity
+import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.activity_profile.*
 
 class PetService : AppCompatActivity() {
     private lateinit var database: DatabaseReference
@@ -29,5 +37,39 @@ class PetService : AppCompatActivity() {
     fun retrievePetInfo (id: Int, dataSnapshot: DataSnapshot): Pet {
         pet = dataSnapshot.child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id).getValue<Pet>()!!
         return pet
+    }
+
+    fun registerNewPet(id: Int, pet: Pet) {
+        database = Firebase.database.reference
+        auth = FirebaseAuth.getInstance()
+
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(auth.uid.toString())
+            .child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id)
+            .setValue(pet)
+
+//        mostraToastySuccess("Novo pet registrado com sucesso")
+    }
+
+    fun uploadProfilePhotoPet(id : Int, dataPicture : ByteArray) {
+        auth = FirebaseAuth.getInstance()
+        storage = FirebaseStorage.getInstance()
+
+        //Referência de caminho às pastas filhas (Ex.: images/posts/{id do user}/{id do pet do user}/{foto.jpeg}
+        var storageRef = storage.reference
+            .child(AnimalLoversConstants.STORAGE_ROOT.nome)
+            .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
+            .child(auth.uid.toString())
+            .child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+
+        //Faz o upload no caminho determinado
+        var uploadTask = storageRef.putBytes(dataPicture)
+
+        uploadTask.addOnFailureListener {
+            //Printa a stack em caso de erro, e não fará o novo post
+            println(uploadTask.exception.toString())
+        }.addOnSuccessListener { taskSnapshot ->
+            println(storageRef.toString())
+        }
     }
 }

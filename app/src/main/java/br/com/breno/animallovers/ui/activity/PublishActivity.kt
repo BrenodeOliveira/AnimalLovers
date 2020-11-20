@@ -10,7 +10,6 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Conta
+import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
@@ -48,6 +48,7 @@ private val postService = PostService()
 private val petService = PetService()
 private var accountInfo = Conta()
 private var post = Post()
+private var pet = Pet()
 
 private var idPet: Int = 0
 
@@ -58,6 +59,7 @@ class PublishActivity : AppCompatActivity() {
         setContentView(R.layout.activity_publish)
         requestingPermissionToUser()
 
+        getPetsName()
         clickButtonCamera()
         clickButtonGallery()
         clickPublishPost()
@@ -70,6 +72,32 @@ class PublishActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return super.onSupportNavigateUp()
+    }
+
+    private fun getPetsName() {
+        database = Firebase.database.reference
+        auth = FirebaseAuth.getInstance()
+
+
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                accountInfo = dataSnapshot.getValue<Conta>()!!
+
+                idPet = petService.idFirstPet(dataSnapshot)
+                if (idPet > 0) {
+                    pet = petService.retrievePetInfo(idPet, dataSnapshot)
+                    tv_name_user.text = pet.nome
+                }
+                else {
+                    tv_name_user.text = ""
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 
     private fun clickPublishPost() {

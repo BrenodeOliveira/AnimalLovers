@@ -155,15 +155,61 @@
     </RadioGroup>
 
     <Button
+        android:id="@+id/btn_camera_cadastro_pet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="137dp"
+        android:background="@drawable/background_button_publish"
+        android:drawableStart="@drawable/ic_baseline_camera_alt_24"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/radio_sexo_animal"
+        app:layout_constraintEnd_toEndOf="@+id/tv_sex_pet"
+        app:layout_constraintEnd_toStartOf="@+id/btn_galery_cadastro_pet"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_galery_cadastro_pet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:background="@drawable/background_button_publish"
+        android:drawableStart="@drawable/ic_baseline_photo_library_24"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/radio_sexo_animal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/iv_photo_to_profile" />
+
+    <ImageView
+        android:id="@+id/iv_photo_to_profile"
+        android:layout_width="63dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/txt_space_to_publicate"
+
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="@+id/btn_cadastrar_pet"
+        app:layout_constraintStart_toStartOf="@+id/btn_cadastrar_pet"
+        app:layout_constraintTop_toBottomOf="@+id/btn_cadastrar_pet" />
+
+    <Button
         android:id="@+id/btn_cadastrar_pet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:layout_marginTop="148dp"
         android:background="@drawable/background_button_red"
         android:padding="16dp"
         android:text="Cadastrar"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/radio_sexo_animal" />
 

@@ -1,5 +1,6 @@
 package br.com.breno.animallovers.ui.activity
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,12 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
 
         retrieveUserInfo()
+        clickNewPet()
+    }
+    private fun clickNewPet() {
+        btn_cadastrar_pet.setOnClickListener {
+            startActivity(Intent(this, PetRegisterActivity::class.java))
+        }
     }
 
     private fun retrieveUserInfo() {
@@ -53,7 +60,7 @@ class ProfileActivity : AppCompatActivity() {
                 }
 
                 tv_animal_name.text = petInfo.nome
-                tv_animal_sex_write.text = petInfo.peso
+                tv_animal_sex_write.text = petInfo.sexo
                 tv_animal_age_write.text = petInfo.idade
                 tv_animal_weight_write.text = petInfo.peso
                 tv_summary_text.text = petInfo.resumo
@@ -66,6 +73,7 @@ class ProfileActivity : AppCompatActivity() {
         })
 
     }
+
     private fun retrieveProfilePhoto(idPet: Int) {
         storage = FirebaseStorage.getInstance()
         var storageRef = storage.reference
@@ -78,7 +86,7 @@ class ProfileActivity : AppCompatActivity() {
             val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
             iv_animal_photo.setImageBitmap(bmp)
         }.addOnFailureListener {
-            mostraToastyError("Erro ao carregar foto de perfil")
+
         }
     }
 }

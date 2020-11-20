@@ -6,4 +6,7 @@ class Pet {
     var peso: String = ""
     var resumo: String = ""
     var sexo: String = ""
+    var tipo: String = ""
+    var raca: String = ""
+    var pathFotoPerfil: String = ""
 }
