@@ -50,6 +50,7 @@ class PostService : AppCompatActivity() {
 
     fun registerNewPost(id : Int, post : Post) {
         val database = Firebase.database.reference
+        auth = FirebaseAuth.getInstance()
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
@@ -59,7 +60,5 @@ class PostService : AppCompatActivity() {
             .setValue(post)
         println("Sucesso em realizar novo post")
 
-
-        mostraToastySuccess("Sucesso em realizar novo post")
     }
 }

@@ -56,7 +56,10 @@ class ProfileActivity : AppCompatActivity() {
                 idPet = petService.idFirstPet(dataSnapshot)
                 if (idPet > 0) {
                     petInfo = petService.retrievePetInfo(idPet, dataSnapshot)
-                    retrieveProfilePhoto(idPet)
+
+                    if (petInfo.pathFotoPerfil != "") {
+                        retrieveProfilePhoto(idPet)
+                    }
                 }
 
                 tv_animal_name.text = petInfo.nome

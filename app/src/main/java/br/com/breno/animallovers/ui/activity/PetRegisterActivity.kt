@@ -80,8 +80,6 @@ class PetRegisterActivity : AppCompatActivity() {
                         pet.tipo = tipo_pet_register.text.toString()
                         pet.sexo = checkedBox
 
-
-
                         if(null != iv_photo_to_profile.drawable) {
                             val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
                             val baos = ByteArrayOutputStream()
@@ -89,9 +87,11 @@ class PetRegisterActivity : AppCompatActivity() {
                             val dataPicture = baos.toByteArray()
 
 
-                            petService.uploadProfilePhotoPet(idPet, dataPicture)
+                            petService.uploadProfilePhotoPet(idPet, dataPicture, pet)
                         }
-                        petService.registerNewPet(idPet, pet)
+                        else {
+                            petService.registerNewPet(idPet, pet)
+                        }
                         mostraToastySuccess("Novo pet registrado com sucesso")
                     }
 

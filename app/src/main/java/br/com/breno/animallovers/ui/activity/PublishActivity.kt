@@ -23,6 +23,8 @@ import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.service.PostService
+import br.com.breno.animallovers.ui.activity.extensions.mostraToastyError
+import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.DateUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -118,26 +120,31 @@ class PublishActivity : AppCompatActivity() {
                         iv_photo_to_publish.isDrawingCacheEnabled = true
                         iv_photo_to_publish.buildDrawingCache()
 
-                        if(null != iv_photo_to_publish.drawable) {
-                            val bitmap = (iv_photo_to_publish.drawable as BitmapDrawable).bitmap
-                            val baos = ByteArrayOutputStream()
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                            val dataPicture = baos.toByteArray()
-
-                            postService.persistNewPetPost(idPet, dataPicture, post)
+                        if(null == iv_photo_to_publish.drawable && post.legenda == "") {
+                            mostraToastyError("Para realizar um post é necessário: \n- Digitar um texto;\nOu\n- Inserir uma foto.")
                         }
                         else {
-                            //Como não há foto/vídeo, a data/hora da pub será definida aqui, se houvesse seria a data/hora de upload
-                            post.dataHora = DateUtils.dataFormatWithMilliseconds()
-                            post.pathPub = ""
-                            postService.registerNewPost(idPet, post)
-                        }
+                            if(null != iv_photo_to_publish.drawable) {
+                                val bitmap = (iv_photo_to_publish.drawable as BitmapDrawable).bitmap
+                                val baos = ByteArrayOutputStream()
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                                val dataPicture = baos.toByteArray()
 
+                                postService.persistNewPetPost(idPet, dataPicture, post)
+                            }
+                            else {
+                                //Como não há foto/vídeo, a data/hora da pub será definida aqui, se houvesse seria a data/hora de upload
+                                post.dataHora = DateUtils.dataFormatWithMilliseconds()
+                                post.pathPub = ""
+                                postService.registerNewPost(idPet, post)
+                            }
+                            mostraToastySuccess("Novo post realizado")
+                        }
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Toasty.error(baseContext, "Erro ao carregar informações do perfil", Toasty.LENGTH_LONG).show()
+                    mostraToastyError("Erro ao carregar informações do perfil")
                 }
             })
         }

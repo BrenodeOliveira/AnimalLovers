@@ -51,7 +51,7 @@ class PetService : AppCompatActivity() {
 //        mostraToastySuccess("Novo pet registrado com sucesso")
     }
 
-    fun uploadProfilePhotoPet(id : Int, dataPicture : ByteArray) {
+    fun uploadProfilePhotoPet(id : Int, dataPicture : ByteArray, pet : Pet) {
         auth = FirebaseAuth.getInstance()
         storage = FirebaseStorage.getInstance()
 
@@ -69,7 +69,9 @@ class PetService : AppCompatActivity() {
             //Printa a stack em caso de erro, e não fará o novo post
             println(uploadTask.exception.toString())
         }.addOnSuccessListener { taskSnapshot ->
-            println(storageRef.toString())
+            pet.pathFotoPerfil = storageRef.toString()
+
+            registerNewPet(id, pet)
         }
     }
 }
