@@ -1,21 +1,15 @@
 package br.com.breno.animallovers.service
 
 import androidx.appcompat.app.AppCompatActivity
-import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
-import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.activity_profile.*
 
 class PetService : AppCompatActivity() {
     private lateinit var database: DatabaseReference
@@ -47,8 +41,6 @@ class PetService : AppCompatActivity() {
             .child(auth.uid.toString())
             .child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id)
             .setValue(pet)
-
-//        mostraToastySuccess("Novo pet registrado com sucesso")
     }
 
     fun uploadProfilePhotoPet(id : Int, dataPicture : ByteArray, pet : Pet) {

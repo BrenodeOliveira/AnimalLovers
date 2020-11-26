@@ -1,15 +1,16 @@
 package br.com.breno.animallovers.ui.activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.service.ModalBottomSheet
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
+import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_feed.*
 import kotlin.system.exitProcess
@@ -17,6 +18,7 @@ import kotlin.system.exitProcess
 class FeedActivity : AppCompatActivity() {
 
     lateinit var toggle: ActionBarDrawerToggle
+    var modalBottomSheet = ModalBottomSheet()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +31,17 @@ class FeedActivity : AppCompatActivity() {
         clickOpenNavDrawer()
         clickUserPage()
 
+        modalBottomSheet.isCancelable = false
+        modalBottomSheet.show(supportFragmentManager, "modalMenu")
     }
 
+    fun getPetIdToPopulateFeed(context : Context) {
+        val myPreferences = ProjectPreferences(context)
+        println(myPreferences.getPetLogged())
+        /*
+            Daqui, deve acessar o banco com o id do pet, e buscar os posts feitos por ele, jogar no RecyclerView do feed
+         */
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
             return true

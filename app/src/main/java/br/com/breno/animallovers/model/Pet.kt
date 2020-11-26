@@ -9,4 +9,5 @@ class Pet {
     var tipo: String = ""
     var raca: String = ""
     var pathFotoPerfil: String = ""
+    var id: String = ""
 }
