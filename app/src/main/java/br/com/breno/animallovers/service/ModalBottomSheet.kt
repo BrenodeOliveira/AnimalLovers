@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.ui.activity.FeedActivity
+import br.com.breno.animallovers.ui.activity.ProfileActivity
 import br.com.breno.animallovers.ui.activity.RegisterActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -97,9 +98,13 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
     }
 
     override fun onStop() {
-        var feed = FeedActivity()
+//        var feed = FeedActivity()
+//
+//        context?.let { feed.getPetIdToPopulateFeed(it) }
 
-        context?.let { feed.getPetIdToPopulateFeed(it) }
+//        var profile = ProfileActivity()
+//        profile.
+
 
         super.onStop()
     }

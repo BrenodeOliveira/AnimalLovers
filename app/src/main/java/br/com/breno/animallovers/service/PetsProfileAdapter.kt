@@ -1,6 +1,8 @@
 package br.com.breno.animallovers.service
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.ui.activity.FeedActivity
+import br.com.breno.animallovers.ui.activity.ProfileActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
@@ -15,7 +19,11 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.pet_item.view.*
 
 
-class PetsProfileAdapter (private val pet: List<Pet>, private val context: Context, private val mbs: ModalBottomSheet) : RecyclerView.Adapter<PetsProfileAdapter.ViewHolder>() {
+class PetsProfileAdapter(
+    private val pet: List<Pet>,
+    private val context: Context,
+    private val mbs: ModalBottomSheet
+) : RecyclerView.Adapter<PetsProfileAdapter.ViewHolder>() {
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
 
@@ -35,7 +43,7 @@ class PetsProfileAdapter (private val pet: List<Pet>, private val context: Conte
                 .child(auth.uid.toString())
                 .child(pets.id + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
 
-            storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener {bytesPrm ->
+            storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
                 val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
                 holder?.let {
                     it.title.text = pets.nome
@@ -45,16 +53,24 @@ class PetsProfileAdapter (private val pet: List<Pet>, private val context: Conte
                     it.photo.setOnClickListener {
                         val myPreferences = ProjectPreferences(context)
                         myPreferences.setPetLogged(pets.id)
+//                        context.startActivity(Intent(context, ProfileActivity::class.java))
+
+                        val i = Intent(context, FeedActivity::class.java)
+                        context.startActivity(i)
+//                        (context as Activity).finish()
+
                         mbs.dismiss()
                     }
                     it.description.setOnClickListener {
                         val myPreferences = ProjectPreferences(context)
                         myPreferences.setPetLogged(pets.id)
+                        context.startActivity(Intent(context, ProfileActivity::class.java))
                         mbs.dismiss()
                     }
                     it.title.setOnClickListener {
                         val myPreferences = ProjectPreferences(context)
                         myPreferences.setPetLogged(pets.id)
+                        context.startActivity(Intent(context, ProfileActivity::class.java))
                         mbs.dismiss()
                     }
                 }

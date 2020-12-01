@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:maxHeight="250dp">
+
+    <LinearLayout
+        android:layout_width="381dp"
+        android:layout_height="361dp"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_pet_name_post_feed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textSize="30dp"
+            tools:text="Nina" />
+
+        <TextView
+            android:id="@+id/tv_date_time_post_feed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="01/01/2020 23:59:59" />
+
+        <TextView
+            android:id="@+id/tv_pet_description_post_feed"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_marginTop="10dp"
+            android:textAlignment="textStart"
+            android:textSize="17sp"
+            tools:text="NinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNina" />
+
+        <ImageView
+            android:id="@+id/iv_photo_post_feed"
+            android:layout_width="match_parent"
+            android:layout_height="215dp"
+            app:srcCompat="@drawable/animalovers_logo" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

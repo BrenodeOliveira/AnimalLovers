@@ -5,10 +5,12 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -19,7 +21,7 @@ class PostService : AppCompatActivity() {
     private var pet = Pet()
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun persistNewPetPost(id : Int, dataPicture : ByteArray, post : Post) {
+    fun persistNewPetPost(id : String, dataPicture : ByteArray, post : Post) {
         auth = FirebaseAuth.getInstance()
         storage = FirebaseStorage.getInstance()
 
@@ -29,9 +31,9 @@ class PostService : AppCompatActivity() {
         //Referência de caminho às pastas filhas (Ex.: images/posts/{id do user}/{id do pet do user}/{foto.jpeg}
         var storageRef = storage.reference
             .child(AnimalLoversConstants.STORAGE_ROOT.nome)
-            .child(AnimalLoversConstants.STORAGE_ROOT_POSTS.nome)
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
             .child(auth.uid.toString())
-            .child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id)
+            .child(id)
             .child(dateTimePost)
 
         //Faz o upload no caminho determinado
@@ -48,17 +50,33 @@ class PostService : AppCompatActivity() {
         }
     }
 
-    fun registerNewPost(id : Int, post : Post) {
+    fun registerNewPost(id : String, post : Post) {
         val database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
-            .child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id)
-            .child(AnimalLoversConstants.STORAGE_ROOT_POSTS.nome)
-            .child(post.dataHora)
-            .setValue(post)
-        println("Sucesso em realizar novo post")
+            .child(id)
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).addListenerForSingleValueEvent(object :
+            ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var idNewPost : Long = snapshot.childrenCount + 1
+
+                    database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+                        .child(auth.uid.toString())
+                        .child(id)
+                        .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                        .child(idNewPost.toString()).setValue(post)
+                    println("Sucesso em realizar novo post")
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            })
+
+
+
 
     }
 }

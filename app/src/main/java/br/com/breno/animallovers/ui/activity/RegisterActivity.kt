@@ -1,12 +1,9 @@
 package br.com.breno.animallovers.ui.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
-import android.view.WindowManager
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast

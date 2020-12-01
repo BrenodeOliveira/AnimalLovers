@@ -28,8 +28,8 @@ class PetService : AppCompatActivity() {
         return iteratorPet
     }
 
-    fun retrievePetInfo (id: Int, dataSnapshot: DataSnapshot): Pet {
-        pet = dataSnapshot.child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id).getValue<Pet>()!!
+    fun retrievePetInfo (id: String, dataSnapshot: DataSnapshot): Pet {
+        pet = dataSnapshot.child(id).getValue<Pet>()!!
         return pet
     }
 

@@ -26,6 +26,7 @@ import br.com.breno.animallovers.service.PostService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToastyError
 import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.DateUtils
+import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -52,7 +53,7 @@ private var accountInfo = Conta()
 private var post = Post()
 private var pet = Pet()
 
-private var idPet: Int = 0
+private var idPet: String = ""
 
 class PublishActivity : AppCompatActivity() {
 
@@ -85,9 +86,10 @@ class PublishActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                 accountInfo = dataSnapshot.getValue<Conta>()!!
+                val myPreferences = ProjectPreferences(baseContext)
 
-                idPet = petService.idFirstPet(dataSnapshot)
-                if (idPet > 0) {
+                idPet = myPreferences.getPetLogged().toString()
+                if (idPet != "") {
                     pet = petService.retrievePetInfo(idPet, dataSnapshot)
                     tv_name_user.text = pet.nome
                 }
@@ -115,8 +117,10 @@ class PublishActivity : AppCompatActivity() {
 
                     accountInfo = dataSnapshot.getValue<Conta>()!!
 
-                    idPet = petService.idFirstPet(dataSnapshot)
-                    if (idPet > 0) {
+                    val myPreferences = ProjectPreferences(baseContext)
+
+                    idPet = myPreferences.getPetLogged().toString()
+                    if (idPet != "") {
                         iv_photo_to_publish.isDrawingCacheEnabled = true
                         iv_photo_to_publish.buildDrawingCache()
 

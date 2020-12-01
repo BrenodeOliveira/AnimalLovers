@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.service.ModalBottomSheet
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToastyError
+import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -26,10 +28,11 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
+    var modalBottomSheet = ModalBottomSheet()
 
     private val petService = PetService()
     private var petInfo = Pet()
-    private var idPet: Int = 0
+    private var idPet: String = ""
     private var accountInfo = Conta()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +41,13 @@ class ProfileActivity : AppCompatActivity() {
 
         retrieveUserInfo()
         clickNewPet()
+        clickChangeProfile()
+    }
+
+    private fun clickChangeProfile() {
+        btn_trocar_perfil_pet.setOnClickListener {
+            modalBottomSheet.show(supportFragmentManager, "modalMenu")
+        }
     }
     private fun clickNewPet() {
         btn_cadastrar_pet.setOnClickListener {
@@ -53,8 +63,10 @@ class ProfileActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 accountInfo = dataSnapshot.getValue<Conta>()!!
 
-                idPet = petService.idFirstPet(dataSnapshot)
-                if (idPet > 0) {
+                val myPreferences = ProjectPreferences(baseContext)
+
+                idPet = myPreferences.getPetLogged().toString()
+                if (idPet != "") {
                     petInfo = petService.retrievePetInfo(idPet, dataSnapshot)
 
                     if (petInfo.pathFotoPerfil != "") {
@@ -77,13 +89,13 @@ class ProfileActivity : AppCompatActivity() {
 
     }
 
-    private fun retrieveProfilePhoto(idPet: Int) {
+    private fun retrieveProfilePhoto(idPet: String) {
         storage = FirebaseStorage.getInstance()
         var storageRef = storage.reference
             .child(AnimalLoversConstants.STORAGE_ROOT.nome)
             .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
             .child(auth.uid.toString())
-            .child(AnimalLoversConstants.DATABASE_NODE_PET.nome + idPet + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+            .child(idPet + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
 
         storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener {bytesPrm ->
             val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
@@ -92,4 +104,6 @@ class ProfileActivity : AppCompatActivity() {
 
         }
     }
+
+    fun finishMe() { finish() }
 }
