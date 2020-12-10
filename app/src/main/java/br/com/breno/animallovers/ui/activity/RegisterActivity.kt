@@ -30,33 +30,35 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun signUpUser() {
-        if (et_email.text.toString().isEmpty()) {
+        if (et_email.editText?.text.toString().isEmpty()) {
             et_email.error = "Insira um e-mail"
             et_email.requestFocus()
             return
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(et_email.text.toString()).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(et_email.editText?.text.toString()).matches()) {
             et_email.error = "Insira um e-mail válido para prosseguir"
             et_email.requestFocus()
             return
         }
 
-        if (et_password.text.toString().isEmpty()) {
+        if (et_password.editText?.text.toString().isEmpty()) {
             et_password.error = "Insira uma senha"
             et_password.requestFocus()
             return
         }
 
-        if (!et_ag_password.text.toString().equals(et_password.text.toString()) or
-            et_ag_password.text.toString().isEmpty()
+        if (!et_ag_password.editText?.text.toString()
+                .equals(et_password.editText?.text.toString()) or
+            et_ag_password.editText?.text.toString().isEmpty()
         ) {
             et_ag_password.error = "Senhas incompativeis"
             et_ag_password.requestFocus()
             return
         }
 
-        auth.createUserWithEmailAndPassword(et_email.text.toString(), et_password.text.toString())
+        auth.createUserWithEmailAndPassword(et_email.editText?.text.toString(),
+            et_password.editText?.text.toString())
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
@@ -69,8 +71,8 @@ class RegisterActivity : AppCompatActivity() {
                                 val database = Firebase.database.reference
                                 val conta = Conta()
 
-                                conta.email = et_email.text.toString()
-                                conta.usuario = et_email.text.toString()
+                                conta.email = et_email.editText?.text.toString()
+                                conta.usuario = et_email.editText?.text.toString()
                                 conta.id = user.uid
 
                                 database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)

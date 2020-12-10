@@ -50,4 +50,14 @@
     <string name="txt_add_publi">Adicione uma foto/vídeo</string>
     <string name="txt_demonstrate">Insira uma legenda...</string>
     <string name="txt_space_to_publicate">Espaço para a imagem da publicação</string>
+    <string name="txt_name_pet">Nome</string>
+    <string name="txt_age_pet">Idade</string>
+    <string name="txt_heigt_pet">Peso</string>
+    <string name="txt_type_pet">Tipo</string>
+    <string name="txt_raca_pet">Raça</string>
+    <string name="txt_desc_pet">Descrição</string>
+    <string name="txt_sex_pet">Sexo</string>
+    <string name="txt_masc_pet">Macho</string>
+    <string name="txt_fem_pet">Fêmea</string>
+    <string name="txt_cadastrar">Cadastrar</string>
 </resources>

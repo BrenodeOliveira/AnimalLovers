@@ -63,7 +63,8 @@ class PetRegisterActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         btn_cadastrar_pet.setOnClickListener {
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(
+            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+                .child(auth.uid.toString()).addListenerForSingleValueEvent(
                 object :
                     ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -73,15 +74,15 @@ class PetRegisterActivity : AppCompatActivity() {
                         val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
                         val checkedBox = checkedRadioButton.text.toString()
 
-                        pet.resumo = resumo_pet_register.text.toString()
-                        pet.idade = idade_pet_register.text.toString()
-                        pet.nome = nome_pet_register.text.toString()
-                        pet.peso = peso_pet_register.text.toString()
-                        pet.raca = raca_pet_register.text.toString()
-                        pet.tipo = tipo_pet_register.text.toString()
+                        pet.resumo = resumo_pet_register.editText?.text.toString()
+                        pet.idade = idade_pet_register.editText?.text.toString()
+                        pet.nome = nome_pet_register.editText?.text.toString()
+                        pet.peso = peso_pet_register.editText?.text.toString()
+                        pet.raca = raca_pet_register.editText?.text.toString()
+                        pet.tipo = tipo_pet_register.editText?.text.toString()
                         pet.sexo = checkedBox
 
-                        if(null != iv_photo_to_profile.drawable) {
+                        if (null != iv_photo_to_profile.drawable) {
                             val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
                             val baos = ByteArrayOutputStream()
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -89,8 +90,7 @@ class PetRegisterActivity : AppCompatActivity() {
 
 
                             petService.uploadProfilePhotoPet(idPet, dataPicture, pet)
-                        }
-                        else {
+                        } else {
                             petService.registerNewPet(idPet, pet)
                         }
                         mostraToastySuccess("Novo pet registrado com sucesso")

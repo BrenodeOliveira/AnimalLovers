@@ -39,21 +39,21 @@ class LoginActivity : AppCompatActivity() {
 
         disableButtonLogin()
 
-        if (et_email_login.text.toString().isEmpty()) {
+        if (et_email_login.editText?.text.toString().isEmpty()) {
             buttonEnablingLogin()
             et_email_login.error = "Insira um e-mail"
             et_email_login.requestFocus()
             return
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(et_email_login.text.toString()).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(et_email_login.editText?.text.toString()).matches()) {
             buttonEnablingLogin()
             et_email_login.error = "Insira um e-mail válido para prosseguir"
             et_email_login.requestFocus()
             return
         }
 
-        if (et_password_login.text.toString().isEmpty()) {
+        if (et_password_login.editText?.text.toString().isEmpty()) {
             buttonEnablingLogin()
             et_password_login.error = "Insira uma senha"
             et_password_login.requestFocus()
@@ -61,8 +61,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         auth.signInWithEmailAndPassword(
-            et_email_login.text.toString(),
-            et_password_login.text.toString()
+            et_email_login.editText?.text.toString(),
+            et_password_login.editText?.text.toString()
         )
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -91,9 +91,9 @@ class LoginActivity : AppCompatActivity() {
             // If sign in fails, display a message to the user.
             mostraToast("Falha ao acessar sua conta")
             progress_login.visibility = GONE
-            et_email_login.text.clear()
+            et_email_login.editText?.text?.clear()
             et_email_login.requestFocus()
-            et_password_login.text.clear()
+            et_password_login.editText?.text?.clear()
         }
     }
 
