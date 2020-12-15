@@ -3,15 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_bottom"
-    app:startDestination="@id/feedFragment2">
-
-    <activity
-        android:id="@+id/firstFeedActivity"
-        android:name="br.com.breno.animallovers.ui.activity.FirstFeedActivity"
-        android:label="activity_first_feed"
-        tools:layout="@layout/activity_first_feed" />
+    app:startDestination="@id/foruButton">
     <fragment
-        android:id="@+id/feedFragment2"
+        android:id="@+id/chatButton"
+        android:name="br.com.breno.animallovers.ui.fragment.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/foruButton"
         android:name="br.com.breno.animallovers.ui.fragment.FeedFragment"
-        android:label="FeedFragment" />
+        android:label="Feed"
+        tools:layout="@layout/fragment_feed" />
+    <fragment
+        android:id="@+id/addButton"
+        android:name="br.com.breno.animallovers.ui.fragment.AdicionarFragment"
+        android:label="Adicionar"
+        tools:layout="@layout/fragment_publish" />
+    <fragment
+        android:id="@+id/notificacaoButton"
+        android:name="br.com.breno.animallovers.ui.fragment.NotificacaoFragment"
+        android:label="Notificacao"
+        tools:layout="@layout/fragment_notificacao" />
+    <fragment
+        android:id="@+id/pesquisarButton"
+        android:name="br.com.breno.animallovers.ui.fragment.PesquisarFragment"
+        android:label="Pesquisar"
+        tools:layout="@layout/fragment_pesquisar" />
 </navigation>

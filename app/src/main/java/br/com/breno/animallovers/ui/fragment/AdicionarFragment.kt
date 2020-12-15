@@ -1,4 +1,4 @@
-package br.com.breno.animallovers.ui.activity
+package br.com.breno.animallovers.ui.fragment
 
 import android.Manifest
 import android.app.Activity
@@ -6,27 +6,32 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.service.PetService
-import br.com.breno.animallovers.ui.activity.extensions.mostraToast
-import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.service.PostService
-import br.com.breno.animallovers.ui.activity.extensions.mostraToastyError
-import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
+import br.com.breno.animallovers.ui.fragment.extensions.mostraToast
+import br.com.breno.animallovers.ui.fragment.extensions.mostraToastyError
+import br.com.breno.animallovers.ui.fragment.extensions.mostraToastySuccess
+import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
+import br.com.breno.animallovers.viewModel.EstadoAppViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -35,9 +40,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.activity_publish.*
 import kotlinx.android.synthetic.main.fragment_publish.*
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import java.io.ByteArrayOutputStream
 
 private const val CAMERA_RQ = 102
@@ -56,11 +60,23 @@ private var pet = Pet()
 
 private var idPet: String = ""
 
-class PublishActivity : AppCompatActivity() {
+class AdicionarFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_publish)
+    private val controlador by lazy {
+        findNavController()
+    }
+    private val estadoAppViewModel: EstadoAppViewModel by sharedViewModel()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_publish, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         requestingPermissionToUser()
 
         getPetsName()
@@ -73,28 +89,27 @@ class PublishActivity : AppCompatActivity() {
 
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return super.onSupportNavigateUp()
-    }
-
     private fun getPetsName() {
+
         database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
 
-
-        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(
+            auth.uid.toString()
+        ).addListenerForSingleValueEvent(object :
+            ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                 accountInfo = dataSnapshot.getValue<Conta>()!!
-                val myPreferences = ProjectPreferences(baseContext)
+                val myPreferences = ProjectPreferences(requireContext())
 
                 idPet = myPreferences.getPetLogged().toString()
                 if (idPet != "") {
-                    pet = petService.retrievePetInfo(idPet, dataSnapshot)
+                    pet = petService.retrievePetInfo(
+                        idPet, dataSnapshot
+                    )
                     tv_name_user.text = pet.nome
-                }
-                else {
+                } else {
                     tv_name_user.text = ""
                 }
             }
@@ -112,38 +127,48 @@ class PublishActivity : AppCompatActivity() {
 
             post.legenda = et_comment.text.toString()
 
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
-                @RequiresApi(VERSION_CODES.O)
+            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+                .child(
+                   auth.uid.toString()
+                ).addListenerForSingleValueEvent(object :
+                ValueEventListener {
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                    accountInfo = dataSnapshot.getValue<Conta>()!!
+                    accountInfo =
+                        dataSnapshot.getValue<Conta>()!!
 
-                    val myPreferences = ProjectPreferences(baseContext)
+                    val myPreferences = ProjectPreferences(requireContext())
 
-                    idPet = myPreferences.getPetLogged().toString()
+                    idPet =
+                        myPreferences.getPetLogged().toString()
                     if (idPet != "") {
                         iv_photo_to_publish.isDrawingCacheEnabled = true
                         iv_photo_to_publish.buildDrawingCache()
 
-                        if(null == iv_photo_to_publish.drawable && post.legenda == "") {
+                        if (null == iv_photo_to_publish.drawable && post.legenda == "") {
                             mostraToastyError("Para realizar um post é necessário: \n- Digitar um texto;\nOu\n- Inserir uma foto.")
-                        }
-                        else {
-                            if(null != iv_photo_to_publish.drawable) {
+                        } else {
+                            if (null != iv_photo_to_publish.drawable) {
                                 val bitmap = (iv_photo_to_publish.drawable as BitmapDrawable).bitmap
                                 val baos = ByteArrayOutputStream()
                                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                                 val dataPicture = baos.toByteArray()
 
-                                postService.persistNewPetPost(idPet, dataPicture, post)
-                            }
-                            else {
+                                postService.persistNewPetPost(
+                                    idPet, dataPicture, post )
+                            } else {
                                 //Como não há foto/vídeo, a data/hora da pub será definida aqui, se houvesse seria a data/hora de upload
-                                post.dataHora = DateUtils.dataFormatWithMilliseconds()
+                                post.dataHora =
+                                    DateUtils.dataFormatWithMilliseconds()
                                 post.pathPub = ""
-                                postService.registerNewPost(idPet, post)
+                                postService.registerNewPost(
+                                    idPet,
+                                    post
+                                )
                             }
                             mostraToastySuccess("Novo post realizado")
+                            controlador.popBackStack()
                         }
                     }
                 }
@@ -157,13 +182,17 @@ class PublishActivity : AppCompatActivity() {
 
     private fun clickButtonGallery() {
         btn_galery.setOnClickListener {
-            if (VERSION.SDK_INT >= VERSION_CODES.M) {
-                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(requireContext(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_DENIED
                 ) {
                     //denied
                     val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    requestPermissions(permissions, STORAGE_RQ)
+                    requestPermissions(
+                        permissions,
+                        STORAGE_RQ
+                    )
                 } else {
                     //granted
                     pickImageFromGallery()
@@ -183,15 +212,21 @@ class PublishActivity : AppCompatActivity() {
     }
 
     private fun requestingPermissionToUser() {
-        checkForPermission(Manifest.permission.CAMERA, "camera", CAMERA_RQ)
+        checkForPermission(
+            Manifest.permission.CAMERA, "camera",
+            CAMERA_RQ
+        )
     }
 
     private fun clickButtonCamera() {
         btn_camera.setOnClickListener {
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
-            if (takePictureIntent.resolveActivity(this.packageManager) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_CODE)
+            if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+                startActivityForResult(
+                    takePictureIntent,
+                    REQUEST_CODE
+                )
             } else {
                 mostraToast("Impossivel abrir a camera")
             }
@@ -211,9 +246,9 @@ class PublishActivity : AppCompatActivity() {
     }
 
     private fun checkForPermission(permission: String, name: String, requestCode: Int) {
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             when {
-                ContextCompat.checkSelfPermission(applicationContext, permission) ==
+                checkSelfPermission(requireContext(), permission) ==
                         PackageManager.PERMISSION_GRANTED -> {
                 }
 
@@ -221,7 +256,7 @@ class PublishActivity : AppCompatActivity() {
                     showDialogPermissions(permission, name, requestCode)
 
                 else -> ActivityCompat
-                    .requestPermissions(this, arrayOf(permission), requestCode)
+                    .requestPermissions(requireActivity(), arrayOf(permission), requestCode)
             }
         }
     }
@@ -246,7 +281,7 @@ class PublishActivity : AppCompatActivity() {
     }
 
     private fun showDialogPermissions(permission: String, name: String, requestCode: Int) {
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(requireContext())
 
         builder.apply {
             setMessage("Permissão para acessar sua câmera é requerida para usar esse app")
@@ -254,7 +289,7 @@ class PublishActivity : AppCompatActivity() {
             setPositiveButton("Ok") { _, _ ->
                 ActivityCompat
                     .requestPermissions(
-                        this@PublishActivity,
+                        requireActivity(),
                         arrayOf(permission), requestCode
                     )
             }

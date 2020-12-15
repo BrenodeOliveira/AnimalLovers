@@ -18,7 +18,7 @@
             android:layout_width="183dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="30dp"
+            android:textSize="30sp"
             tools:text="Titulo" />
 
         <TextView
@@ -26,7 +26,7 @@
             android:layout_width="184dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="20dp"
+            android:textSize="20sp"
             tools:text="Descrição" />
 
         <ImageView

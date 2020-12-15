@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.ui.activity.FeedActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage

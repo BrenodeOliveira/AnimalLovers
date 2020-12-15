@@ -1,6 +1,5 @@
 package br.com.breno.animallovers.service
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -10,7 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
-import br.com.breno.animallovers.ui.activity.FeedActivity
+import br.com.breno.animallovers.ui.activity.MainActivity
 import br.com.breno.animallovers.ui.activity.ProfileActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.ProjectPreferences
@@ -55,7 +54,7 @@ class PetsProfileAdapter(
                         myPreferences.setPetLogged(pets.id)
 //                        context.startActivity(Intent(context, ProfileActivity::class.java))
 
-                        val i = Intent(context, FeedActivity::class.java)
+                        val i = Intent(context, MainActivity::class.java)
                         context.startActivity(i)
 //                        (context as Activity).finish()
 

@@ -32,27 +32,31 @@ class FeedService {
         auth = FirebaseAuth.getInstance()
         var numChildren = 0L
 
-
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(
             auth.uid.toString()).child(petId).addListenerForSingleValueEvent(object :
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 pet = snapshot.getValue<Pet>()!!
 
-                numChildren = snapshot.child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).childrenCount
+                numChildren = snapshot
+                    .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).childrenCount
 
                 for (x in 0..numChildren) {
-                    if (snapshot.child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).hasChild(x.toString())) {
-                        var post: Post = snapshot.child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).child(x.toString()).getValue<Post>()!!
+                    if (snapshot.child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                            .hasChild(x.toString())) {
+                        var post: Post = snapshot.child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                            .child(x.toString()).getValue<Post>()!!
 
                         listPosts.add(post)
                         var vi = View(context1)
 
-                        val recyclerView = vi.findViewById(R.id.recycler_feed) as RecyclerView
+                        val recyclerView
+                                = vi.findViewById(R.id.recycler_feed) as RecyclerView
                         recyclerView.layoutManager = LinearLayoutManager(context1)
                         recyclerView.adapter = FeedAdapter(listPosts, pet, context1)
 
-                        val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+                        val layoutManager = StaggeredGridLayoutManager(1
+                            , StaggeredGridLayoutManager.VERTICAL)
                         recyclerView.layoutManager = layoutManager
 
                     }

@@ -1,8 +1,6 @@
 package br.com.breno.animallovers.ui.activity
 
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View.GONE
@@ -79,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
         if (currentUser != null) {
             if (currentUser.isEmailVerified) {
                 progress_login.visibility = GONE
-                startActivity(Intent(this, FeedActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
                 buttonEnablingLogin()

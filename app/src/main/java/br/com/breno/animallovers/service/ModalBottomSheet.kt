@@ -12,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
-import br.com.breno.animallovers.ui.activity.FeedActivity
-import br.com.breno.animallovers.ui.activity.ProfileActivity
 import br.com.breno.animallovers.ui.activity.RegisterActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

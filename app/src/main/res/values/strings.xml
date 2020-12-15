@@ -60,4 +60,23 @@
     <string name="txt_masc_pet">Macho</string>
     <string name="txt_fem_pet">Fêmea</string>
     <string name="txt_cadastrar">Cadastrar</string>
+    <string name="content_feed">Imagem representando um animal</string>
+    <string name="content_like">Botão favoritar</string>
+    <string name="content_comment">Botão comentário</string>
+    <string name="content_share">Botão compartilhar</string>
+    <string name="txt_publish">Publicar</string>
+    <string name="content_profile_pet">Botão para acessar perfil do pet</string>
+    <string name="content_user_photo">Foto usuário</string>
+    <string name="txt_change_profile">Trocar Perfil</string>
+    <string name="txt_register">Cadastrar</string>
+    <string name="txt_animal_sex">Sexo:</string>
+    <string name="txt_animal_age">Idade:</string>
+    <string name="txt_animal_heigt">Peso:</string>
+    <string name="txt_animal_masc">Macho</string>
+    <string name="txt_animal_age_example">3 anos</string>
+    <string name="txt_animal_heigt_example">5 Kilos</string>
+    <string name="txt_animal_resume">Animal muito amigável e bem comportado.</string>
+    <string name="txt_personal_contact">Contato pessoal</string>
+    <string name="txt_notify">Notificações</string>
+    <string name="txt_chat">Chat</string>
 </resources>

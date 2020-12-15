@@ -2,49 +2,107 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:maxHeight="250dp">
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:maxHeight="250dp"
+    app:cardElevation="4dp">
 
-    <LinearLayout
-        android:layout_width="381dp"
-        android:layout_height="361dp"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv_pet_name_post_feed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="textStart"
+            android:layout_marginStart="16dp"
             android:textSize="30sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Nina" />
-
-        <TextView
-            android:id="@+id/tv_date_time_post_feed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="01/01/2020 23:59:59" />
 
         <TextView
             android:id="@+id/tv_pet_description_post_feed"
             android:layout_width="match_parent"
-            android:layout_height="41dp"
-            android:layout_marginTop="10dp"
-            android:textAlignment="textStart"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="sans-serif-thin"
             android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_action_fav"
+            tools:layout_editor_absoluteY="264dp"
             tools:text="NinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNina" />
 
         <ImageView
             android:id="@+id/iv_photo_post_feed"
             android:layout_width="match_parent"
             android:layout_height="215dp"
-            app:srcCompat="@drawable/animalovers_logo" />
+            android:contentDescription="@string/content_feed"
+            android:scaleType="fitXY"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_pet_name_post_feed"
+            app:srcCompat="@drawable/animalovers_logo"
+            tools:layout_editor_absoluteY="92dp" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/iv_action_fav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:contentDescription="@string/content_like"
+            android:focusable="true"
+            android:src="@drawable/ic_action_fav"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_photo_post_feed"
+            tools:layout_editor_absoluteY="313dp" />
+
+        <ImageView
+            android:id="@+id/iv_action_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:contentDescription="@string/content_comment"
+            android:focusable="true"
+            android:src="@drawable/ic_action_comment"
+            app:layout_constraintStart_toEndOf="@id/iv_action_fav"
+            app:layout_constraintTop_toTopOf="@id/iv_action_fav" />
+
+        <ImageView
+            android:id="@+id/iv_action_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:contentDescription="@string/content_share"
+            android:focusable="true"
+            android:src="@drawable/ic_action_share"
+            app:layout_constraintStart_toEndOf="@id/iv_action_comment"
+            app:layout_constraintTop_toTopOf="@id/iv_action_fav" />
+
+        <TextView
+            android:id="@+id/tv_date_time_post_feed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_pet_description_post_feed"
+            tools:text="01/01/2020 23:59:59" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
