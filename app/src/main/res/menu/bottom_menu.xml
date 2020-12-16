@@ -2,25 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/chatButton"
-        android:icon="@drawable/ic_baseline_question_answer_24"
+        android:icon="@drawable/ic_action_question_answer"
         android:title="@string/txt_chat" />
 
     <item
         android:id="@+id/foruButton"
-        android:icon="@drawable/ic_baseline_favorite_24"
+        android:icon="@drawable/ic_action_favorite"
         android:title="@string/txt_foryou" />
 
     <item
         android:id="@+id/addButton"
-        android:icon="@drawable/ic_baseline_add_circle_24"
+        android:icon="@drawable/ic_action_add_circle"
         android:title="@string/txt_add" />
 
     <item
         android:id="@+id/notificacaoButton"
-        android:icon="@drawable/ic_baseline_notifications_24"
+        android:icon="@drawable/ic_action_notifications"
         android:title="@string/txt_notify" />
     <item
         android:id="@+id/pesquisarButton"
-        android:icon="@drawable/ic_baseline_search_24"
+        android:icon="@drawable/ic_action_search"
         android:title="@string/txt_search" />
 </menu>

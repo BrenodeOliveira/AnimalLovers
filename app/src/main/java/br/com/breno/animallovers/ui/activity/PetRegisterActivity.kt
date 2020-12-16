@@ -20,8 +20,6 @@ import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
-import br.com.breno.animallovers.utils.DateUtils
-import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -30,7 +28,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_pet_register.*
-import kotlinx.android.synthetic.main.activity_publish.*
 import java.io.ByteArrayOutputStream
 
 

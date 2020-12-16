@@ -37,26 +37,13 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/iv_dehaze"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="@string/txt_dehaze_feed"
-                    android:src="@drawable/ic_baseline_dehaze_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
                     android:id="@+id/iv_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="true"
                     android:contentDescription="@string/content_profile_pet"
-                    android:src="@drawable/ic_baseline_person_24"
+                    android:src="@drawable/ic_action_person"
                     android:layout_marginEnd="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

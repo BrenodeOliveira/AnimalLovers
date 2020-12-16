@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -31,6 +30,7 @@ import br.com.breno.animallovers.ui.fragment.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
+import br.com.breno.animallovers.viewModel.ComponentesVisuais
 import br.com.breno.animallovers.viewModel.EstadoAppViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -40,6 +40,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_publish.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import java.io.ByteArrayOutputStream
@@ -65,7 +66,7 @@ class AdicionarFragment : Fragment() {
     private val controlador by lazy {
         findNavController()
     }
-    private val estadoAppViewModel: EstadoAppViewModel by sharedViewModel()
+//    private val estadoAppViewModel: EstadoAppViewModel by sharedViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,6 +84,8 @@ class AdicionarFragment : Fragment() {
         clickButtonCamera()
         clickButtonGallery()
         clickPublishPost()
+
+//        estadoAppViewModel.temComponentes = ComponentesVisuais(appBar = false)
 
 //        setSupportActionBar(toolbar_publi)
 //        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -115,7 +118,6 @@ class AdicionarFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
             }
         })
     }

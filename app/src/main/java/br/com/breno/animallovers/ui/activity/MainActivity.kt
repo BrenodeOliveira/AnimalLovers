@@ -22,6 +22,7 @@ import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.ProjectPreferences
 import br.com.breno.animallovers.viewModel.EstadoAppViewModel
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -34,11 +35,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import kotlin.system.exitProcess
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    lateinit var toggle: ActionBarDrawerToggle
-
-    private val controlador by lazy{
+    private val controlador by lazy {
         findNavController(R.id.main_activity_nav_host)
     }
     private val viewModel: EstadoAppViewModel by viewModel()
@@ -46,13 +45,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(feed_toolbar)
         inicializaNavDrawer()
 
-        clickNavDrawer()
-        clickOpenNavDrawer()
         clickUserPage()
 
 //        controlador.addOnDestinationChangedListener { controller, destination, arguments ->
+//
+//            title = destination.label
 //
 //            viewModel.componentes.observe(this, Observer {
 //                it?.let { temComponentes ->
@@ -74,44 +74,32 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    //Mantem
-    private fun clickNavDrawer() {
-        nav_view.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.alter_data -> mostraToast("Alterar dados")
-                R.id.combine_pets -> mostraToast("Combina pets")
-                R.id.clinics_pets -> mostraToast("Clinicas")
-                R.id.get_out -> {
-                    finish()
-                    exitProcess(0)
-                }
-            }
-            true
-        }
-    }
-
     private fun clickUserPage() {
         iv_user.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 
-    private fun clickOpenNavDrawer() {
-        iv_dehaze.setOnClickListener {
-            drawer_layout.openDrawer(GravityCompat.START)
-        }
-    }
-
     private fun inicializaNavDrawer() {
-        toggle = ActionBarDrawerToggle(this, drawer_layout, R.string.open, R.string.close)
+        val toggle = ActionBarDrawerToggle(this, drawer_layout, feed_toolbar, 0, 0)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+        nav_view.setNavigationItemSelectedListener(this)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.alter_data -> {
+                startActivity(Intent(this, UserDataActivity::class.java))
+            }
+            R.id.combine_pets -> mostraToast("Combina pets")
+            R.id.clinics_pets -> mostraToast("Clinicas")
+            R.id.get_out -> {
+                finish()
+                exitProcess(0)
+            }
+        }
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
     }
 }
