@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.alter_data -> {
                 startActivity(Intent(this, UserDataActivity::class.java))
             }
-            R.id.combine_pets -> mostraToast("Combina pets")
             R.id.clinics_pets -> mostraToast("Clinicas")
             R.id.get_out -> {
                 finish()

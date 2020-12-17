@@ -8,11 +8,8 @@
             android:title="@string/txt_alterar" />
     </group>
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="all">
 
-        <item
-            android:id="@+id/combine_pets"
-            android:title="@string/txt_combinar" />
         <item
             android:id="@+id/clinics_pets"
             android:title="@string/txt_clinicas" />
