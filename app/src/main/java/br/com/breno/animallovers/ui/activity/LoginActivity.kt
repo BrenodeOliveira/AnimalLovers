@@ -11,13 +11,14 @@ import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.viewModel.LoginActivityViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private val viewModel:LoginActivityViewModel by viewModel()
+    private val viewModel: LoginActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
