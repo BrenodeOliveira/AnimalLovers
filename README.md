@@ -18,8 +18,7 @@ Release Lab.Software (dez/2020)
 Release TCC (previsão jun/2021)
 - Chat
 - Integração API Vision AI
-- Match de Perfis
-- Busca de clínicas
+- Busca de clínicas com geolocalização
 
 Time Quarteto Fantástico
 > Breno Rocha
