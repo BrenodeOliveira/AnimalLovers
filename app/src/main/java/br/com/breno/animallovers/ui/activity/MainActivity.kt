@@ -1,45 +1,33 @@
 package br.com.breno.animallovers.ui.activity
 
+import android.app.AlertDialog
 import android.content.Intent
-import android.content.Intent.*
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
-import android.view.View.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
-import br.com.breno.animallovers.model.Pet
-import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.service.FeedAdapter
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
-import br.com.breno.animallovers.utils.AnimalLoversConstants
-import br.com.breno.animallovers.utils.ProjectPreferences
 import br.com.breno.animallovers.viewModel.EstadoAppViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var auth: FirebaseAuth
+
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
     private val controlador by lazy {
         findNavController(R.id.main_activity_nav_host)
@@ -53,6 +41,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
+
+        checkForPermissions(
+            android.Manifest.permission.ACCESS_FINE_LOCATION, "localização",
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
 
         inicializaNavDrawer()
         clickUserPage()
@@ -99,7 +92,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.alter_data -> {
                 startActivity(Intent(this, UserDataActivity::class.java))
             }
-            R.id.clinics_pets -> mostraToast("Clinicas")
+            R.id.clinics_pets -> {
+                startActivity(Intent(this, MapsActivity::class.java))
+            }
             R.id.get_out -> {
                 FirebaseAuth.getInstance().signOut()
 
@@ -112,5 +107,59 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+// Começa a parte para permissão do mapa
+    private fun checkForPermissions(permission: String, name: String, requestCode: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            when {
+                ContextCompat.checkSelfPermission(applicationContext, permission) ==
+                        PackageManager.PERMISSION_GRANTED -> {
+
+                }
+                shouldShowRequestPermissionRationale(permission) -> showDialog(
+                    permission,
+                    name,
+                    requestCode
+                )
+
+                else -> ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        fun innerCheck(name: String) {
+            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                mostraToast("Permissão negada para $name")
+            } else {
+                mostraToast("Permissão concedida para usar a $name")
+            }
+        }
+
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> innerCheck("localização")
+        }
+
+    }
+
+    private fun showDialog(permission: String, name: String, requestCode: Int) {
+        val builder = AlertDialog.Builder(this)
+
+        builder.apply {
+            setMessage("Permissão para acessar sua localização é requerida para usar esse app")
+            setTitle("Requisição de permissão")
+            setPositiveButton("OK") { _, _ ->
+                ActivityCompat
+                    .requestPermissions(this@MainActivity, arrayOf(permission), requestCode)
+            }
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 }

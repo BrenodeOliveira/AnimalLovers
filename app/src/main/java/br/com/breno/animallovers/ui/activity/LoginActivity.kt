@@ -129,6 +129,8 @@ class LoginActivity : AppCompatActivity() {
     private fun disableButtonLogin() {
         progress_login.visibility = VISIBLE
         btn_logon.isEnabled = false
+        btn_criar_conta_login.isEnabled = false
+        btn_esqueci.isEnabled = false
         btn_logon.setBackgroundResource(R.drawable.background_button_login_disable)
     }
 }
