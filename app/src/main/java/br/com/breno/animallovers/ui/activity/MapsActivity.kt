@@ -85,6 +85,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             if (location != null) {
                 lastLocation = location
                 val currentLatLng = LatLng(location.latitude, location.longitude)
+                //Verificar se nesse zoom fica bom para o usuario
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 19f))
             }
         }
