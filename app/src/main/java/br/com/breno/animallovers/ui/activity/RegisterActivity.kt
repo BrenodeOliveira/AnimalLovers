@@ -76,7 +76,7 @@ class RegisterActivity : AppCompatActivity() {
                                 conta.id = user.uid
 
                                 database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                                    .child(conta.id).setValue(conta)
+                                    .child(conta.id).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).setValue(conta)
 
                                 startActivity(Intent(this, LoginActivity::class.java))
                                 finish()

@@ -44,6 +44,10 @@ class FeedAdapter(private val posts: List<Post>, val petPost: Pet, private val c
                     it.dateTime.text = post.dataHora
                     it.description.text = post.legenda
                     it.photoPost.setImageBitmap(bmp)
+
+                    if(it.photoPost.drawable == null) {
+                        it.photoPost.visibility = View.INVISIBLE
+                    }
                 }
             }.addOnFailureListener {
 

@@ -8,9 +8,8 @@ import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.service.ModalBottomSheet
-import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.service.PetService
-import br.com.breno.animallovers.ui.activity.extensions.mostraToastyError
+import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -61,7 +60,7 @@ class ProfileActivity : AppCompatActivity() {
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                accountInfo = dataSnapshot.getValue<Conta>()!!
+                accountInfo = dataSnapshot.child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
 
                 val myPreferences = ProjectPreferences(baseContext)
 

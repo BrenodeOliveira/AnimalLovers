@@ -59,6 +59,7 @@
     <string name="txt_masc_pet">Macho</string>
     <string name="txt_fem_pet">Fêmea</string>
     <string name="txt_cadastrar">Cadastrar</string>
+    <string name="txt_salvar">Salvar</string>
     <string name="content_feed">Imagem representando um animal</string>
     <string name="content_like">Botão favoritar</string>
     <string name="content_comment">Botão comentário</string>

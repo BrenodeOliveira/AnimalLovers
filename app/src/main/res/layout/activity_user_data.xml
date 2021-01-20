@@ -43,6 +43,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar_user_register">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_nome_dono"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nome"
@@ -62,6 +63,7 @@
         app:layout_constraintTop_toBottomOf="@id/nome_user_register">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_cidade_dono"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cidade"
@@ -82,6 +84,7 @@
         app:layout_constraintTop_toTopOf="@id/city_user_register">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_pais_dono"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="País"
@@ -122,13 +125,12 @@
         app:layout_constraintTop_toTopOf="@id/btn_camera_cadastro_user" />
 
     <ImageView
-        android:id="@+id/iv_photo_to_profile"
+        android:id="@+id/iv_photo_to_profile_owner"
         android:layout_width="150dp"
         android:layout_height="130dp"
         android:layout_marginTop="32dp"
         android:contentDescription="@string/txt_space_to_publicate"
         android:scaleType="fitXY"
-        android:src="@drawable/animalovers_logo_simples"
         app:layout_constraintEnd_toEndOf="@id/btn_galery_cadastro_user"
         app:layout_constraintStart_toStartOf="@id/btn_camera_cadastro_user"
         app:layout_constraintTop_toBottomOf="@id/btn_galery_cadastro_user"
@@ -141,11 +143,11 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/background_button_red"
         android:padding="16dp"
-        android:text="@string/txt_cadastrar"
+        android:text="@string/txt_salvar"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline_end"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/iv_photo_to_profile" />
+        app:layout_constraintTop_toBottomOf="@id/iv_photo_to_profile_owner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
