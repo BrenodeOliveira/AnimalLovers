@@ -163,7 +163,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_margin="10dp">
 
                 <TextView
                     android:id="@+id/tv_contact"
@@ -180,9 +181,10 @@
                     app:layout_constraintVertical_bias="0" />
 
                 <ImageView
-                    android:id="@+id/iv_photo_contact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/iv_photo_owner_contact"
+                    android:layout_width="75dp"
+                    android:layout_height="80dp"
+                    android:scaleType="fitXY"
                     android:layout_marginTop="8dp"
                     android:contentDescription="@string/content_user_photo"
                     android:src="@mipmap/ic_launcher_round"
@@ -193,9 +195,10 @@
                     android:id="@+id/tv_name_contact_person"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:text="@string/txt_gui_taka"
-                    app:layout_constraintBottom_toBottomOf="@id/iv_photo_contact"
-                    app:layout_constraintStart_toEndOf="@id/iv_photo_contact"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_photo_owner_contact"
+                    app:layout_constraintStart_toEndOf="@id/iv_photo_owner_contact"
                     app:layout_constraintTop_toBottomOf="@id/tv_contact" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

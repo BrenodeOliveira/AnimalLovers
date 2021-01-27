@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
@@ -40,7 +41,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.fragment_publish.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import java.io.ByteArrayOutputStream
@@ -60,6 +63,7 @@ private var post = Post()
 private var pet = Pet()
 
 private var idPet: String = ""
+private lateinit var storage: FirebaseStorage
 
 class AdicionarFragment : Fragment() {
 
@@ -108,9 +112,11 @@ class AdicionarFragment : Fragment() {
 
                 idPet = myPreferences.getPetLogged().toString()
                 if (idPet != "") {
-                    pet = petService.retrievePetInfo(
-                        idPet, dataSnapshot
-                    )
+                    pet = petService.retrievePetInfo(idPet, dataSnapshot)
+
+                    if(pet.pathFotoPerfil != "") {
+                        retrieveProfilePhoto(idPet)
+                    }
                     tv_name_user.text = pet.nome
                 } else {
                     tv_name_user.text = ""
@@ -120,6 +126,22 @@ class AdicionarFragment : Fragment() {
             override fun onCancelled(error: DatabaseError) {
             }
         })
+    }
+
+    private fun retrieveProfilePhoto(idPet: String) {
+        storage = FirebaseStorage.getInstance()
+        var storageRef = storage.reference
+            .child(AnimalLoversConstants.STORAGE_ROOT.nome)
+            .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
+            .child(auth.uid.toString())
+            .child(idPet + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+
+        storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener {bytesPrm ->
+            val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
+            iv_pet_photo_profile_publish.setImageBitmap(bmp)
+        }.addOnFailureListener {
+
+        }
     }
 
     private fun clickPublishPost() {

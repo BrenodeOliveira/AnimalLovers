@@ -72,6 +72,9 @@ class ProfileActivity : AppCompatActivity() {
                         retrieveProfilePhoto(idPet)
                     }
                 }
+                if(accountInfo.pathFotoPerfil != "") {
+                    retrieveOwnerProfilePhoto()
+                }
 
                 tv_animal_name.text = petInfo.nome
                 tv_animal_sex_write.text = petInfo.sexo
@@ -99,6 +102,22 @@ class ProfileActivity : AppCompatActivity() {
         storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener {bytesPrm ->
             val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
             iv_animal_photo.setImageBitmap(bmp)
+        }.addOnFailureListener {
+
+        }
+    }
+
+    private fun retrieveOwnerProfilePhoto() {
+        storage = FirebaseStorage.getInstance()
+        var storageRef = storage.reference
+            .child(AnimalLoversConstants.STORAGE_ROOT.nome)
+            .child(AnimalLoversConstants.STORAGE_ROOT_OWNER_PHOTOS.nome)
+            .child(auth.uid.toString())
+            .child(auth.uid.toString() + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+
+        storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener {bytesPrm ->
+            val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
+            iv_photo_owner_contact.setImageBitmap(bmp)
         }.addOnFailureListener {
 
         }

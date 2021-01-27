@@ -6,9 +6,11 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/iv_user_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/iv_pet_photo_profile_publish"
+        android:layout_width="75dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="5dp"
+        android:scaleType="fitXY"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/content_app_logo"
@@ -25,21 +27,21 @@
         android:fontFamily="sans-serif"
         android:text="@string/txt_publish"
         android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_user_photo"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_pet_photo_profile_publish"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/tv_name_user"
-        app:layout_constraintTop_toTopOf="@+id/iv_user_photo" />
+        app:layout_constraintTop_toTopOf="@+id/iv_pet_photo_profile_publish" />
 
     <TextView
         android:id="@+id/tv_name_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="@string/txt_gui_taka"
-        app:layout_constraintBottom_toBottomOf="@id/iv_user_photo"
-        app:layout_constraintStart_toEndOf="@id/iv_user_photo"
-        app:layout_constraintTop_toTopOf="@id/iv_user_photo" />
+        android:text="@string/string_empty"
+        app:layout_constraintBottom_toBottomOf="@id/iv_pet_photo_profile_publish"
+        app:layout_constraintStart_toEndOf="@id/iv_pet_photo_profile_publish"
+        app:layout_constraintTop_toTopOf="@id/iv_pet_photo_profile_publish" />
 
     <EditText
         android:id="@+id/et_comment"
@@ -55,7 +57,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_user_photo" />
+        app:layout_constraintTop_toBottomOf="@id/iv_pet_photo_profile_publish" />
 
     <ImageView
         android:id="@+id/iv_photo_to_publish"
