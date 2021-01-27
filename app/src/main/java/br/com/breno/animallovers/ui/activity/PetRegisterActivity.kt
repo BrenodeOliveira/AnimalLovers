@@ -62,42 +62,43 @@ class PetRegisterActivity : AppCompatActivity() {
         btn_cadastrar_pet.setOnClickListener {
             database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
                 .child(auth.uid.toString()).addListenerForSingleValueEvent(
-                object :
-                    ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    object :
+                        ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                        idPet = petService.idFirstPet(dataSnapshot) + 1 //Incrementa os ids dos pets
-                        val checkedRadio: Int = radio_sexo_animal.checkedRadioButtonId
-                        val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
-                        val checkedBox = checkedRadioButton.text.toString()
+                            idPet =
+                                petService.idFirstPet(dataSnapshot) + 1 //Incrementa os ids dos pets
+                            val checkedRadio: Int = radio_sexo_animal.checkedRadioButtonId
+                            val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
+                            val checkedBox = checkedRadioButton.text.toString()
 
-                        pet.resumo = resumo_pet_register.editText?.text.toString()
-                        pet.idade = idade_pet_register.editText?.text.toString()
-                        pet.nome = nome_pet_register.editText?.text.toString()
-                        pet.peso = peso_pet_register.editText?.text.toString()
-                        pet.raca = raca_pet_register.editText?.text.toString()
-                        pet.tipo = tipo_pet_register.editText?.text.toString()
-                        pet.sexo = checkedBox
+                            pet.resumo = resumo_pet_register.editText?.text.toString()
+                            pet.idade = idade_pet_register.editText?.text.toString()
+                            pet.nome = nome_pet_register.editText?.text.toString()
+                            pet.peso = peso_pet_register.editText?.text.toString()
+                            pet.raca = raca_pet_register.editText?.text.toString()
+                            pet.tipo = tipo_pet_register.editText?.text.toString()
+                            pet.sexo = checkedBox
 
-                        if (null != iv_photo_to_profile.drawable) {
-                            val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
-                            val baos = ByteArrayOutputStream()
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                            val dataPicture = baos.toByteArray()
+                            if (null != iv_photo_to_profile.drawable) {
+                                val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
+                                val baos = ByteArrayOutputStream()
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                                val dataPicture = baos.toByteArray()
 
 
-                            petService.uploadProfilePhotoPet(idPet, dataPicture, pet)
-                        } else {
-                            petService.registerNewPet(idPet, pet)
+                                petService.uploadProfilePhotoPet(idPet, dataPicture, pet)
+                            } else {
+                                petService.registerNewPet(idPet, pet)
+                            }
+                            mostraToastySuccess("Novo pet registrado com sucesso")
                         }
-                        mostraToastySuccess("Novo pet registrado com sucesso")
-                    }
 
-                    override fun onCancelled(error: DatabaseError) {
+                        override fun onCancelled(error: DatabaseError) {
 
-                    }
-                })
-
+                        }
+                    })
+            finish()
         }
     }
 

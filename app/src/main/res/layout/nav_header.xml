@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="@id/img_profile" />
 
     <TextView
-        android:id="@+id/txt_local_account"
+        android:id="@+id/txt_country_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
@@ -44,5 +44,6 @@
         android:textColor="@color/colorBlack"
         app:layout_constraintStart_toEndOf="@id/img_profile"
         app:layout_constraintTop_toBottomOf="@id/txt_name_account" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

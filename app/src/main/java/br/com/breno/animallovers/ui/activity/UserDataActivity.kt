@@ -116,6 +116,7 @@ class UserDataActivity : AppCompatActivity() {
                     override fun onCancelled(error: DatabaseError) {
                     }
                 })
+            finish()
         }
     }
 

@@ -122,6 +122,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun buttonEnablingLogin() {
         btn_logon.isEnabled = true
+        btn_criar_conta_login.isEnabled = true
+        btn_esqueci.isEnabled = true
         btn_logon.setBackgroundResource(R.drawable.background_button_red)
         progress_login.visibility = GONE
     }

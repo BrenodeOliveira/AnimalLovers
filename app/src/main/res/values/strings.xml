@@ -80,4 +80,6 @@
     <string name="txt_notify">Notificações</string>
     <string name="txt_chat">Chat</string>
     <string name="title_activity_maps">Map</string>
+    <string name="txt_cidade_padrao">SP</string>
+    <string name="slash">-</string>
 </resources>
