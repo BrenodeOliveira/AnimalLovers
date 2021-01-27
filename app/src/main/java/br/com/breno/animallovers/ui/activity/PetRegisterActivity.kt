@@ -66,8 +66,7 @@ class PetRegisterActivity : AppCompatActivity() {
                         ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                            idPet =
-                                petService.idFirstPet(dataSnapshot) + 1 //Incrementa os ids dos pets
+                            idPet = petService.idLastPet(dataSnapshot) + 1 //Incrementa os ids dos pets
                             val checkedRadio: Int = radio_sexo_animal.checkedRadioButtonId
                             val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
                             val checkedBox = checkedRadioButton.text.toString()
@@ -98,7 +97,7 @@ class PetRegisterActivity : AppCompatActivity() {
 
                         }
                     })
-            finish()
+
         }
     }
 

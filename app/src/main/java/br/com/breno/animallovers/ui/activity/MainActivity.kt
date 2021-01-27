@@ -36,6 +36,9 @@ import com.google.firebase.storage.FirebaseStorage
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_profile.*
+
+import kotlinx.android.synthetic.main.activity_profile.iv_photo_owner_contact
+
 import kotlinx.android.synthetic.main.nav_header.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -43,6 +46,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var auth: FirebaseAuth
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
+
+    private lateinit var storage: FirebaseStorage
+    private lateinit var database: DatabaseReference
+    private var accountInfo = Conta()
+
+
     private val controlador by lazy {
         findNavController(R.id.main_activity_nav_host)
     }
@@ -98,7 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
-
+        retrieveUserInfo()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -177,4 +186,44 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dialog.show()
     }
 
+
+    private fun retrieveUserInfo() {
+        database = Firebase.database.reference
+        auth = FirebaseAuth.getInstance()
+
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                accountInfo = dataSnapshot.child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
+
+                if(accountInfo.pathFotoPerfil != "") {
+                    retrieveOwnerProfilePhoto()
+                }
+                val paisEstado = accountInfo.cidade + " - " + accountInfo.pais
+                txt_name_owner_account_main.text = accountInfo.usuario
+                txt_local_account_main.text = paisEstado
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toasty.error(baseContext, "Erro ao carregar informações do perfil", Toasty.LENGTH_LONG).show()
+            }
+        })
+
+    }
+
+    private fun retrieveOwnerProfilePhoto() {
+        storage = FirebaseStorage.getInstance()
+        var storageRef = storage.reference
+            .child(AnimalLoversConstants.STORAGE_ROOT.nome)
+            .child(AnimalLoversConstants.STORAGE_ROOT_OWNER_PHOTOS.nome)
+            .child(auth.uid.toString())
+            .child(auth.uid.toString() + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+
+        storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener {bytesPrm ->
+            val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
+            img_profile_nav_main.setImageBitmap(bmp)
+        }.addOnFailureListener {
+
+        }
+    }
 }

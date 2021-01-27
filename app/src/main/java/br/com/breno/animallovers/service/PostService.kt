@@ -62,6 +62,8 @@ class PostService : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var idNewPost : Long = snapshot.childrenCount + 1
 
+                    post.idPost = idNewPost.toString()
+                    post.postAtivo = true
                     database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
                         .child(auth.uid.toString())
                         .child(id)
@@ -74,9 +76,5 @@ class PostService : AppCompatActivity() {
                 }
 
             })
-
-
-
-
     }
 }

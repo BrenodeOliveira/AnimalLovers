@@ -10,9 +10,10 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/img_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/img_profile_nav_main"
+        android:layout_width="75dp"
+        android:layout_height="80dp"
+        android:scaleType="fitXY"
         android:layout_marginTop="24dp"
         android:contentDescription="@string/content_user_photo"
         android:src="@mipmap/ic_launcher"
@@ -21,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txt_name_account"
+        android:id="@+id/txt_name_owner_account_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -30,20 +31,20 @@
         android:text="@string/txt_nome_padrao"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorBlack"
-        app:layout_constraintBottom_toBottomOf="@id/img_profile"
-        app:layout_constraintStart_toEndOf="@id/img_profile"
-        app:layout_constraintTop_toTopOf="@id/img_profile" />
+        app:layout_constraintBottom_toBottomOf="@id/img_profile_nav_main"
+        app:layout_constraintStart_toEndOf="@id/img_profile_nav_main"
+        app:layout_constraintTop_toTopOf="@id/img_profile_nav_main" />
 
     <TextView
-        android:id="@+id/txt_country_account"
+        android:id="@+id/txt_local_account_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
         android:text="@string/txt_local_padrao"
         android:textColor="@color/colorBlack"
-        app:layout_constraintStart_toEndOf="@id/img_profile"
-        app:layout_constraintTop_toBottomOf="@id/txt_name_account" />
+        app:layout_constraintStart_toEndOf="@id/img_profile_nav_main"
+        app:layout_constraintTop_toBottomOf="@id/txt_name_owner_account_main" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
