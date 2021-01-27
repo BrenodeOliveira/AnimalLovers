@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                        bottomNavigationView.visibility = GONE
 //                    }
 //                }
-//            })
+//            }).........
 //        }
 
         bottomNavigationView.setupWithNavController(controlador)

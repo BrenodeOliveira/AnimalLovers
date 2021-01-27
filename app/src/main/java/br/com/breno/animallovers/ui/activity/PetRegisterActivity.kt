@@ -99,6 +99,7 @@ class PetRegisterActivity : AppCompatActivity() {
                     })
 
         }
+        finish()
     }
 
     private fun requestingPermissionToUser() {
