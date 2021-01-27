@@ -62,18 +62,20 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
                 for (x in 0..numChildren) {
                     if (snapshot.hasChild("pet$x")) {
 
-                        pet = snapshot.child("pet$x").getValue<Pet>()!!
+                        if(snapshot.child("pet$x").hasChild(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome)) {
+                            pet = snapshot.child("pet$x").child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
 
-                        pet.id = "pet$x"
-                        arraylist.add(pet)
+                            pet.id = "pet$x"
+                            arraylist.add(pet)
 
-                        val recyclerView = view.findViewById(R.id.recycler_escolha_pet) as RecyclerView
-                        val context: Context = recyclerView.context
-                        recyclerView.layoutManager = LinearLayoutManager(context)
-                        recyclerView.adapter = PetsProfileAdapter(arraylist, context,this@ModalBottomSheet)
+                            val recyclerView = view.findViewById(R.id.recycler_escolha_pet) as RecyclerView
+                            val context: Context = recyclerView.context
+                            recyclerView.layoutManager = LinearLayoutManager(context)
+                            recyclerView.adapter = PetsProfileAdapter(arraylist, context,this@ModalBottomSheet)
 
-                        val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL)
-                        recyclerView.layoutManager = layoutManager
+                            val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL)
+                            recyclerView.layoutManager = layoutManager
+                        }
 
                     }
                 }

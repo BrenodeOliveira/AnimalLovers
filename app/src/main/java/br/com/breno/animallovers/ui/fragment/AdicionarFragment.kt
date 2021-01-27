@@ -126,8 +126,12 @@ class AdicionarFragment : Fragment() {
         btn_publish.setOnClickListener {
             database = Firebase.database.reference
             auth = FirebaseAuth.getInstance()
+            val myPreferences = ProjectPreferences(requireContext())
 
             post.legenda = et_comment.text.toString()
+            post.nomePet = tv_name_user.text as String
+            post.idOwner = auth.uid.toString()
+            post.idPet = myPreferences.getPetLogged().toString()
 
             database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
                 .child(

@@ -17,7 +17,7 @@ class PetService : AppCompatActivity() {
     private lateinit var storage: FirebaseStorage
     private var pet = Pet()
 
-    fun idFirstPet(dataSnapshot: DataSnapshot): Int {
+    fun idLastPet(dataSnapshot: DataSnapshot): Int {
         var iteratorPet = 0
         val numChildren = dataSnapshot.childrenCount
         for (x in 0..numChildren) {
@@ -29,7 +29,7 @@ class PetService : AppCompatActivity() {
     }
 
     fun retrievePetInfo (id: String, dataSnapshot: DataSnapshot): Pet {
-        pet = dataSnapshot.child(id).getValue<Pet>()!!
+        pet = dataSnapshot.child(id).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
         return pet
     }
 
@@ -40,6 +40,7 @@ class PetService : AppCompatActivity() {
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
             .child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id)
+            .child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome)
             .setValue(pet)
     }
 

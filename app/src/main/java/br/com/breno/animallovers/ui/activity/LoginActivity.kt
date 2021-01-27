@@ -8,6 +8,7 @@ import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
+import br.com.breno.animallovers.utils.ProjectPreferences
 import br.com.breno.animallovers.viewModel.LoginActivityViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -77,6 +78,8 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUI(currentUser: FirebaseUser?) {
         if (currentUser != null) {
             if (currentUser.isEmailVerified) {
+                val myPreferences = ProjectPreferences(baseContext)
+                myPreferences.setPetLogged("")
                 progress_login.visibility = GONE
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
