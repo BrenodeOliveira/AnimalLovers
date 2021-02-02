@@ -10,4 +10,5 @@ class Pet {
     var raca: String = ""
     var pathFotoPerfil: String = ""
     var id: String = ""
+    var idOwner: String = ""
 }

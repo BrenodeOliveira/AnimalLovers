@@ -27,6 +27,7 @@
     <string name="txt_sair">Sair</string>
     <string name="txt_clinicas">Clínicas Veterinarias</string>
 
+    <string name="txt_pet_search">Busque por nomes</string>
     <string name="txt_alterar">Alterar dados</string>
     <string name="txt_configs">Configurações</string>
     <string name="txt_nome_padrao">Guilherme</string>
