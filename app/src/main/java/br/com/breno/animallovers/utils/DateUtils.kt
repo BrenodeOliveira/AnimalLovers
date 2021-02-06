@@ -8,11 +8,15 @@ class DateUtils {
     companion object {
         fun dataFormatWithMilliseconds() : String {
 
-            return SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSSSSS").format(Date()).replace(".", ":")
+            return SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSSSSS").format(Date())
         }
 
         fun convertStringToDate(dateTimePost: String): Date? {
-            return SimpleDateFormat("dd-MM-yyyy HH:mm:ss:SSSSSS").parse(dateTimePost)
+            return SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSSSSS").parse(dateTimePost)
+        }
+
+        fun dateFrmt() :String {
+            return "dd-MM-yyyy HH:mm:ss.SSSSSS"
         }
     }
 }
