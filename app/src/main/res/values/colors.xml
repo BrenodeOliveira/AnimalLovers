@@ -11,4 +11,5 @@
     <color name="colorGrayBtn">#D9D9DA</color>
     <color name="colorWhite">#FFF</color>
     <color name="colorPressed">#FC3768</color>
+    <color name="icon_tint">#333333</color>
 </resources>

@@ -7,6 +7,7 @@ enum class AnimalLoversConstants (val nome: String) {
     DATABASE_NODE_PET("pet"),
     DATABASE_NODE_PET_ATTR("atributos"),
     DATABASE_NODE_PET_FRIENDS_REQUEST("solicitacoes"),
+    DATABASE_NODE_POST_LIKE("likesPost"),
 
     CONST_ROOT_POSTS("posts"),
 
