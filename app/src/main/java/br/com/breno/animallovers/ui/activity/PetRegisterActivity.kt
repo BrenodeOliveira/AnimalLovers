@@ -78,7 +78,8 @@ class PetRegisterActivity : AppCompatActivity() {
                             pet.raca = raca_pet_register.editText?.text.toString()
                             pet.tipo = tipo_pet_register.editText?.text.toString()
                             pet.sexo = checkedBox
-
+                            pet.id = AnimalLoversConstants.DATABASE_NODE_PET.nome + idPet.toString()
+                            pet.idOwner = auth.uid.toString()
                             if (null != iv_photo_to_profile.drawable) {
                                 val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
                                 val baos = ByteArrayOutputStream()

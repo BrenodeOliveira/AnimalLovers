@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
@@ -21,9 +23,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.feed_item.view.*
+
 
 class FeedAdapter(
     private val posts: List<Post>,
@@ -41,14 +45,16 @@ class FeedAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val post = posts[(posts.size -1) - position]
+        val post = posts[(posts.size - 1) - position]
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
 
         val myPreferences = ProjectPreferences(context)
 
         if (post.pathPub != "") {
-            val storageRef = storage.reference.child(AnimalLoversConstants.STORAGE_ROOT.nome).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).child(post.idOwner).child(post.idPet).child(post.dataHora)
+            val storageRef = storage.reference.child(AnimalLoversConstants.STORAGE_ROOT.nome).child(
+                AnimalLoversConstants.CONST_ROOT_POSTS.nome
+            ).child(post.idOwner).child(post.idPet).child(post.dataHora)
             storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
                 val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
                 holder.let {
@@ -76,33 +82,42 @@ class FeedAdapter(
             }
         }
         database = Firebase.database.reference
-        var numLikes = Integer.parseInt(holder.numLikesPost.text as String)
 
-        var hasPetLikedPost = false
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-            .child(petPost.idOwner)
-            .child(petPost.id)
+            .child(post.idOwner)
+            .child(post.idPet)
             .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
-            .child(post.idPost).addListenerForSingleValueEvent(object :ValueEventListener{
+            .child(post.idPost).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)) {
-                        for(i in 0 until snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).childrenCount) {
-                            numLikes += snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).children.toMutableList()[0].childrenCount.toInt()
+                    var numLikes = 0
+
+                    var hasPetLikedPost = false
+
+                    if (snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)) {
+                        val ownersPets: HashMap<String, HashMap<String, String>> = snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).value as HashMap<String, HashMap<String, String>>
+                        for (i in 0 until ownersPets.size) {
+                            val idOwnerPet = ownersPets.keys.toMutableList()[i]
+                            for (j in 0 until (ownersPets.toMutableMap()[idOwnerPet]?.values?.size!!)) {
+                                numLikes ++
+                                holder.numLikesPost.text = numLikes.toString()
+                            }
                         }
 
                         if(snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).hasChild(auth.uid.toString())) {
+                            println(snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).child(auth.uid.toString()))
+
                             if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).child(auth.uid.toString()).hasChild(myPreferences.getPetLogged().toString())) {
                                 holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 hasPetLikedPost = true
                             }
                         }
                     }
-                    holder.numLikesPost.text = numLikes.toString()
+
 
                     holder.likePost.setOnClickListener {
-                        if(holder.numLikesPost.text != "") {
+                        if (holder.numLikesPost.text != "") {
 
-                            if(hasPetLikedPost) {
+                            if (hasPetLikedPost) {
                                 database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
                                     .child(post.idOwner)
                                     .child(post.idPet)
@@ -113,7 +128,7 @@ class FeedAdapter(
                                     .child(myPreferences.getPetLogged().toString())
                                     .setValue(null)
                                 holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.icon_tint), android.graphics.PorterDuff.Mode.MULTIPLY)
-                                numLikes --
+                                numLikes--
                                 hasPetLikedPost = false
                             } else {
                                 database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
@@ -126,13 +141,19 @@ class FeedAdapter(
                                     .child(myPreferences.getPetLogged().toString())
                                     .setValue(DateUtils.dataFormatWithMilliseconds())
                                 holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
-                                numLikes ++
+                                numLikes++
                                 hasPetLikedPost = true
                             }
                             holder.numLikesPost.text = numLikes.toString()
                         } else {
                             holder.numLikesPost.text = "0"
                         }
+                    }
+
+                    holder.numLikesPost.setOnClickListener {
+                        val profilesLikesPostAdapter = ProfilesLikesPostService(post)
+                        val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                        profilesLikesPostAdapter.show(manager, "likesPost")
                     }
                 }
 
