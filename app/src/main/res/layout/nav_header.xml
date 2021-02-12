@@ -9,11 +9,10 @@
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_profile_nav_main"
         android:layout_width="75dp"
         android:layout_height="80dp"
-        android:scaleType="fitXY"
         android:layout_marginTop="24dp"
         android:contentDescription="@string/content_user_photo"
         android:src="@mipmap/ic_launcher"
