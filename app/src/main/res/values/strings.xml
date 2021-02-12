@@ -84,8 +84,17 @@
     <string name="title_activity_maps">Map</string>
     <string name="txt_cidade_padrao">SP</string>
     <string name="slash">-</string>
+
     <string name="title_dialog_cancel_friendship">Desfazer Amizade</string>
     <string name="cancel_friendship_request">Desfazer pedido de amizade</string>
     <string name="cancel">Cancelar</string>
     <string name="mutual_friends">Amigos em comum: </string>
+
+    <string name="user_chat_photo">Foto do usuário do chat</string>
+    <string name="txt_chat_default">Salve</string>
+    <string name="txt_latest_message">Ultima mensagem enviada por esse usuario</string>
+    <string name="txt_example_message">This is my message</string>
+    <string name="txt_send_message">Enviar</string>
+    <string name="txt_enter_message">Entre com a mensagem</string>
+
 </resources>
