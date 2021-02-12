@@ -195,7 +195,7 @@
                     android:id="@+id/tv_name_contact_person"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
                     android:text="@string/txt_gui_taka"
                     app:layout_constraintBottom_toBottomOf="@id/iv_photo_owner_contact"
                     app:layout_constraintStart_toEndOf="@id/iv_photo_owner_contact"
