@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/tv_pet_name_undo_friendship"
+        android:layout_width="183dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Nome"
+        android:textAlignment="center"
+        android:textSize="28sp" />
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/tv_friends_since_undo_friendship"
+        android:layout_width="183dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Amigos desde"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_mutual_friends_undo_friendship"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:text="Amigos em comum: 8999"
+        android:textAlignment="center"
+        android:textSize="17sp" />
+
+
+    <ImageView
+        android:layout_gravity="center"
+        android:id="@+id/iv_icon_foto_perfil_undo_friendship"
+        android:layout_width="184dp"
+        android:layout_height="100dp"
+        android:contentDescription="ABC"
+        app:srcCompat="@drawable/animalovers_logo_simples" />
+
+
+    <LinearLayout
+        android:layout_width="223dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="clip_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_undo_friendship"
+            android:layout_width="129dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="19dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/background_button_red"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/title_dialog_cancel_friendship"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btn_donot_undo_friendship"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="19dp"
+            android:background="@drawable/background_button_red"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+</LinearLayout>
+
+
+

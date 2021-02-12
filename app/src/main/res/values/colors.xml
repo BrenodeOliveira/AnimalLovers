@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#509482</color>
+    <color name="colorPrimary">#FC3768</color>
     <color name="colorPrimaryDark">#AEB8B8</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccent">#FC0D1B</color>
     <color name="color_button_login">#F72349</color>
     <color name="color_login_button_transparent">#FC0D1B</color>
     <color name="colorLogin">#A1A1A1</color>
@@ -11,4 +11,5 @@
     <color name="colorGrayBtn">#D9D9DA</color>
     <color name="colorWhite">#FFF</color>
     <color name="colorPressed">#FC3768</color>
+    <color name="icon_tint">#333333</color>
 </resources>

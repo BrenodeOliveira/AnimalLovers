@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:maxHeight="250dp"
+    app:cardElevation="10dp">
+
+    <LinearLayout
+        android:layout_width="182dp"
+        android:layout_height="185dp"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_pet_name_search_pets"
+            android:layout_width="183dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:textSize="26sp"
+            tools:text="Nome" />
+
+        <ImageView
+            android:id="@+id/iv_icon_foto_perfil_search_pets"
+            android:layout_width="184dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="5dp"
+            app:srcCompat="@drawable/animalovers_logo" />
+
+        <ImageView
+            android:id="@+id/iv_add_friend_search_pets"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            app:srcCompat="@drawable/ic_coracao" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

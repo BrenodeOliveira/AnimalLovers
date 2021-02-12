@@ -27,6 +27,7 @@
     <string name="txt_sair">Sair</string>
     <string name="txt_clinicas">Clínicas Veterinarias</string>
 
+    <string name="txt_pet_search">Busque por nomes</string>
     <string name="txt_alterar">Alterar dados</string>
     <string name="txt_configs">Configurações</string>
     <string name="txt_nome_padrao">Guilherme</string>
@@ -83,4 +84,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="txt_cidade_padrao">SP</string>
     <string name="slash">-</string>
+    <string name="title_dialog_cancel_friendship">Desfazer Amizade</string>
+    <string name="cancel_friendship_request">Desfazer pedido de amizade</string>
+    <string name="cancel">Cancelar</string>
+    <string name="mutual_friends">Amigos em comum: </string>
 </resources>

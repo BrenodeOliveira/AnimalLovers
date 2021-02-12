@@ -1,16 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="15dp"
+    >
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_name_pet_search"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="2dp"
+            android:paddingBottom="3dp"
+            android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="321dp"
+                android:layout_height="42dp"
+                android:hint="@string/txt_pet_search"
+                android:inputType="textPersonName"
+                android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_search_pets"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:backgroundTint="#03FFFFFF"
+            android:layout_marginTop="20dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:foreground="?android:attr/actionModeWebSearchDrawable"
+            android:gravity="bottom|center_horizontal" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_search_pets"
+        android:scrollbars="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Pesquisar" />
+        android:layout_marginStart="5dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
