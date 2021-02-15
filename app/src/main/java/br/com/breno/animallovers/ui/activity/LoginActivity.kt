@@ -39,6 +39,8 @@ class LoginActivity : AppCompatActivity() {
 
         disableButtonLogin()
 
+        //O TIL muda de cor conforme a cor do colorAccent
+
         if (et_email_login.editText?.text.toString().isEmpty()) {
             buttonEnablingLogin()
             et_email_login.error = "Insira um e-mail"
