@@ -37,7 +37,7 @@ class FeedAdapter(
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
-
+    private lateinit var db: DatabaseReference
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.feed_item, parent, false)
@@ -82,7 +82,7 @@ class FeedAdapter(
             }
         }
         database = Firebase.database.reference
-
+        db = Firebase.database.reference
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(post.idOwner)
             .child(post.idPet)
@@ -155,6 +155,29 @@ class FeedAdapter(
                         val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }
+
+                    holder.commentPost.setOnClickListener {
+                        val profilesLikesPostAdapter = CommentsPostService(post)
+                        val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                        profilesLikesPostAdapter.show(manager, "likesPost")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    println(error.toString())
+                }
+
+            })
+
+        db.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(post.idOwner)
+            .child(post.idPet)
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+            .child(post.idPost)
+            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dSnapshot: DataSnapshot) {
+                    holder.numCommentsPost.text = dSnapshot.childrenCount.toString()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -182,6 +205,8 @@ class FeedAdapter(
         var description: TextView = itemView.tv_pet_description_post_feed
         var photoPost: ImageView = itemView.iv_photo_post_feed
         var likePost: ImageView = itemView.iv_action_fav
+        var commentPost: ImageView = itemView.iv_action_comment
+        var sharePost: ImageView = itemView.iv_action_share
         var numLikesPost: TextView = itemView.tv_num_likes_post
         var numCommentsPost: TextView = itemView.tv_num_comments_post
         var numSharesPost: TextView = itemView.tv_num_shares_post
@@ -192,6 +217,9 @@ class FeedAdapter(
             val description = itemView.tv_pet_description_post_feed
             val photoPost = itemView.iv_photo_post_feed
             var likePost = itemView.iv_action_fav
+            var commentPost= itemView.iv_action_comment
+            var sharePost = itemView.iv_action_share
+
             var numLikesPost = itemView.tv_num_likes_post
             var numCommentsPost = itemView.tv_num_comments_post
             var numSharesPost = itemView.tv_num_shares_post

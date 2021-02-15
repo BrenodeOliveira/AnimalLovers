@@ -1,7 +1,5 @@
 package br.com.breno.animallovers.service
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +11,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.ui.activity.RegisterActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -25,7 +21,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.modal_escolha_perfil_pet.*
 
 class ProfilesLikesPostService(private val post : Post) : BottomSheetDialogFragment() {
 
@@ -52,7 +47,6 @@ class ProfilesLikesPostService(private val post : Post) : BottomSheetDialogFragm
         database = Firebase.database.reference
         db = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
-        var numChildren = 0L
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(post.idOwner)
@@ -63,7 +57,6 @@ class ProfilesLikesPostService(private val post : Post) : BottomSheetDialogFragm
             .addListenerForSingleValueEvent(object :
                 ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.toString()
 
                     val ownersPets: HashMap<String, HashMap<String, String>> =
                         snapshot.value as HashMap<String, HashMap<String, String>>
@@ -88,7 +81,7 @@ class ProfilesLikesPostService(private val post : Post) : BottomSheetDialogFragm
                                 recyclerView?.layoutParams!!.height = 550
 
                                 recyclerView!!.layoutManager = LinearLayoutManager(activity)
-                                recyclerView.adapter = ProfilesLikesPostAdapter(arraylist, context!!, this@ProfilesLikesPostService)
+                                recyclerView.adapter = ProfilesLikesPostAdapter(arraylist, context!!)
 
                                 val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                                 recyclerView.layoutManager = layoutManager

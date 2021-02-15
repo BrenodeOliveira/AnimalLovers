@@ -364,16 +364,9 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         val mAlertDialog = mBuilder.show()
         mAlertDialog.tv_pet_name_undo_friendship.text = pet.nome
 
-//        val diff: Duration = Duration.between(DateUtils.convertStringToDate(solicitacao.dataEnvioSolicitacao)?.let { dateToDateTime(it) }, LocalDateTime.now())
-//        System.out.println(diff)
-//        val formattedDiff: String = java.lang.String.format(Locale.ENGLISH, "%d days", diff.toDays())
-//        println(formattedDiff)
-
-
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.dateFrmt())
         val start: LocalDateTime = LocalDateTime.parse(solicitacao.dataEnvioSolicitacao, formatter)
         val end: LocalDateTime = LocalDateTime.parse(LocalDateTime.now().format(formatter), formatter)
-
 
         if(ChronoUnit.DAYS.between(start, end) > 31) {
             if (ChronoUnit.MONTHS.between(start, end) > 12) {
@@ -398,9 +391,6 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         } else {
             mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + ChronoUnit.DAYS.between(start, end) + " dias"
         }
-        System.out.println(ChronoUnit.DAYS.between(start, end))
-
-
 
         dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

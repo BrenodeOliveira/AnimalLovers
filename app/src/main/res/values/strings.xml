@@ -97,4 +97,6 @@
     <string name="txt_send_message">Enviar</string>
     <string name="txt_enter_message">Entre com a mensagem</string>
 
+    <string name="comments">Comentários</string>
+    <string name="type_your_comment">Digite seu comentário</string>
 </resources>

@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.profiles_like_post_item.view.*
 
-class ProfilesLikesPostAdapter(private val pet: List<Pet>, private val context: Context, private val likesModalBottomSheet: ProfilesLikesPostService): RecyclerView.Adapter<ProfilesLikesPostAdapter.ViewHolder>() {
+class ProfilesLikesPostAdapter(private val pet: List<Pet>, private val context: Context): RecyclerView.Adapter<ProfilesLikesPostAdapter.ViewHolder>() {
 
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
