@@ -1,6 +1,8 @@
 package br.com.breno.animallovers.model
 
-class Pet {
+import java.io.Serializable
+
+class Pet  : Serializable {
     var idade: String = ""
     var nome: String = ""
     var peso: String = ""

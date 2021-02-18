@@ -41,6 +41,16 @@ class ProfileActivity : AppCompatActivity() {
         retrieveUserInfo()
         clickNewPet()
         clickChangeProfile()
+        clickChangePetsAttrs()
+    }
+
+    private fun clickChangePetsAttrs() {
+        iv_call_change_pet_attr.setOnClickListener {
+            val intent = Intent(baseContext, AlterarDadosPetActivity::class.java)
+            intent.putExtra("PET_INFO", petInfo)
+            startActivity(intent)
+            finishMe()
+        }
     }
 
     private fun clickChangeProfile() {

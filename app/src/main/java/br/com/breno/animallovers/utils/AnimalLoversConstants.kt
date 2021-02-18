@@ -18,4 +18,7 @@ enum class AnimalLoversConstants (val nome: String) {
     STORAGE_ROOT_PROFILE_PHOTOS("profilePicture"),
     STORAGE_ROOT_OWNER_PHOTOS("ownerPicture"),
     STORAGE_PICTURE_EXTENSION(".jpeg"),
+
+    MALE("Macho"),
+    FEMALE("Fêmea")
 }
