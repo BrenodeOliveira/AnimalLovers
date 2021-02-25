@@ -19,7 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.AlterarDadosPetActivity"></activity>
+        <activity android:name=".ui.activity.ProfilePetActivity"></activity>
+        <activity android:name=".service.PetFriendsService"></activity>
+        <activity android:name=".ui.activity.AlterarDadosPetActivity" />
         <activity
             android:name=".ui.activity.ChatLogActivity"
             android:theme="@style/AppTheme.RoundButton">

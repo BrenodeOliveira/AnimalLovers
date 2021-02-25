@@ -1,21 +1,26 @@
 package br.com.breno.animallovers.service
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.constants.StatusSolicitacaoAmizade
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.model.SolicitacaoAmizade
+import br.com.breno.animallovers.ui.activity.ProfilePetActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
@@ -37,8 +42,6 @@ import kotlinx.android.synthetic.main.undo_friendship.*
 import kotlinx.android.synthetic.main.undo_friendship.view.*
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 
@@ -109,6 +112,12 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                                         StatusSolicitacaoAmizade.SENT.status -> it.icSendFriendShipRequest.setImageResource(R.drawable.ic_coracao_espera)
                                     }
                                 }
+                                else {
+                                    it.icSendFriendShipRequest.setImageResource(R.drawable.ic_coracao)
+                                }
+                            }
+                            else {
+                                it.icSendFriendShipRequest.setImageResource(R.drawable.ic_coracao)
                             }
                         }
                     }
@@ -162,6 +171,14 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                         }
                     })
             }
+
+            it.layoutItem.setOnClickListener {
+                val intent = Intent(context, ProfilePetActivity::class.java)
+                intent.putExtra("PET_INFO_PROFILE", pet)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+                startActivity(context, intent, Bundle())
+            }
         }
     }
 
@@ -169,11 +186,11 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         val name: TextView = itemView.tv_pet_name_search_pets
         var photoProfile: ImageView = itemView.iv_icon_foto_perfil_search_pets
         var icSendFriendShipRequest : ImageView = itemView.iv_add_friend_search_pets
+        var layoutItem : LinearLayout = itemView.linLayoutOpenPetProfile
 
         fun bindView(post: Post, pet: Pet) {
             val name = itemView.tv_pet_name_search_pets
-            val photoProfile = itemView.iv_icon_foto_perfil_search_pets
-            var icSendFriendShipRequest = itemView.iv_add_friend_search_pets
+
 
             name.text = pet.nome
         }
@@ -364,33 +381,10 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         val mAlertDialog = mBuilder.show()
         mAlertDialog.tv_pet_name_undo_friendship.text = pet.nome
 
-        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.dateFrmt())
-        val start: LocalDateTime = LocalDateTime.parse(solicitacao.dataEnvioSolicitacao, formatter)
-        val end: LocalDateTime = LocalDateTime.parse(LocalDateTime.now().format(formatter), formatter)
 
-        if(ChronoUnit.DAYS.between(start, end) > 31) {
-            if (ChronoUnit.MONTHS.between(start, end) > 12) {
-                if(ChronoUnit.YEARS.between(start, end) > 1) {
-                    mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + ChronoUnit.YEARS.between(start, end) + " anos"
-                } else {
-                    mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + ChronoUnit.YEARS.between(start, end) + " ano"
-                }
-            } else if(ChronoUnit.MONTHS.between(start, end) <= 1){
-                mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + ChronoUnit.MONTHS.between(start, end) + " mês"
-            } else {
-                mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + ChronoUnit.MONTHS.between(start, end) + " meses"
-            }
-        } else if (ChronoUnit.DAYS.between(start, end) < 1) {
-            if(ChronoUnit.HOURS.between(start, end) > 1) {
-                mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + ChronoUnit.HOURS.between(start, end) + " horas"
-            } else if (ChronoUnit.HOURS.between(start, end).toInt() == 1){
-                mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + ChronoUnit.HOURS.between(start, end) + " hora"
-            } else {
-                mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + ChronoUnit.MINUTES.between(start, end) + " minutos"
-            }
-        } else {
-            mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + ChronoUnit.DAYS.between(start, end) + " dias"
-        }
+        val petService = PetService()
+
+        mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + petService.friendlyTextFriendshipStatusSince(solicitacao)
 
         dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -410,11 +404,12 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                             val idOwnerAmgSearchPet = amgsSearchPet.keys.toList()[j]
                             val idOwnerAmgPet = amgsPet.keys.toList()[i]
 
-                            if (idOwnerAmgSearchPet.equals(idOwnerAmgPet)) {
+                            if (idOwnerAmgSearchPet == idOwnerAmgPet) {
 
-                                for (k in 0 until (amgsPet.get(idOwnerAmgPet)?.size ?: 0)) {
-                                    for (l in 0 until (amgsSearchPet.get(idOwnerAmgSearchPet)?.size ?: 0)) {
-                                        if (amgsPet.get(idOwnerAmgPet)?.keys?.toList()?.get(k)?.equals(amgsSearchPet.get(idOwnerAmgSearchPet)?.keys?.toList()?.get(l)!!)!!) {
+                                for (k in 0 until (amgsPet[idOwnerAmgPet]?.size ?: 0)) {
+                                    for (l in 0 until (amgsSearchPet[idOwnerAmgSearchPet]?.size ?: 0)) {
+                                        if (amgsPet[idOwnerAmgPet]?.keys?.toList()?.get(k)?.equals(
+                                                amgsSearchPet[idOwnerAmgSearchPet]?.keys?.toList()?.get(l)!!)!!) {
                                             numMutualFriends++
                                         }
                                     }
@@ -424,14 +419,14 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                     }
 
                     if (numMutualFriends == 0) {
-                        mAlertDialog.tv_mutual_friends_undo_friendship.setText("Nenhum amigo em comum")
+                        mAlertDialog.tv_mutual_friends_undo_friendship.text = "Nenhum amigo em comum"
                     } else if (numMutualFriends == 1) {
-                        mAlertDialog.tv_mutual_friends_undo_friendship.setText(numMutualFriends.toString() + " amigo em comum")
+                        mAlertDialog.tv_mutual_friends_undo_friendship.text = numMutualFriends.toString() + " amigo em comum"
                     } else {
-                        mAlertDialog.tv_mutual_friends_undo_friendship.setText(numMutualFriends.toString() + " amigos em comum")
+                        mAlertDialog.tv_mutual_friends_undo_friendship.text = numMutualFriends.toString() + " amigos em comum"
                     }
                 } else {
-                    mAlertDialog.tv_mutual_friends_undo_friendship.setText("Nenhum amigo em comum11")
+                    mAlertDialog.tv_mutual_friends_undo_friendship.text = "Nenhum amigo em comum"
                 }
             }
 

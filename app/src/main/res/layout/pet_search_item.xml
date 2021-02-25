@@ -9,6 +9,8 @@
     app:cardElevation="10dp">
 
     <LinearLayout
+
+        android:id="@+id/linLayoutOpenPetProfile"
         android:layout_width="182dp"
         android:layout_height="185dp"
         android:layout_margin="10dp"

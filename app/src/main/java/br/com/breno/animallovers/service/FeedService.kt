@@ -53,7 +53,7 @@ class FeedService {
                         val recyclerView
                                 = vi.findViewById(R.id.recycler_feed) as RecyclerView
                         recyclerView.layoutManager = LinearLayoutManager(context1)
-                        recyclerView.adapter = FeedAdapter(listPosts, pet, context1)
+                        recyclerView.adapter = FeedAdapter(listPosts, context1)
 
                         val layoutManager = StaggeredGridLayoutManager(1
                             , StaggeredGridLayoutManager.VERTICAL)

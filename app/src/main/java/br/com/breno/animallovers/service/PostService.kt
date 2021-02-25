@@ -1,8 +1,13 @@
 package br.com.breno.animallovers.service
 
 import android.os.Build
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -12,6 +17,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 
@@ -76,5 +82,27 @@ class PostService : AppCompatActivity() {
                 }
 
             })
+    }
+
+    fun getAllPostsPet(pet: Pet, snapshot: DataSnapshot) : List<Post> {
+        val listPosts = ArrayList<Post>()
+        var numChildren = 0L
+
+        numChildren = snapshot.child(pet.id)
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).childrenCount
+
+        for (x in 0..numChildren) {
+            if (snapshot.child(pet.id)
+                    .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                    .hasChild(x.toString())) {
+                val post: Post = snapshot.child(pet.id).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                    .child(x.toString()).getValue<Post>()!!
+
+                listPosts.add(post)
+
+            }
+        }
+
+        return listPosts
     }
 }

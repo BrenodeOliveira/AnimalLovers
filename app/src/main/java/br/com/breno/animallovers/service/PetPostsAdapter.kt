@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.ui.activity.ProfilePetActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
@@ -28,11 +27,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.feed_item.view.*
 
-
-class FeedAdapter(
-    private val posts: List<Post>,
-    private val context: Context
-) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
+class PetPostsAdapter (private val posts: List<Post>, val petPost: Pet, private val context: Context)  : RecyclerView.Adapter<PetPostsAdapter.ViewHolder>(){
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
@@ -75,9 +70,9 @@ class FeedAdapter(
                 it.name.text = post.nomePet
                 it.dateTime.text = post.dataHora
                 it.description.text = post.legenda
-                val layoutParams: ViewGroup.LayoutParams = it.photoPost.layoutParams
+                val layoutParams: ViewGroup.LayoutParams = it.photoPost.getLayoutParams()
                 layoutParams.height = 50
-                it.photoPost.layoutParams = layoutParams
+                it.photoPost.setLayoutParams(layoutParams)
             }
         }
         database = Firebase.database.reference
@@ -94,39 +89,20 @@ class FeedAdapter(
 
                     if (snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)) {
                         val ownersPets: HashMap<String, HashMap<String, String>> = snapshot.child(
-                            AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome
-                        ).value as HashMap<String, HashMap<String, String>>
+                            AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).value as HashMap<String, HashMap<String, String>>
                         for (i in 0 until ownersPets.size) {
                             val idOwnerPet = ownersPets.keys.toMutableList()[i]
                             for (j in 0 until (ownersPets.toMutableMap()[idOwnerPet]?.values?.size!!)) {
-                                numLikes++
+                                numLikes ++
                                 holder.numLikesPost.text = numLikes.toString()
                             }
                         }
 
-                        if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)
-                                .hasChild(
-                                    auth.uid.toString()
-                                )
-                        ) {
-                            println(
-                                snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)
-                                    .child(
-                                        auth.uid.toString()
-                                    )
-                            )
+                        if(snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).hasChild(auth.uid.toString())) {
+                            println(snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).child(auth.uid.toString()))
 
-                            if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)
-                                    .child(
-                                        auth.uid.toString()
-                                    ).hasChild(myPreferences.getPetLogged().toString())
-                            ) {
-                                holder.likePost.setColorFilter(
-                                    ContextCompat.getColor(
-                                        context,
-                                        R.color.colorAccent
-                                    ), android.graphics.PorterDuff.Mode.MULTIPLY
-                                )
+                            if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).child(auth.uid.toString()).hasChild(myPreferences.getPetLogged().toString())) {
+                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 hasPetLikedPost = true
                             }
                         }
@@ -146,12 +122,7 @@ class FeedAdapter(
                                     .child(auth.uid.toString())
                                     .child(myPreferences.getPetLogged().toString())
                                     .setValue(null)
-                                holder.likePost.setColorFilter(
-                                    ContextCompat.getColor(
-                                        context,
-                                        R.color.icon_tint
-                                    ), android.graphics.PorterDuff.Mode.MULTIPLY
-                                )
+                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.icon_tint), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 numLikes--
                                 hasPetLikedPost = false
                             } else {
@@ -164,12 +135,7 @@ class FeedAdapter(
                                     .child(auth.uid.toString())
                                     .child(myPreferences.getPetLogged().toString())
                                     .setValue(DateUtils.dataFormatWithMilliseconds())
-                                holder.likePost.setColorFilter(
-                                    ContextCompat.getColor(
-                                        context,
-                                        R.color.colorAccent
-                                    ), android.graphics.PorterDuff.Mode.MULTIPLY
-                                )
+                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 numLikes++
                                 hasPetLikedPost = true
                             }
@@ -180,20 +146,14 @@ class FeedAdapter(
                     }
 
                     holder.numLikesPost.setOnClickListener {
-                        var manager : FragmentManager
                         val profilesLikesPostAdapter = ProfilesLikesPostService(post)
-                        manager = if (context is ProfilePetActivity) {
-                            context.supportFragmentManager
-                        } else {
-                            (context as AppCompatActivity).supportFragmentManager
-                        }
+                        val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }
 
                     holder.commentPost.setOnClickListener {
                         val profilesLikesPostAdapter = CommentsPostService(post)
-                        val manager: FragmentManager =
-                            (context as AppCompatActivity).supportFragmentManager
+                        val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }
                 }
@@ -241,17 +201,26 @@ class FeedAdapter(
         var photoPost: ImageView = itemView.iv_photo_post_feed
         var likePost: ImageView = itemView.iv_action_fav
         var commentPost: ImageView = itemView.iv_action_comment
+        var sharePost: ImageView = itemView.iv_action_share
         var numLikesPost: TextView = itemView.tv_num_likes_post
         var numCommentsPost: TextView = itemView.tv_num_comments_post
+        var numSharesPost: TextView = itemView.tv_num_shares_post
 
         fun bindView(post: Post, pet: Pet) {
             val name = itemView.tv_pet_name_post_feed
             val dateTime = itemView.tv_date_time_post_feed
             val description = itemView.tv_pet_description_post_feed
+            val photoPost = itemView.iv_photo_post_feed
+            var likePost = itemView.iv_action_fav
+            var commentPost= itemView.iv_action_comment
+            var sharePost = itemView.iv_action_share
+
+            var numLikesPost = itemView.tv_num_likes_post
+            var numCommentsPost = itemView.tv_num_comments_post
+            var numSharesPost = itemView.tv_num_shares_post
             name.text = pet.nome
             dateTime.text = post.dataHora
             description.text = post.legenda
         }
     }
 }
-

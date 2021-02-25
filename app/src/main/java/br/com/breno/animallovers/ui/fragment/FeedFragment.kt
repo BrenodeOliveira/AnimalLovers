@@ -129,7 +129,7 @@ class FeedFragment : Fragment() {
 
                             listPosts.sortBy { convertStringToDate(it.dataHora) }
                             recycler_feed.layoutManager = LinearLayoutManager(requireContext())
-                            recycler_feed.adapter = FeedAdapter(listPosts, pet, requireContext())
+                            recycler_feed.adapter = FeedAdapter(listPosts, requireContext())
 
                             val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                             recycler_feed.layoutManager = layoutManager
@@ -142,7 +142,7 @@ class FeedFragment : Fragment() {
                                     listPosts.add(post)
 
                                     recycler_feed.layoutManager = LinearLayoutManager(requireContext())
-                                    recycler_feed.adapter = FeedAdapter(listPosts, pet, requireContext())
+                                    recycler_feed.adapter = FeedAdapter(listPosts, requireContext())
 
                                     val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                                     recycler_feed.layoutManager = layoutManager
