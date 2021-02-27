@@ -1,13 +1,20 @@
 package br.com.breno.animallovers.service
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat.setBackground
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -15,6 +22,7 @@ import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Comentario
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
+import br.com.breno.animallovers.model.ReportComment
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
@@ -27,9 +35,12 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.comments_post_item.view.*
-import kotlinx.android.synthetic.main.fragment_publish.view.*
+import kotlinx.android.synthetic.main.edit_comment.*
+import kotlinx.android.synthetic.main.edit_comment.tv_comment_text_edit_comment
 import kotlinx.android.synthetic.main.modal_likes_pets_post.view.*
+import kotlinx.android.synthetic.main.report_comment.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -45,6 +56,7 @@ class CommentsPostAdapter(
     private lateinit var db: DatabaseReference
     private lateinit var dBase: DatabaseReference
     private lateinit var dtBase: DatabaseReference
+    private lateinit var dt: DatabaseReference
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -65,6 +77,7 @@ class CommentsPostAdapter(
         db = Firebase.database.reference
         dBase = Firebase.database.reference
         dtBase = Firebase.database.reference
+        dt = Firebase.database.reference
         var pet: Pet
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(comentario.idOwner)
@@ -298,14 +311,27 @@ class CommentsPostAdapter(
                                                         }
                                                     }
 
-                                                    val view = LayoutInflater.from(context).inflate(R.layout.modal_likes_pets_post, it.parent as ViewGroup)
+                                                    val view = LayoutInflater.from(context).inflate(
+                                                        R.layout.modal_likes_pets_post,
+                                                        it.parent as ViewGroup
+                                                    )
 
-                                                    val recyclerView = view.findViewById(R.id.recycler_pets_likes_post) as? RecyclerView
+                                                    val recyclerView =
+                                                        view.findViewById(R.id.recycler_pets_likes_post) as? RecyclerView
 
-                                                    recyclerView!!.layoutManager = LinearLayoutManager(context)
-                                                    recyclerView.adapter = ProfilesLikesPostAdapter(petsArray, context)
+                                                    recyclerView!!.layoutManager =
+                                                        LinearLayoutManager(
+                                                            context
+                                                        )
+                                                    recyclerView.adapter = ProfilesLikesPostAdapter(
+                                                        petsArray,
+                                                        context
+                                                    )
 
-                                                    val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+                                                    val layoutManager = StaggeredGridLayoutManager(
+                                                        1,
+                                                        StaggeredGridLayoutManager.VERTICAL
+                                                    )
                                                     recyclerView.layoutManager = layoutManager
                                                 }
 
@@ -321,6 +347,292 @@ class CommentsPostAdapter(
                                     }
 
                                 })
+                        }
+
+                    }
+
+                    holder.optionsOpenIcon.setOnClickListener {
+
+                        if (comentario.idOwner == auth.uid && comentario.idPet == myPreferences.getPetLogged()) {
+                            val popupMenu = PopupMenu(context, holder.itemView)
+                            popupMenu.setOnMenuItemClickListener {
+                                when (it.itemId) {
+                                    R.id.item_copy_comment -> {
+                                        val clipboard: ClipboardManager = context.getSystemService(
+                                            Context.CLIPBOARD_SERVICE
+                                        ) as ClipboardManager
+                                        val clip: ClipData = ClipData.newPlainText(
+                                            "label",
+                                            comentario.textoComentario
+                                        )
+                                        clipboard.setPrimaryClip(clip)
+                                        Toasty.info(
+                                            context,
+                                            "Comentário copiado para a área de transferência"
+                                        ).show()
+                                        return@setOnMenuItemClickListener true
+                                    }
+
+                                    R.id.item_edit_comment -> {
+                                        val mDialogView = LayoutInflater.from(context).inflate(R.layout.edit_comment, null)
+                                        val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
+                                        val mAlertDialog = mBuilder.show()
+
+                                        mAlertDialog.tv_comment_text_edit_comment.text = comentario.textoComentario
+                                        mAlertDialog.et_input_comment_edit_comment.setText(comentario.textoComentario)
+
+                                        mAlertDialog.bt_cancel_edit_comment.setOnClickListener {
+                                            mAlertDialog.dismiss()
+                                        }
+
+                                        mAlertDialog.bt_update_edit_comment.setOnClickListener {
+                                            if (mAlertDialog.tv_comment_text_edit_comment.text != mAlertDialog.et_input_comment_edit_comment.text) {
+                                                comentario.textoComentario = mAlertDialog.et_input_comment_edit_comment.text.toString()
+
+                                                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+                                                    .child(post.idOwner)
+                                                    .child(post.idPet)
+                                                    .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                                                    .child(post.idPost)
+                                                    .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+                                                    .child(comentario.idComentario)
+                                                    .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
+                                                    .child(comentario.idOwner)
+                                                    .child(comentario.idPet)
+                                                    .setValue(comentario)
+                                                mAlertDialog.dismiss()
+                                            }
+                                        }
+                                        return@setOnMenuItemClickListener true
+                                    }
+
+                                    R.id.item_delete_comment -> {
+
+                                        AlertDialog.Builder(context)
+                                            .setTitle(R.string.delete_comment_title)
+                                            .setMessage(R.string.delete_comment_message)
+                                            .setPositiveButton(R.string.yes) { dialog, which ->
+
+                                                comentario.comentarioAtivo = false
+
+                                                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+                                                    .child(post.idOwner)
+                                                    .child(post.idPet)
+                                                    .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                                                    .child(post.idPost)
+                                                    .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+                                                    .child(comentario.idComentario)
+                                                    .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
+                                                    .child(comentario.idOwner)
+                                                    .child(comentario.idPet)
+                                                    .setValue(comentario)
+                                            }
+                                            .setNegativeButton(R.string.no, null)
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show()
+
+                                        return@setOnMenuItemClickListener true
+                                    }
+
+                                }
+                                return@setOnMenuItemClickListener false
+                            }
+
+                            popupMenu.inflate(R.menu.menu_options_comment_owner_comment)
+                            popupMenu.show()
+                        } else {
+                            val popupMenu = PopupMenu(context, holder.itemView)
+                            popupMenu.setOnMenuItemClickListener {
+                                when (it.itemId) {
+                                    R.id.item_copy_comment -> {
+                                        val clipboard: ClipboardManager = context.getSystemService(
+                                            Context.CLIPBOARD_SERVICE
+                                        ) as ClipboardManager
+                                        val clip: ClipData = ClipData.newPlainText(
+                                            "label",
+                                            comentario.textoComentario
+                                        )
+                                        clipboard.setPrimaryClip(clip)
+                                        Toasty.info(
+                                            context,
+                                            "Comentário copiado para a área de transferência"
+                                        ).show()
+                                        return@setOnMenuItemClickListener true
+
+                                    }
+
+                                    R.id.item_report_comment -> {
+                                        var listOfReasonsReportted = ArrayList<String>()
+
+                                        val mDialogView = LayoutInflater.from(context).inflate(R.layout.report_comment, null)
+                                        val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
+                                        val mAlertDialog = mBuilder.show()
+
+                                        mAlertDialog.tv_is_offensive_report_comment2.setOnClickListener {
+                                            if(mAlertDialog.tv_is_offensive_report_comment2.tag == R.drawable.selected_option_background) {
+                                                mAlertDialog.tv_is_offensive_report_comment2.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
+                                                mAlertDialog.tv_is_offensive_report_comment2.tag = R.drawable.likes_post_count
+
+                                                if(listOfReasonsReportted.contains(mAlertDialog.tv_is_offensive_report_comment2.text.toString())) {
+                                                    listOfReasonsReportted.remove(mAlertDialog.tv_is_offensive_report_comment2.text.toString())
+                                                }
+                                            }
+                                            else {
+                                                mAlertDialog.tv_is_offensive_report_comment2.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
+                                                mAlertDialog.tv_is_offensive_report_comment2.tag = R.drawable.selected_option_background
+                                                listOfReasonsReportted.add(mAlertDialog.tv_is_offensive_report_comment2.text.toString())
+                                            }
+                                        }
+                                        mAlertDialog.tv_sexual_content_comment3.setOnClickListener {
+                                            if(mAlertDialog.tv_sexual_content_comment3.tag == R.drawable.selected_option_background) {
+                                                mAlertDialog.tv_sexual_content_comment3.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
+                                                mAlertDialog.tv_sexual_content_comment3.tag = R.drawable.likes_post_count
+
+                                                if(listOfReasonsReportted.contains(mAlertDialog.tv_sexual_content_comment3.text.toString())) {
+                                                    listOfReasonsReportted.remove(mAlertDialog.tv_sexual_content_comment3.text.toString())
+                                                }
+                                            }
+                                            else {
+                                                mAlertDialog.tv_sexual_content_comment3.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
+                                                mAlertDialog.tv_sexual_content_comment3.tag = R.drawable.selected_option_background
+                                                listOfReasonsReportted.add(mAlertDialog.tv_sexual_content_comment3.text.toString())
+                                            }
+                                        }
+                                        mAlertDialog.tv_explicit_violence_comment.setOnClickListener {
+                                            if(mAlertDialog.tv_explicit_violence_comment.tag == R.drawable.selected_option_background) {
+                                                mAlertDialog.tv_explicit_violence_comment.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
+                                                mAlertDialog.tv_explicit_violence_comment.tag = R.drawable.likes_post_count
+
+                                                if(listOfReasonsReportted.contains(mAlertDialog.tv_explicit_violence_comment.text.toString())) {
+                                                    listOfReasonsReportted.remove(mAlertDialog.tv_explicit_violence_comment.text.toString())
+                                                }
+                                            }
+                                            else {
+                                                mAlertDialog.tv_explicit_violence_comment.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
+                                                mAlertDialog.tv_explicit_violence_comment.tag = R.drawable.selected_option_background
+                                                listOfReasonsReportted.add(mAlertDialog.tv_explicit_violence_comment.text.toString())
+                                            }
+                                        }
+                                        mAlertDialog.tv_is_fake_news_report_comment.setOnClickListener {
+                                            if(mAlertDialog.tv_is_fake_news_report_comment.tag == R.drawable.selected_option_background) {
+                                                mAlertDialog.tv_is_fake_news_report_comment.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
+                                                mAlertDialog.tv_is_fake_news_report_comment.tag = R.drawable.likes_post_count
+
+                                                if(listOfReasonsReportted.contains(mAlertDialog.tv_is_fake_news_report_comment.text.toString())) {
+                                                    listOfReasonsReportted.remove(mAlertDialog.tv_is_fake_news_report_comment.text.toString())
+                                                }
+                                            }
+                                            else {
+                                                mAlertDialog.tv_is_fake_news_report_comment.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
+                                                mAlertDialog.tv_is_fake_news_report_comment.tag = R.drawable.selected_option_background
+                                                listOfReasonsReportted.add(mAlertDialog.tv_is_fake_news_report_comment.text.toString())
+                                            }
+                                        }
+                                        mAlertDialog.tv_i_disliked_report_comment.setOnClickListener {
+                                            if(mAlertDialog.tv_i_disliked_report_comment.tag == R.drawable.selected_option_background) {
+                                                mAlertDialog.tv_i_disliked_report_comment.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
+                                                mAlertDialog.tv_i_disliked_report_comment.tag = R.drawable.likes_post_count
+
+                                                if(listOfReasonsReportted.contains(mAlertDialog.tv_i_disliked_report_comment.text.toString())) {
+                                                    listOfReasonsReportted.remove(mAlertDialog.tv_i_disliked_report_comment.text.toString())
+                                                }
+                                            }
+                                            else {
+                                                mAlertDialog.tv_i_disliked_report_comment.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
+                                                mAlertDialog.tv_i_disliked_report_comment.tag = R.drawable.selected_option_background
+                                                listOfReasonsReportted.add(mAlertDialog.tv_i_disliked_report_comment.text.toString())
+
+                                            }                                     }
+                                        mAlertDialog.tv_other_report_comment.setOnClickListener {
+                                            if(mAlertDialog.tv_other_report_comment.tag == R.drawable.selected_option_background) {
+                                                mAlertDialog.tv_other_report_comment.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
+                                                mAlertDialog.tv_other_report_comment.tag = R.drawable.likes_post_count
+
+                                                if(listOfReasonsReportted.contains(mAlertDialog.tv_other_report_comment.text.toString())) {
+                                                    listOfReasonsReportted.remove(mAlertDialog.tv_other_report_comment.text.toString())
+                                                }
+                                            }
+                                            else {
+                                                mAlertDialog.tv_other_report_comment.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
+                                                mAlertDialog.tv_other_report_comment.tag = R.drawable.selected_option_background
+                                                listOfReasonsReportted.add(mAlertDialog.tv_other_report_comment.text.toString())
+
+                                            }
+                                        }
+                                        mAlertDialog.tv_violate_rules_rgeport_comment2.setOnClickListener {
+                                            if(mAlertDialog.tv_violate_rules_rgeport_comment2.tag == R.drawable.selected_option_background) {
+                                                mAlertDialog.tv_violate_rules_rgeport_comment2.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
+                                                mAlertDialog.tv_violate_rules_rgeport_comment2.tag = R.drawable.likes_post_count
+
+                                                if(listOfReasonsReportted.contains(mAlertDialog.tv_violate_rules_rgeport_comment2.text.toString())) {
+                                                    listOfReasonsReportted.remove(mAlertDialog.tv_violate_rules_rgeport_comment2.text.toString())
+                                                }
+                                            }
+                                            else {
+                                                mAlertDialog.tv_violate_rules_rgeport_comment2.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
+                                                mAlertDialog.tv_violate_rules_rgeport_comment2.tag = R.drawable.selected_option_background
+                                                listOfReasonsReportted.add(mAlertDialog.tv_violate_rules_rgeport_comment2.text.toString())
+
+                                            }
+                                        }
+
+                                        mAlertDialog.bt_report_comment.setOnClickListener {
+                                            if(listOfReasonsReportted.size == 0 && mAlertDialog.et_input_description_report_comment.text.isNullOrEmpty()) {
+                                                Toasty.error(context, "Escolha um dos motivos para realizar a denuncia do comentário, ou descreva a sua denuncia").show()
+                                            }
+                                            else {
+                                                var reportComment = ReportComment()
+
+                                                reportComment.idComentario = comentario.idComentario
+                                                reportComment.idOwnerComment = comentario.idOwner
+                                                reportComment.idPetComment = comentario.idPet
+                                                reportComment.idPost = post.idPost
+
+                                                reportComment.idOwnerReportter = auth.uid.toString()
+                                                reportComment.idPetReportter = myPreferences.getPetLogged().toString()
+                                                reportComment.dateTimeReport = DateUtils.dataFormatWithMilliseconds()
+                                                reportComment.listOfReasonsReportted = listOfReasonsReportted
+                                                reportComment.descriptionOfReport = mAlertDialog.et_input_description_report_comment.text.toString()
+
+                                                dt.child(AnimalLoversConstants.DATABASE_ENTITY_ADMIN.nome).addListenerForSingleValueEvent(object : ValueEventListener {
+                                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                                        if(snapshot.hasChildren() && snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_REPORT_COMMENT.nome)) {
+                                                            val numReporttedComments = snapshot.child(AnimalLoversConstants.DATABASE_NODE_REPORT_COMMENT.nome).childrenCount + 1
+
+                                                            database.child(AnimalLoversConstants.DATABASE_ENTITY_ADMIN.nome)
+                                                                .child(AnimalLoversConstants.DATABASE_NODE_REPORT_COMMENT.nome)
+                                                                .child(numReporttedComments.toString())
+                                                                .setValue(reportComment)
+                                                        }
+                                                        else {
+                                                            database.child(AnimalLoversConstants.DATABASE_ENTITY_ADMIN.nome)
+                                                                .child(AnimalLoversConstants.DATABASE_NODE_REPORT_COMMENT.nome)
+                                                                .child("1")
+                                                                .setValue(reportComment)
+                                                        }
+                                                        mAlertDialog.hide()
+                                                    }
+
+                                                    override fun onCancelled(error: DatabaseError) {
+                                                        println(error.toString())
+                                                    }
+
+                                                })
+
+
+                                            }
+                                        }
+
+                                        return@setOnMenuItemClickListener true
+                                    }
+
+                                }
+                                return@setOnMenuItemClickListener false
+                            }
+
+
+                            popupMenu.inflate(R.menu.menu_options_comment)
+                            popupMenu.show()
                         }
 
                     }
@@ -341,6 +653,8 @@ class CommentsPostAdapter(
         val numLikesComment = itemView.tv_num_likes_comment_modal_comment
         val likeComment = itemView.iv_action_fav_comment_modal_comment
         var photo = itemView.iv_icon_foto_perfil_pet_modal_comment
+        var optionsOpenIcon = itemView.iv_icon_options_modal_comment
+        var layoutItem = itemView.lin_layout_comment_item
         val abc = itemView.recycler_pets_likes_post
 
         fun bindView(comment: Comentario) {

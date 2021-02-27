@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.model.Comentario
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.feed_item.view.*
@@ -32,6 +34,8 @@ class PetPostsAdapter (private val posts: List<Post>, val petPost: Pet, private 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var db: DatabaseReference
+    private var comentario = Comentario()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.feed_item, parent, false)
@@ -42,6 +46,8 @@ class PetPostsAdapter (private val posts: List<Post>, val petPost: Pet, private 
         val post = posts[(posts.size - 1) - position]
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
+
+        var arraylist = ArrayList<Comentario>()
 
         val myPreferences = ProjectPreferences(context)
 
@@ -152,7 +158,7 @@ class PetPostsAdapter (private val posts: List<Post>, val petPost: Pet, private 
                     }
 
                     holder.commentPost.setOnClickListener {
-                        val profilesLikesPostAdapter = CommentsPostService(post)
+                        val profilesLikesPostAdapter = CommentsPostService(post, arraylist)
                         val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }
@@ -172,7 +178,25 @@ class PetPostsAdapter (private val posts: List<Post>, val petPost: Pet, private 
             .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dSnapshot: DataSnapshot) {
-                    holder.numCommentsPost.text = dSnapshot.childrenCount.toString()
+
+                    arraylist.clear()
+                    for (i in 1 until dSnapshot.childrenCount + 1) {
+                        if (dSnapshot.hasChild(i.toString())) {
+                            var rootNodeComment = dSnapshot.child(i.toString()).child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome).value as HashMap<String, HashMap<String, HashMap<String, String>>>
+                            val idOnwer = rootNodeComment.keys.toMutableList()[0]
+                            val idPet = rootNodeComment[idOnwer]?.keys?.toMutableList()?.get(0)
+
+                            comentario = (dSnapshot.child(i.toString())
+                                .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
+                                .child(idOnwer)
+                                .child(idPet.toString())
+                                .getValue<Comentario>())!!
+                            if (comentario.comentarioAtivo) {
+                                arraylist.add(comentario)
+                            }
+                        }
+                    }
+                    holder.numCommentsPost.text = arraylist.size.toString()
                 }
 
                 override fun onCancelled(error: DatabaseError) {

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/const_layout_edit_comment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Editar Comentário"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_comment_text_edit_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="32dp"
+        android:padding="2dp"
+        android:text="..."
+        android:textAlignment="viewStart"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/et_input_comment_edit_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.219" />
+
+    <EditText
+        android:id="@+id/et_input_comment_edit_comment"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="12dp"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/edit_rounded"
+        android:hint="@string/type_your_comment"
+        app:layout_constraintTop_toBottomOf="@id/tv_comment_text_edit_comment"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+
+        android:id="@+id/bt_update_edit_comment"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:animateLayoutChanges="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/background_button_transparent_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_input_comment_edit_comment"
+        app:srcCompat="@drawable/ic_baseline_send_24" />
+
+    <ImageButton
+
+        android:id="@+id/bt_cancel_edit_comment"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="1"
+
+        android:adjustViewBounds="false"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/background_button_transparent_login"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/bt_update_edit_comment"
+        app:srcCompat="@drawable/ic_cancelar" />
+</androidx.constraintlayout.widget.ConstraintLayout>

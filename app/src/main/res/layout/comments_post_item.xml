@@ -8,6 +8,7 @@
     android:layout_marginBottom="2dp">
 
     <LinearLayout
+        android:id="@+id/lin_layout_comment_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -16,6 +17,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_icon_options_modal_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center|center_horizontal|end"
+                android:layout_marginLeft="3dp"
+                app:srcCompat="@drawable/ic_three_hearts" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -97,22 +106,14 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/iv_icon_options_modal_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_gravity="center|center_horizontal|end"
-                app:srcCompat="@drawable/ic_three_hearts"
-                android:layout_marginLeft="3dp"/>
-
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_comment_text_modal_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="2dp"
             android:layout_margin="3dp"
+            android:padding="2dp"
             android:text="..."
             android:textSize="16sp" />
     </LinearLayout>

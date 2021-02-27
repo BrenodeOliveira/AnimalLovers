@@ -99,6 +99,14 @@
 
     <string name="comments">Comentários</string>
     <string name="type_your_comment">Digite seu comentário</string>
+    <string name="type_your_report">Descreva sua denuncia</string>
+
+    <string name="delete_comment_title">Excluir comentário</string>
+    <string name="delete_comment_message">Deseja realmente excluir seu comentário?</string>
+
+    <string name="report_comment">Denunciar Comentário</string>
 
     <string name="ver">Ver</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
 </resources>

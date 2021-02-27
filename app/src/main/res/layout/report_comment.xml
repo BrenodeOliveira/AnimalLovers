@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="20dp"
+    android:paddingTop="20dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/report_comment"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_comment_text_edit_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:layout_marginTop="64dp"
+        android:padding="2dp"
+        android:text="Informe o motivo pelo qual você acha que esse comentário não deve ser aceito no AnimalLovers"
+        android:textAlignment="viewStart"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="211dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Se quiser, pode descrever sua denuncia para auxiliar na análise"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView4" />
+
+    <EditText
+        android:id="@+id/et_input_description_report_comment"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="236dp"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/edit_rounded"
+        android:hint="@string/type_your_report"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_comment_text_edit_comment" />
+
+    <Button
+        android:id="@+id/bt_report_comment"
+        android:layout_width="190dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/background_button_red"
+        android:padding="7dp"
+        app:layout_goneMarginEnd="5dp"
+        android:text="@string/report_comment"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_input_description_report_comment" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        app:cardElevation="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_text_edit_comment">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:id="@+id/cv_options_report_comment">
+
+
+            <TextView
+                android:id="@+id/tv_is_offensive_report_comment2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:padding="6dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/likes_post_count"
+                android:text="É ofensivo"
+                android:textColor="@color/colorGrayBtn"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/tv_explicit_violence_comment"
+                app:layout_constraintTop_toBottomOf="@+id/tv_violate_rules_rgeport_comment2" />
+
+            <TextView
+                android:id="@+id/tv_sexual_content_comment3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:padding="6dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/likes_post_count"
+                android:text="Teor sexual"
+                android:textColor="@color/colorGrayBtn"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/tv_violate_rules_rgeport_comment2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_explicit_violence_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:padding="6dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/likes_post_count"
+                android:text="Violência explícita"
+                android:textColor="@color/colorGrayBtn"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_is_fake_news_report_comment" />
+
+            <TextView
+                android:id="@+id/tv_is_fake_news_report_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:padding="6dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/likes_post_count"
+                android:text="Noticia falsa"
+                android:textColor="@color/colorGrayBtn"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_i_disliked_report_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/likes_post_count"
+                android:padding="6dp"
+                android:text="Não gostei"
+                android:textColor="@color/colorGrayBtn"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/tv_is_offensive_report_comment2"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sexual_content_comment3" />
+
+            <TextView
+                android:id="@+id/tv_other_report_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="2dp"
+                android:background="@drawable/likes_post_count"
+                android:text="Outro"
+                android:textColor="@color/colorGrayBtn"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/tv_i_disliked_report_comment"
+                app:layout_constraintTop_toBottomOf="@+id/tv_sexual_content_comment3" />
+
+            <TextView
+                android:id="@+id/tv_violate_rules_rgeport_comment2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/likes_post_count"
+                android:text="Viola as regras de uso"
+                android:textColor="@color/colorGrayBtn"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/tv_is_fake_news_report_comment"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

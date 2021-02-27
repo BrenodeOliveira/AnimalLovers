@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.PopupMenu
 import androidx.annotation.Nullable
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,13 +25,17 @@ import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.comments_post_item.*
 
 
-class CommentsPostService(private val post: Post) : BottomSheetDialogFragment() {
+class CommentsPostService(private val post: Post, private val listComentario: ArrayList<Comentario>) : BottomSheetDialogFragment() {
 
     private lateinit var database: DatabaseReference
     private lateinit var db: DatabaseReference
@@ -54,53 +59,75 @@ class CommentsPostService(private val post: Post) : BottomSheetDialogFragment() 
         auth = FirebaseAuth.getInstance()
         database = Firebase.database.reference
         db = Firebase.database.reference
-
         val myPreferences = ProjectPreferences(view.context)
 
-        var arraylist = ArrayList<Comentario>()
+        if(listComentario.isNullOrEmpty()) {
 
-        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-            .child(post.idOwner)
-            .child(post.idPet)
-            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
-            .child(post.idPost)
-            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    arraylist.clear()
-                    for (i in 1 until dataSnapshot.childrenCount + 1) {
-                        if(dataSnapshot.hasChild(i.toString())) {
-                            var rootNodeComment = dataSnapshot.child(i.toString()).child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome).value as HashMap<String, HashMap<String, HashMap<String, String>>>
-                            val idOnwer = rootNodeComment.keys.toMutableList()[0]
-                            val idPet = rootNodeComment[idOnwer]?.keys?.toMutableList()?.get(0)
+            var arraylist = ArrayList<Comentario>()
 
-                            comentario = (dataSnapshot.child(i.toString())
-                                .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
-                                .child(idOnwer)
-                                .child(idPet.toString())
-                                .getValue<Comentario>())!!
-                            if(comentario.comentarioAtivo) {
-                                arraylist.add(comentario)
+            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+                .child(post.idOwner)
+                .child(post.idPet)
+                .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                .child(post.idPost)
+                .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        arraylist.clear()
+                        for (i in 1 until dataSnapshot.childrenCount + 1) {
+                            if (dataSnapshot.hasChild(i.toString())) {
+                                var rootNodeComment = dataSnapshot.child(i.toString()).child(
+                                    AnimalLoversConstants.DATABASE_NODE_COMMENT.nome
+                                ).value as HashMap<String, HashMap<String, HashMap<String, String>>>
+                                val idOnwer = rootNodeComment.keys.toMutableList()[0]
+                                val idPet = rootNodeComment[idOnwer]?.keys?.toMutableList()?.get(0)
+
+                                comentario = (dataSnapshot.child(i.toString())
+                                    .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
+                                    .child(idOnwer)
+                                    .child(idPet.toString())
+                                    .getValue<Comentario>())!!
+                                if (comentario.comentarioAtivo) {
+                                    arraylist.add(comentario)
+                                }
                             }
                         }
+                        if (arraylist.size != 0) {
+                            val recyclerView = view.findViewById(R.id.recycler_comments_post) as? RecyclerView
+                            recyclerView?.layoutParams!!.height = 700
+
+                            recyclerView!!.layoutManager = LinearLayoutManager(activity)
+                            recyclerView.adapter = CommentsPostAdapter(arraylist, view.context, post)
+
+                            val layoutManager = StaggeredGridLayoutManager(
+                                1,
+                                StaggeredGridLayoutManager.VERTICAL
+                            )
+                            recyclerView.layoutManager = layoutManager
+                        }
                     }
-                    if(arraylist.size != 0) {
-                        val recyclerView = view.findViewById(R.id.recycler_comments_post) as? RecyclerView
-                        recyclerView?.layoutParams!!.height = 700
 
-                        recyclerView!!.layoutManager = LinearLayoutManager(activity)
-                        recyclerView.adapter = CommentsPostAdapter(arraylist, view.context, post)
-
-                        val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-                        recyclerView.layoutManager = layoutManager
+                    override fun onCancelled(errorDb: DatabaseError) {
+                        println(errorDb.toString())
                     }
-                }
 
-                override fun onCancelled(errorDb: DatabaseError) {
-                    println(errorDb.toString())
-                }
+                })
 
-            })
+        }
+        else {
+            val recyclerView = view.findViewById(R.id.recycler_comments_post) as? RecyclerView
+            recyclerView?.layoutParams!!.height = 700
+
+            recyclerView!!.layoutManager = LinearLayoutManager(activity)
+            recyclerView.adapter = CommentsPostAdapter(listComentario, view.context, post)
+
+            val layoutManager = StaggeredGridLayoutManager(
+                1,
+                StaggeredGridLayoutManager.VERTICAL
+            )
+            recyclerView.layoutManager = layoutManager
+        }
+
         val ivIconPostComment : ImageButton = view.findViewById(R.id.bt_post_comment)
         val tvComment : EditText = view.findViewById(R.id.et_input_comment)
         ivIconPostComment.visibility = View.GONE
@@ -114,7 +141,8 @@ class CommentsPostService(private val post: Post) : BottomSheetDialogFragment() 
                     tvComment.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
                 } else {
                     ivIconPostComment.visibility = View.VISIBLE
-                    tvComment.layoutParams.width = (377 * context?.resources?.displayMetrics!!.density).toInt()
+                    tvComment.layoutParams.width =
+                        (377 * context?.resources?.displayMetrics!!.density).toInt()
                 }
             }
 
@@ -139,24 +167,25 @@ class CommentsPostService(private val post: Post) : BottomSheetDialogFragment() 
                 .child(post.idPet)
                 .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
                 .child(post.idPost)
-                .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome).addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        comentario.idComentario = (snapshot.childrenCount + 1).toString()
-                        db.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                            .child(post.idOwner)
-                            .child(post.idPet)
-                            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
-                            .child(post.idPost)
-                            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
-                            .child(comentario.idComentario)
-                            .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
-                            .child(auth.uid.toString())
-                            .child(myPreferences.getPetLogged().toString())
-                            .setValue(comentario)
+                .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome).addListenerForSingleValueEvent(
+                    object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            comentario.idComentario = (snapshot.childrenCount + 1).toString()
+                            db.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+                                .child(post.idOwner)
+                                .child(post.idPet)
+                                .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                                .child(post.idPost)
+                                .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+                                .child(comentario.idComentario)
+                                .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
+                                .child(auth.uid.toString())
+                                .child(myPreferences.getPetLogged().toString())
+                                .setValue(comentario)
 
                         //Adicionar o comentário ao RecyclerView e atualizá-lo
                         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                        imm.hideSoftInputFromWindow(view!!.getWindowToken(), 0)
+                        imm.hideSoftInputFromWindow(view.windowToken, 0)
 
                         tvComment.text.clear()
                     }
