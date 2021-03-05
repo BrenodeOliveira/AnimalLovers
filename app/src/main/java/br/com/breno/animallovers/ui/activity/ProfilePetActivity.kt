@@ -43,10 +43,19 @@ class ProfilePetActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile_pet)
         petInfo = (intent.getSerializableExtra("PET_INFO_PROFILE") as? Pet)!!
 
+        refreshPetInfo(petInfo)
         loadPetInfo(petInfo)
         loadPetPosts(petInfo)
 
         seeFriends(petInfo)
+    }
+
+    private fun refreshPetInfo(pet : Pet) {
+        swipe_refresh_pet_profile.setOnRefreshListener {
+            loadPetPosts(pet)
+
+            seeFriends(pet)
+        }
     }
 
     private fun loadPetInfo(pet: Pet) {
@@ -116,6 +125,7 @@ class ProfilePetActivity : AppCompatActivity() {
                     } else {
                         tv_status_friendship_profile_pet.text = "Enviar solicitação"
                     }
+                    swipe_refresh_pet_profile.isRefreshing = false
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -158,7 +168,7 @@ class ProfilePetActivity : AppCompatActivity() {
                         1, StaggeredGridLayoutManager.VERTICAL
                     )
                     recyclerView.layoutManager = layoutManager
-
+                    swipe_refresh_pet_profile.isRefreshing = false
                 }
 
                 override fun onCancelled(error: DatabaseError) {

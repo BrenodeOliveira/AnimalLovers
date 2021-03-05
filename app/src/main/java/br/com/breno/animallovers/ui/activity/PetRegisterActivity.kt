@@ -92,6 +92,7 @@ class PetRegisterActivity : AppCompatActivity() {
                                 petService.registerNewPet(idPet, pet)
                             }
                             mostraToastySuccess("Novo pet registrado com sucesso")
+                            finish()
                         }
 
                         override fun onCancelled(error: DatabaseError) {
@@ -100,7 +101,6 @@ class PetRegisterActivity : AppCompatActivity() {
                     })
 
         }
-        finish()
     }
 
     private fun requestingPermissionToUser() {

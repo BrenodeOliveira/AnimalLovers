@@ -25,6 +25,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_feed.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class FeedFragment : Fragment() {
@@ -50,15 +52,20 @@ class FeedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         populateRecyclerFeed()
-//        estadoAppViewModel.temComponentes = ComponentesVisuais()
+        refreshFeed()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //verificar como destruir o fragment e nao duplicar o RV
     }
 
-    fun populateRecyclerFeed() {
+    private fun refreshFeed() {
+        swipe_refresh_feed.setOnRefreshListener {
+            populateRecyclerFeed()
+        }
+    }
+
+    private fun populateRecyclerFeed() {
         val myPreferences = ProjectPreferences(requireContext())
         if(myPreferences.getPetLogged() == "") {
             val intent = Intent(activity, ProfileActivity::class.java)
@@ -133,7 +140,7 @@ class FeedFragment : Fragment() {
 
                             val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                             recycler_feed.layoutManager = layoutManager
-
+                            swipe_refresh_feed.isRefreshing = false
                         } else {
                             for (x in 0..numChildren) {
                                 if (sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).hasChild(x.toString())) {
@@ -146,6 +153,7 @@ class FeedFragment : Fragment() {
 
                                     val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                                     recycler_feed.layoutManager = layoutManager
+                                    swipe_refresh_feed.isRefreshing = false
                                 }
                             }
                         }

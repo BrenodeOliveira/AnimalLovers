@@ -186,7 +186,7 @@ class FeedAdapter(
 
                     holder.numLikesPost.setOnClickListener {
                         val profilesLikesPostAdapter = ProfilesLikesPostService(post)
-                        var manager : FragmentManager = if (context is ProfilePetActivity) {
+                        var manager: FragmentManager = if (context is ProfilePetActivity) {
                             context.supportFragmentManager
                         } else {
                             (context as AppCompatActivity).supportFragmentManager
@@ -196,7 +196,8 @@ class FeedAdapter(
 
                     holder.commentPost.setOnClickListener {
                         val profilesLikesPostAdapter = CommentsPostService(post, arraylist)
-                        val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                        val manager: FragmentManager =
+                            (context as AppCompatActivity).supportFragmentManager
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }
                 }
@@ -219,7 +220,9 @@ class FeedAdapter(
                     arraylist.clear()
                     for (i in 1 until dSnapshot.childrenCount + 1) {
                         if (dSnapshot.hasChild(i.toString())) {
-                            var rootNodeComment = dSnapshot.child(i.toString()).child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome).value as HashMap<String, HashMap<String, HashMap<String, String>>>
+                            var rootNodeComment = dSnapshot.child(i.toString()).child(
+                                AnimalLoversConstants.DATABASE_NODE_COMMENT.nome
+                            ).value as HashMap<String, HashMap<String, HashMap<String, String>>>
                             val idOnwer = rootNodeComment.keys.toMutableList()[0]
                             val idPet = rootNodeComment[idOnwer]?.keys?.toMutableList()?.get(0)
 
