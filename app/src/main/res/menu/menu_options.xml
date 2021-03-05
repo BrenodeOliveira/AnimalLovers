@@ -1,9 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:id="@+id/item_copy_comment"
+        android:id="@+id/item_copy_menu_options"
         android:title="Copiar" />
     <item
-        android:id="@+id/item_report_comment"
+        android:id="@+id/item_report_menu_options"
         android:title="Denunciar"/>
 
 </menu>

@@ -3,9 +3,7 @@ package br.com.breno.animallovers.service
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +12,6 @@ import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat.setBackground
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -357,7 +354,7 @@ class CommentsPostAdapter(
                             val popupMenu = PopupMenu(context, holder.itemView)
                             popupMenu.setOnMenuItemClickListener {
                                 when (it.itemId) {
-                                    R.id.item_copy_comment -> {
+                                    R.id.item_copy_menu_options_owner -> {
                                         val clipboard: ClipboardManager = context.getSystemService(
                                             Context.CLIPBOARD_SERVICE
                                         ) as ClipboardManager
@@ -373,7 +370,7 @@ class CommentsPostAdapter(
                                         return@setOnMenuItemClickListener true
                                     }
 
-                                    R.id.item_edit_comment -> {
+                                    R.id.item_edit_menu_options -> {
                                         val mDialogView = LayoutInflater.from(context).inflate(R.layout.edit_comment, null)
                                         val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
                                         val mAlertDialog = mBuilder.show()
@@ -406,7 +403,7 @@ class CommentsPostAdapter(
                                         return@setOnMenuItemClickListener true
                                     }
 
-                                    R.id.item_delete_comment -> {
+                                    R.id.item_delete_menu_options -> {
 
                                         AlertDialog.Builder(context)
                                             .setTitle(R.string.delete_comment_title)
@@ -438,13 +435,13 @@ class CommentsPostAdapter(
                                 return@setOnMenuItemClickListener false
                             }
 
-                            popupMenu.inflate(R.menu.menu_options_comment_owner_comment)
+                            popupMenu.inflate(R.menu.menu_options_owner)
                             popupMenu.show()
                         } else {
                             val popupMenu = PopupMenu(context, holder.itemView)
                             popupMenu.setOnMenuItemClickListener {
                                 when (it.itemId) {
-                                    R.id.item_copy_comment -> {
+                                    R.id.item_copy_menu_options -> {
                                         val clipboard: ClipboardManager = context.getSystemService(
                                             Context.CLIPBOARD_SERVICE
                                         ) as ClipboardManager
@@ -461,7 +458,7 @@ class CommentsPostAdapter(
 
                                     }
 
-                                    R.id.item_report_comment -> {
+                                    R.id.item_report_menu_options -> {
                                         var listOfReasonsReportted = ArrayList<String>()
 
                                         val mDialogView = LayoutInflater.from(context).inflate(R.layout.report_comment, null)
@@ -631,7 +628,7 @@ class CommentsPostAdapter(
                             }
 
 
-                            popupMenu.inflate(R.menu.menu_options_comment)
+                            popupMenu.inflate(R.menu.menu_options)
                             popupMenu.show()
                         }
 

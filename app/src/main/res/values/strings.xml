@@ -105,8 +105,24 @@
     <string name="delete_comment_message">Deseja realmente excluir seu comentário?</string>
 
     <string name="report_comment">Denunciar Comentário</string>
+    <string name="tv_instructions_report_comment">Informe o motivo pelo qual você acha que esse comentário não deve ser aceito no AnimalLovers</string>
+
+    <string name="report_post">Denunciar Publicação</string>
+    <string name="tv_instructions_report_post">Informe o motivo pelo qual você acha que essa publicação não deve ser aceita no AnimalLovers</string>
 
     <string name="ver">Ver</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="sexual_content">Teor sexual</string>
+    <string name="explicit_violence">Violência explícita</string>
+    <string name="fake_news">Noticia falsa</string>
+    <string name="i_disliked_it">Não gostei</string>
+    <string name="other">Outro</string>
+    <string name="violate_usage_rules">Viola as regras de uso</string>
+    <string name="is_offensive">É ofensivo</string>
+    <string name="instruction_type_report">Se quiser, pode descrever sua denuncia para auxiliar na análise</string>
+    <string name="wrong_photo">Foto incoerente</string>
+    <string name="spam">Spam</string>
+    <string name="criminal_content">Conteúdo criminoso</string>
+
 </resources>

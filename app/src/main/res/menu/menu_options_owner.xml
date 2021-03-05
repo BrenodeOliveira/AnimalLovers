@@ -1,14 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/item_copy_comment"
+        android:id="@+id/item_copy_menu_options_owner"
         android:title="Copiar"/>
 
     <item
-        android:id="@+id/item_edit_comment"
+        android:id="@+id/item_edit_menu_options"
         android:title="Editar" />
     <item
-        android:id="@+id/item_delete_comment"
+        android:id="@+id/item_delete_menu_options"
         android:title="Excluir"/>
 
 </menu>

@@ -13,13 +13,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/iv_icon_options_post_feed"
+            android:layout_width="22dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center|center_horizontal|end"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_three_hearts" />
+
         <TextView
             android:id="@+id/tv_pet_name_post_feed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="352dp"
+            android:layout_height="35dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="7dp"
             android:textSize="30sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_icon_options_post_feed"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Nina" />
 
