@@ -3,13 +3,17 @@ package br.com.breno.animallovers.service
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.Build
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -42,6 +46,8 @@ import kotlinx.android.synthetic.main.report_comment.tv_other_report_comment
 import kotlinx.android.synthetic.main.report_comment.tv_sexual_content_comment3
 import kotlinx.android.synthetic.main.report_comment.tv_violate_rules_rgeport_comment2
 import kotlinx.android.synthetic.main.report_post.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class FeedAdapter(
@@ -50,34 +56,44 @@ class FeedAdapter(
 ) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
+
     private lateinit var database: DatabaseReference
-    private lateinit var db: DatabaseReference
     private lateinit var dt: DatabaseReference
+
     private var comentario = Comentario()
+    private var postService = PostService(context)
+    private var likeService = LikeService(context)
+    private var dateUtils = DateUtils()
+
+    var listOfReasonsReportted = ArrayList<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.feed_item, parent, false)
         return ViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = posts[(posts.size - 1) - position]
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
+        var pet = Pet()
 
         var arraylist = ArrayList<Comentario>()
 
         val myPreferences = ProjectPreferences(context)
 
         if (post.pathPub != "") {
-            val storageRef = storage.reference.child(AnimalLoversConstants.STORAGE_ROOT.nome).child(
-                AnimalLoversConstants.CONST_ROOT_POSTS.nome
-            ).child(post.idOwner).child(post.idPet).child(post.dataHora)
+            val storageRef = storage.reference.child(AnimalLoversConstants.STORAGE_ROOT.nome)
+                .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                .child(post.idOwner)
+                .child(post.idPet)
+                .child(post.dataHora)
             storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
                 val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
                 holder.let {
                     it.name.text = post.nomePet
-                    it.dateTime.text = post.dataHora.substringBefore(".")
+                    it.dateTime.text = dateUtils.dateDiffInTextFormat(LocalDateTime.parse(post.dataHora, DateTimeFormatter.ofPattern(DateUtils.dateFrmt())))
                     it.description.text = post.legenda
                     it.photoPost.setImageBitmap(bmp)
 
@@ -92,31 +108,54 @@ class FeedAdapter(
         else {
             holder.let {
                 it.name.text = post.nomePet
-                it.dateTime.text = post.dataHora
+                it.dateTime.text = dateUtils.dateDiffInTextFormat(LocalDateTime.parse(post.dataHora, DateTimeFormatter.ofPattern(DateUtils.dateFrmt())))
                 it.description.text = post.legenda
                 val layoutParams: ViewGroup.LayoutParams = it.photoPost.layoutParams
-                layoutParams.height = 50
+                layoutParams.height = 15
                 it.photoPost.layoutParams = layoutParams
             }
         }
+
+        val ref = storage.reference
+            .child(AnimalLoversConstants.STORAGE_ROOT.nome)
+            .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
+            .child(post.idOwner)
+            .child(post.idPet + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+        try {
+            ref.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
+                val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
+                holder.let {
+                    it.photoProfile.setImageBitmap(bmp)
+
+                    if(it.photoProfile.drawable == null) {
+                        it.photoProfile.visibility = View.INVISIBLE
+                    }
+                }
+            }.addOnFailureListener { itException ->
+                println(itException.toString())
+            }
+        } catch (ex: Exception) {
+            println("Erro ao buscar foto de perfil: $ex")
+        }
+
         database = Firebase.database.reference
-        db = Firebase.database.reference
         dt = Firebase.database.reference
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(post.idOwner)
             .child(post.idPet)
-            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
-            .child(post.idPost).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dSnap: DataSnapshot) {
                     var numLikes = 0
 
                     var hasPetLikedPost = false
 
+                    pet = (dSnap.child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>())!!
+
+                    val snapshot = dSnap.child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                        .child(post.idPost)
                     if (snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)) {
-                        val ownersPets: HashMap<String, HashMap<String, String>> = snapshot.child(
-                            AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome
-                        ).value as HashMap<String, HashMap<String, String>>
+                        val ownersPets: HashMap<String, HashMap<String, String>> = snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).value as HashMap<String, HashMap<String, String>>
                         for (i in 0 until ownersPets.size) {
                             val idOwnerPet = ownersPets.keys.toMutableList()[i]
                             for (j in 0 until (ownersPets.toMutableMap()[idOwnerPet]?.values?.size!!)) {
@@ -125,74 +164,32 @@ class FeedAdapter(
                             }
                         }
 
-                        if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)
-                                .hasChild(
-                                    auth.uid.toString()
-                                )
-                        ) {
-                            println(
-                                snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)
-                                    .child(
-                                        auth.uid.toString()
-                                    )
-                            )
-
-                            if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)
-                                    .child(
-                                        auth.uid.toString()
-                                    ).hasChild(myPreferences.getPetLogged().toString())
-                            ) {
-                                holder.likePost.setColorFilter(
-                                    ContextCompat.getColor(
-                                        context,
-                                        R.color.colorAccent
-                                    ), android.graphics.PorterDuff.Mode.MULTIPLY
-                                )
+                        if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).hasChild(auth.uid.toString())) {
+                            if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).child(auth.uid.toString()).hasChild(myPreferences.getPetLogged().toString())) {
+                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 hasPetLikedPost = true
                             }
                         }
                     }
-
+                    arraylist.clear()
+                    arraylist = postService.getCommentsOfPost(snapshot, post)
+                    holder.numCommentsPost.text = arraylist.size.toString()
 
                     holder.likePost.setOnClickListener {
                         if (holder.numLikesPost.text != "") {
 
-                            if (hasPetLikedPost) {
-                                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                                    .child(post.idOwner)
-                                    .child(post.idPet)
-                                    .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
-                                    .child(post.idPost)
-                                    .child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)
-                                    .child(auth.uid.toString())
-                                    .child(myPreferences.getPetLogged().toString())
-                                    .setValue(null)
-                                holder.likePost.setColorFilter(
-                                    ContextCompat.getColor(
-                                        context,
-                                        R.color.icon_tint
-                                    ), android.graphics.PorterDuff.Mode.MULTIPLY
-                                )
+                            hasPetLikedPost = if (hasPetLikedPost) {
+                                likeService.dislikePost(post)
+
+                                holder.likePost.setColorFilter(ContextCompat
+                                    .getColor(context, R.color.icon_tint), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 numLikes--
-                                hasPetLikedPost = false
+                                false
                             } else {
-                                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                                    .child(post.idOwner)
-                                    .child(post.idPet)
-                                    .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
-                                    .child(post.idPost)
-                                    .child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)
-                                    .child(auth.uid.toString())
-                                    .child(myPreferences.getPetLogged().toString())
-                                    .setValue(DateUtils.dataFormatWithMilliseconds())
-                                holder.likePost.setColorFilter(
-                                    ContextCompat.getColor(
-                                        context,
-                                        R.color.colorAccent
-                                    ), android.graphics.PorterDuff.Mode.MULTIPLY
-                                )
+                                likeService.likePost(post)
+                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 numLikes++
-                                hasPetLikedPost = true
+                                true
                             }
                             holder.numLikesPost.text = numLikes.toString()
                         } else {
@@ -224,42 +221,21 @@ class FeedAdapter(
 
             })
 
-        db.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-            .child(post.idOwner)
-            .child(post.idPet)
-            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
-            .child(post.idPost)
-            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dSnapshot: DataSnapshot) {
+        holder.photoProfile.setOnClickListener {
+            val intent = Intent(context, ProfilePetActivity::class.java)
+            intent.putExtra("PET_INFO_PROFILE", pet)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-                    arraylist.clear()
-                    for (i in 1 until dSnapshot.childrenCount + 1) {
-                        if (dSnapshot.hasChild(i.toString())) {
-                            var rootNodeComment = dSnapshot.child(i.toString()).child(
-                                AnimalLoversConstants.DATABASE_NODE_COMMENT.nome
-                            ).value as HashMap<String, HashMap<String, HashMap<String, String>>>
-                            val idOnwer = rootNodeComment.keys.toMutableList()[0]
-                            val idPet = rootNodeComment[idOnwer]?.keys?.toMutableList()?.get(0)
+            ContextCompat.startActivity(context, intent, Bundle())
+        }
 
-                            comentario = (dSnapshot.child(i.toString())
-                                .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
-                                .child(idOnwer)
-                                .child(idPet.toString())
-                                .getValue<Comentario>())!!
-                            if (comentario.comentarioAtivo) {
-                                arraylist.add(comentario)
-                            }
-                        }
-                    }
-                    holder.numCommentsPost.text = arraylist.size.toString()
-                }
+        holder.name.setOnClickListener {
+            val intent = Intent(context, ProfilePetActivity::class.java)
+            intent.putExtra("PET_INFO_PROFILE", pet)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-                override fun onCancelled(error: DatabaseError) {
-                    println(error.toString())
-                }
-
-            })
+            ContextCompat.startActivity(context, intent, Bundle())
+        }
 
         holder.optionsOpenIcon.setOnClickListener {
 
@@ -268,18 +244,10 @@ class FeedAdapter(
                 popupMenu.setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.item_copy_menu_options_owner -> {
-                            val clipboard: ClipboardManager = context.getSystemService(
-                                Context.CLIPBOARD_SERVICE
-                            ) as ClipboardManager
-                            val clip: ClipData = ClipData.newPlainText(
-                                "label",
-                                post.legenda
-                            )
+                            val clipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val clip: ClipData = ClipData.newPlainText("label", post.legenda)
                             clipboard.setPrimaryClip(clip)
-                            Toasty.info(
-                                context,
-                                "Legenda copiada para a área de transferência"
-                            ).show()
+                            Toasty.info(context, "Legenda copiada para a área de transferência").show()
                             return@setOnMenuItemClickListener true
                         }
 
@@ -299,12 +267,8 @@ class FeedAdapter(
                                 if (mAlertDialog.tv_post_text_edit_post.text != mAlertDialog.et_input_comment_edit_post.text) {
                                     post.legenda = mAlertDialog.et_input_comment_edit_post.text.toString()
 
-                                    database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                                        .child(auth.uid.toString())
-                                        .child(myPreferences.getPetLogged().toString())
-                                        .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
-                                        .child(post.idPost)
-                                        .setValue(post)
+                                    postService.updatePost(post)
+
                                     mAlertDialog.dismiss()
                                 }
                             }
@@ -320,12 +284,8 @@ class FeedAdapter(
 
                                     post.postAtivo = false
 
-                                    database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                                        .child(auth.uid.toString())
-                                        .child(myPreferences.getPetLogged().toString())
-                                        .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
-                                        .child(post.idPost)
-                                        .setValue(post)
+                                    postService.updatePost(post)
+
                                 }
                                 .setNegativeButton(R.string.no, null)
                                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -345,187 +305,47 @@ class FeedAdapter(
                 popupMenu.setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.item_copy_menu_options -> {
-                            val clipboard: ClipboardManager = context.getSystemService(
-                                Context.CLIPBOARD_SERVICE
-                            ) as ClipboardManager
-                            val clip: ClipData = ClipData.newPlainText(
-                                "label",
-                                post.legenda
-                            )
+                            val clipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val clip: ClipData = ClipData.newPlainText("label", post.legenda)
                             clipboard.setPrimaryClip(clip)
-                            Toasty.info(
-                                context,
-                                "Legenda copiada para a área de transferência"
-                            ).show()
+                            Toasty.info(context, "Legenda copiada para a área de transferência").show()
                             return@setOnMenuItemClickListener true
 
                         }
 
                         R.id.item_report_menu_options -> {
-                            var listOfReasonsReportted = ArrayList<String>()
-
                             val mDialogView = LayoutInflater.from(context).inflate(R.layout.report_post, null)
                             val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
                             val mAlertDialog = mBuilder.show()
 
                             mAlertDialog.tv_is_offensive_report_comment2.setOnClickListener {
-                                if(mAlertDialog.tv_is_offensive_report_comment2.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_is_offensive_report_comment2.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_is_offensive_report_comment2.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_is_offensive_report_comment2.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_is_offensive_report_comment2.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_is_offensive_report_comment2.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_is_offensive_report_comment2.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_is_offensive_report_comment2.text.toString())
-                                }
+                                chooseItemReport(mAlertDialog.tv_is_offensive_report_comment2)
                             }
                             mAlertDialog.tv_sexual_content_comment3.setOnClickListener {
-                                if(mAlertDialog.tv_sexual_content_comment3.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_sexual_content_comment3.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_sexual_content_comment3.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_sexual_content_comment3.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_sexual_content_comment3.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_sexual_content_comment3.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_sexual_content_comment3.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_sexual_content_comment3.text.toString())
-                                }
+                                chooseItemReport(mAlertDialog.tv_sexual_content_comment3)
                             }
                             mAlertDialog.tv_explicit_violence_comment.setOnClickListener {
-                                if(mAlertDialog.tv_explicit_violence_comment.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_explicit_violence_comment.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_explicit_violence_comment.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_explicit_violence_comment.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_explicit_violence_comment.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_explicit_violence_comment.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_explicit_violence_comment.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_explicit_violence_comment.text.toString())
-                                }
+                                chooseItemReport(mAlertDialog.tv_explicit_violence_comment)
                             }
                             mAlertDialog.tv_is_fake_news_report_comment.setOnClickListener {
-                                if(mAlertDialog.tv_is_fake_news_report_comment.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_is_fake_news_report_comment.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_is_fake_news_report_comment.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_is_fake_news_report_comment.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_is_fake_news_report_comment.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_is_fake_news_report_comment.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_is_fake_news_report_comment.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_is_fake_news_report_comment.text.toString())
-                                }
+                                chooseItemReport(mAlertDialog.tv_is_fake_news_report_comment)
                             }
                             mAlertDialog.tv_i_disliked_report_comment.setOnClickListener {
-                                if(mAlertDialog.tv_i_disliked_report_comment.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_i_disliked_report_comment.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_i_disliked_report_comment.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_i_disliked_report_comment.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_i_disliked_report_comment.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_i_disliked_report_comment.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_i_disliked_report_comment.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_i_disliked_report_comment.text.toString())
-
-                                }                                     }
+                                chooseItemReport(mAlertDialog.tv_i_disliked_report_comment)                                   }
                             mAlertDialog.tv_other_report_comment.setOnClickListener {
-                                if(mAlertDialog.tv_other_report_comment.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_other_report_comment.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_other_report_comment.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_other_report_comment.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_other_report_comment.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_other_report_comment.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_other_report_comment.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_other_report_comment.text.toString())
-
-                                }
+                                chooseItemReport(mAlertDialog.tv_other_report_comment)
                             }
                             mAlertDialog.tv_violate_rules_rgeport_comment2.setOnClickListener {
-                                if(mAlertDialog.tv_violate_rules_rgeport_comment2.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_violate_rules_rgeport_comment2.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_violate_rules_rgeport_comment2.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_violate_rules_rgeport_comment2.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_violate_rules_rgeport_comment2.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_violate_rules_rgeport_comment2.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_violate_rules_rgeport_comment2.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_violate_rules_rgeport_comment2.text.toString())
-
-                                }
+                                chooseItemReport(mAlertDialog.tv_violate_rules_rgeport_comment2)
                             }
-
-
-
-
                             mAlertDialog.tv_spam_report_post.setOnClickListener {
-                                if(mAlertDialog.tv_spam_report_post.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_spam_report_post.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_spam_report_post.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_spam_report_post.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_spam_report_post.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_spam_report_post.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_spam_report_post.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_spam_report_post.text.toString())
-
-                                }
+                                chooseItemReport(mAlertDialog.tv_spam_report_post)
                             }
                             mAlertDialog.tv_wrong_photo_report_post.setOnClickListener {
-                                if(mAlertDialog.tv_wrong_photo_report_post.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_wrong_photo_report_post.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_wrong_photo_report_post.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_wrong_photo_report_post.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_wrong_photo_report_post.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_wrong_photo_report_post.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_wrong_photo_report_post.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_wrong_photo_report_post.text.toString())
-
-                                }
+                                chooseItemReport(mAlertDialog.tv_wrong_photo_report_post)
                             }
                             mAlertDialog.tv_criminal_content_report_post.setOnClickListener {
-                                if(mAlertDialog.tv_criminal_content_report_post.tag == R.drawable.selected_option_background) {
-                                    mAlertDialog.tv_criminal_content_report_post.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
-                                    mAlertDialog.tv_criminal_content_report_post.tag = R.drawable.likes_post_count
-
-                                    if(listOfReasonsReportted.contains(mAlertDialog.tv_criminal_content_report_post.text.toString())) {
-                                        listOfReasonsReportted.remove(mAlertDialog.tv_criminal_content_report_post.text.toString())
-                                    }
-                                }
-                                else {
-                                    mAlertDialog.tv_criminal_content_report_post.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
-                                    mAlertDialog.tv_criminal_content_report_post.tag = R.drawable.selected_option_background
-                                    listOfReasonsReportted.add(mAlertDialog.tv_criminal_content_report_post.text.toString())
-
-                                }
+                                chooseItemReport(mAlertDialog.tv_criminal_content_report_post)
                             }
 
                             mAlertDialog.bt_report_post.setOnClickListener {
@@ -548,20 +368,7 @@ class FeedAdapter(
 
                                     dt.child(AnimalLoversConstants.DATABASE_ENTITY_ADMIN.nome).addListenerForSingleValueEvent(object : ValueEventListener {
                                         override fun onDataChange(snapshot: DataSnapshot) {
-                                            if(snapshot.hasChildren() && snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_REPORT_POST.nome)) {
-                                                val numReporttedPosts = snapshot.child(AnimalLoversConstants.DATABASE_NODE_REPORT_POST.nome).childrenCount + 1
-
-                                                database.child(AnimalLoversConstants.DATABASE_ENTITY_ADMIN.nome)
-                                                    .child(AnimalLoversConstants.DATABASE_NODE_REPORT_POST.nome)
-                                                    .child(numReporttedPosts.toString())
-                                                    .setValue(reportPost)
-                                            }
-                                            else {
-                                                database.child(AnimalLoversConstants.DATABASE_ENTITY_ADMIN.nome)
-                                                    .child(AnimalLoversConstants.DATABASE_NODE_REPORT_POST.nome)
-                                                    .child("1")
-                                                    .setValue(reportPost)
-                                            }
+                                            postService.reportPost(snapshot, reportPost)
                                             mAlertDialog.hide()
                                         }
 
@@ -570,8 +377,6 @@ class FeedAdapter(
                                         }
 
                                     })
-
-
                                 }
                             }
 
@@ -581,7 +386,6 @@ class FeedAdapter(
                     }
                     return@setOnMenuItemClickListener false
                 }
-
 
                 popupMenu.inflate(R.menu.menu_options)
                 popupMenu.show()
@@ -612,14 +416,23 @@ class FeedAdapter(
         var numLikesPost: TextView = itemView.tv_num_likes_post
         var numCommentsPost: TextView = itemView.tv_num_comments_post
         var optionsOpenIcon = itemView.iv_icon_options_post_feed
+        var photoProfile : ImageView = itemView.iv_icon_profile_photo_post_feed
 
-        fun bindView(post: Post, pet: Pet) {
-            val name = itemView.tv_pet_name_post_feed
-            val dateTime = itemView.tv_date_time_post_feed
-            val description = itemView.tv_pet_description_post_feed
-            name.text = pet.nome
-            dateTime.text = post.dataHora
-            description.text = post.legenda
+    }
+
+    fun chooseItemReport(tv : TextView) {
+        if(tv.tag == R.drawable.selected_option_background) {
+            tv.background = ContextCompat.getDrawable(context, R.drawable.likes_post_count)
+            tv.tag = R.drawable.likes_post_count
+
+            if(listOfReasonsReportted.contains(tv.text.toString())) {
+                listOfReasonsReportted.remove(tv.text.toString())
+            }
+        }
+        else {
+            tv.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
+            tv.tag = R.drawable.selected_option_background
+            listOfReasonsReportted.add(tv.text.toString())
         }
     }
 }

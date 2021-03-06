@@ -44,43 +44,42 @@ class PetsProfileAdapter(
 
             storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
                 val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
-                holder?.let {
+                holder.let {
                     it.title.text = pets.nome
                     it.description.text = pets.resumo
                     it.photo.setImageBitmap(bmp)
-
-                    it.photo.setOnClickListener {
-                        val myPreferences = ProjectPreferences(context)
-                        myPreferences.setPetLogged(pets.id)
-//                        context.startActivity(Intent(context, ProfileActivity::class.java))
-
-                        val i = Intent(context, MainActivity::class.java)
-                        context.startActivity(i)
-//                        (context as Activity).finish()
-
-                        mbs.dismiss()
-                    }
-                    it.description.setOnClickListener {
-                        val myPreferences = ProjectPreferences(context)
-                        myPreferences.setPetLogged(pets.id)
-                        context.startActivity(Intent(context, ProfileActivity::class.java))
-                        mbs.dismiss()
-                    }
-                    it.title.setOnClickListener {
-                        val myPreferences = ProjectPreferences(context)
-                        myPreferences.setPetLogged(pets.id)
-                        context.startActivity(Intent(context, ProfileActivity::class.java))
-                        mbs.dismiss()
-                    }
                 }
             }.addOnFailureListener {
 
             }
         }
         else {
-            holder?.let {
+            holder.let {
                 it.title.text = pets.nome
                 it.description.text = pets.resumo
+            }
+        }
+        holder.let {
+            it.photo.setOnClickListener {
+                val myPreferences = ProjectPreferences(context)
+                myPreferences.setPetLogged(pets.id)
+
+                val i = Intent(context, MainActivity::class.java)
+                context.startActivity(i)
+
+                mbs.dismiss()
+            }
+            it.description.setOnClickListener {
+                val myPreferences = ProjectPreferences(context)
+                myPreferences.setPetLogged(pets.id)
+                context.startActivity(Intent(context, ProfileActivity::class.java))
+                mbs.dismiss()
+            }
+            it.title.setOnClickListener {
+                val myPreferences = ProjectPreferences(context)
+                myPreferences.setPetLogged(pets.id)
+                context.startActivity(Intent(context, ProfileActivity::class.java))
+                mbs.dismiss()
             }
         }
     }

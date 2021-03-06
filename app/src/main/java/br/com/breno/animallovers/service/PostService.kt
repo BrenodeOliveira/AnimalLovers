@@ -1,5 +1,6 @@
 package br.com.breno.animallovers.service
 
+import android.content.Context
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -8,10 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.model.Comentario
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
+import br.com.breno.animallovers.model.ReportPost
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
+import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,11 +24,15 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.fragment_publish.*
 
-class PostService : AppCompatActivity() {
+class PostService(context : Context) {
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
     private var pet = Pet()
+    val database = Firebase.database.reference
+    val commentsService = CommentsService()
+    val myPreferences = ProjectPreferences(context)
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun persistNewPetPost(id : String, dataPicture : ByteArray, post : Post) {
@@ -57,7 +65,6 @@ class PostService : AppCompatActivity() {
     }
 
     fun registerNewPost(id : String, post : Post) {
-        val database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
@@ -105,4 +112,55 @@ class PostService : AppCompatActivity() {
 
         return listPosts
     }
+
+    fun updatePost(post : Post) {
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+            .child(post.idPost)
+            .setValue(post)
+    }
+
+    fun getCommentsOfPost(snapshot: DataSnapshot, post : Post) : ArrayList<Comentario> {
+
+        var arraylist = ArrayList<Comentario>()
+        var comentario: Comentario
+
+        var dSnapshot = snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+
+        for (i in 1 until dSnapshot.childrenCount + 1) {
+            if (dSnapshot.hasChild(i.toString())) {
+                var rootNodeComment = dSnapshot.child(i.toString())
+                    .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome).value as HashMap<String, HashMap<String, HashMap<String, String>>>
+                val idOnwer = rootNodeComment.keys.toMutableList()[0]
+                val idPet = rootNodeComment[idOnwer]?.keys?.toMutableList()?.get(0).toString()
+
+                comentario = commentsService.retrieveComment(i, dSnapshot, idOnwer, idPet)
+                if (comentario.comentarioAtivo) {
+                    arraylist.add(comentario)
+                }
+            }
+        }
+
+        return arraylist
+    }
+
+    fun reportPost(snapshot: DataSnapshot, reportPost: ReportPost) {
+        if(snapshot.hasChildren() && snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_REPORT_POST.nome)) {
+            val numReporttedPosts = snapshot.child(AnimalLoversConstants.DATABASE_NODE_REPORT_POST.nome).childrenCount + 1
+
+            database.child(AnimalLoversConstants.DATABASE_ENTITY_ADMIN.nome)
+                .child(AnimalLoversConstants.DATABASE_NODE_REPORT_POST.nome)
+                .child(numReporttedPosts.toString())
+                .setValue(reportPost)
+        }
+        else {
+            database.child(AnimalLoversConstants.DATABASE_ENTITY_ADMIN.nome)
+                .child(AnimalLoversConstants.DATABASE_NODE_REPORT_POST.nome)
+                .child("1")
+                .setValue(reportPost)
+        }
+    }
+
 }

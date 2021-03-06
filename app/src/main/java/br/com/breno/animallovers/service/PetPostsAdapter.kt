@@ -225,23 +225,14 @@ class PetPostsAdapter (private val posts: List<Post>, val petPost: Pet, private 
         var photoPost: ImageView = itemView.iv_photo_post_feed
         var likePost: ImageView = itemView.iv_action_fav
         var commentPost: ImageView = itemView.iv_action_comment
-        var sharePost: ImageView = itemView.iv_action_share
         var numLikesPost: TextView = itemView.tv_num_likes_post
         var numCommentsPost: TextView = itemView.tv_num_comments_post
-        var numSharesPost: TextView = itemView.tv_num_shares_post
 
         fun bindView(post: Post, pet: Pet) {
             val name = itemView.tv_pet_name_post_feed
             val dateTime = itemView.tv_date_time_post_feed
             val description = itemView.tv_pet_description_post_feed
-            val photoPost = itemView.iv_photo_post_feed
-            var likePost = itemView.iv_action_fav
-            var commentPost= itemView.iv_action_comment
-            var sharePost = itemView.iv_action_share
 
-            var numLikesPost = itemView.tv_num_likes_post
-            var numCommentsPost = itemView.tv_num_comments_post
-            var numSharesPost = itemView.tv_num_shares_post
             name.text = pet.nome
             dateTime.text = post.dataHora
             description.text = post.legenda

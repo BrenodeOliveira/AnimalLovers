@@ -137,7 +137,7 @@ class ProfilePetActivity : AppCompatActivity() {
 
     private fun loadPetPosts(pet: Pet) {
 
-        val postService = PostService()
+        val postService = PostService(baseContext)
         var listPosts : List<Post>
 
 

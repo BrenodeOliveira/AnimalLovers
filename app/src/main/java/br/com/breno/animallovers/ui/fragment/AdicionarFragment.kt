@@ -2,6 +2,7 @@ package br.com.breno.animallovers.ui.fragment
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -31,8 +32,6 @@ import br.com.breno.animallovers.ui.fragment.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
-import br.com.breno.animallovers.viewModel.ComponentesVisuais
-import br.com.breno.animallovers.viewModel.EstadoAppViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -42,10 +41,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.fragment_publish.*
-import org.koin.android.viewmodel.ext.android.sharedViewModel
 import java.io.ByteArrayOutputStream
 
 private const val CAMERA_RQ = 102
@@ -56,7 +52,7 @@ private const val REQUEST_CODE = 42
 private lateinit var database: DatabaseReference
 private lateinit var auth: FirebaseAuth
 
-private val postService = PostService()
+
 private val petService = PetService()
 private var accountInfo = Conta()
 private var post = Post()
@@ -87,7 +83,7 @@ class AdicionarFragment : Fragment() {
         getPetsName()
         clickButtonCamera()
         clickButtonGallery()
-        clickPublishPost()
+        clickPublishPost(view.context)
 
 //        estadoAppViewModel.temComponentes = ComponentesVisuais(appBar = false)
 
@@ -144,7 +140,9 @@ class AdicionarFragment : Fragment() {
         }
     }
 
-    private fun clickPublishPost() {
+    private fun clickPublishPost(context : Context) {
+        val postService = PostService(context)
+
         btn_publish.setOnClickListener {
             database = Firebase.database.reference
             auth = FirebaseAuth.getInstance()

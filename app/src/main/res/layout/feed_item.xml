@@ -15,23 +15,23 @@
 
         <ImageView
             android:id="@+id/iv_icon_options_post_feed"
-            android:layout_width="22dp"
-            android:layout_height="34dp"
+            android:layout_width="20dp"
+            android:layout_height="29dp"
             android:layout_gravity="center|center_horizontal|end"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="40dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_three_hearts" />
 
         <TextView
             android:id="@+id/tv_pet_name_post_feed"
-            android:layout_width="352dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="7dp"
-            android:textSize="30sp"
-            app:layout_constraintStart_toEndOf="@+id/iv_icon_options_post_feed"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="44dp"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/iv_icon_profile_photo_post_feed"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Nina" />
 
@@ -40,10 +40,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="sans-serif-thin"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,41 +51,24 @@
             tools:layout_editor_absoluteY="264dp"
             tools:text="NinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNinaNina" />
 
+
         <ImageView
             android:id="@+id/iv_photo_post_feed"
             android:layout_width="match_parent"
-            android:layout_height="275dp"
-            android:layout_marginTop="4dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="12dp"
             android:contentDescription="@string/content_feed"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_pet_name_post_feed" />
 
-
-        <TextView
-            android:id="@+id/tv_num_likes_post"
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            android:layout_marginTop="280dp"
-            android:background="@drawable/likes_post_count"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="0"
-            android:textColor="@color/colorWhite"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/iv_action_fav"
-            app:layout_constraintEnd_toEndOf="@+id/iv_action_fav"
-            app:layout_constraintStart_toStartOf="@+id/iv_action_fav"
-            app:layout_constraintTop_toTopOf="@+id/iv_photo_post_feed"
-            app:layout_constraintVertical_bias="1.0" />
-
         <ImageView
             android:id="@+id/iv_action_fav"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
             android:clickable="true"
             android:contentDescription="@string/content_like"
@@ -95,16 +78,35 @@
             app:layout_constraintTop_toBottomOf="@id/iv_photo_post_feed" />
 
         <TextView
-            android:id="@+id/tv_num_comments_post"
+            android:id="@+id/tv_num_likes_post"
             android:layout_width="wrap_content"
-            android:layout_height="25dp"
+            android:layout_height="22dp"
             android:layout_marginTop="280dp"
             android:background="@drawable/likes_post_count"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="0"
             android:textColor="@color/colorWhite"
-            android:textSize="12sp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/iv_action_fav"
+            app:layout_constraintEnd_toEndOf="@+id/iv_action_fav"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/iv_action_fav"
+            app:layout_constraintTop_toTopOf="@+id/iv_photo_post_feed"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/tv_num_comments_post"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_marginTop="280dp"
+            android:background="@drawable/likes_post_count"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="0"
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/iv_action_comment"
             app:layout_constraintEnd_toEndOf="@+id/iv_action_comment"
@@ -113,48 +115,17 @@
             app:layout_constraintTop_toTopOf="@+id/iv_photo_post_feed"
             app:layout_constraintVertical_bias="1.0" />
 
+
         <ImageView
             android:id="@+id/iv_action_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="24dp"
             android:clickable="true"
             android:contentDescription="@string/content_comment"
             android:focusable="true"
             android:src="@drawable/ic_action_comment"
             app:layout_constraintStart_toEndOf="@id/iv_action_fav"
-            app:layout_constraintTop_toTopOf="@id/iv_action_fav" />
-
-
-        <TextView
-            android:id="@+id/tv_num_shares_post"
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            android:layout_marginTop="280dp"
-            android:background="@drawable/likes_post_count"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="0"
-            android:textColor="@color/colorWhite"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/iv_action_share"
-            app:layout_constraintEnd_toEndOf="@+id/iv_action_share"
-            app:layout_constraintHorizontal_bias="0.558"
-            app:layout_constraintStart_toStartOf="@+id/iv_action_share"
-            app:layout_constraintTop_toTopOf="@+id/iv_photo_post_feed"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <ImageView
-            android:id="@+id/iv_action_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:clickable="true"
-            android:contentDescription="@string/content_share"
-            android:focusable="true"
-            android:src="@drawable/ic_action_share"
-            app:layout_constraintStart_toEndOf="@id/iv_action_comment"
             app:layout_constraintTop_toTopOf="@id/iv_action_fav" />
 
         <TextView
@@ -164,11 +135,22 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:textSize="14sp"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_pet_description_post_feed"
             tools:text="01/01/2020 23:59:59" />
+
+        <ImageView
+            android:id="@+id/iv_icon_profile_photo_post_feed"
+            android:layout_width="75dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toEndOf="@+id/iv_icon_options_post_feed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/animalovers_logo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
