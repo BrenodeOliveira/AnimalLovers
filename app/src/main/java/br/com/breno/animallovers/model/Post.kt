@@ -1,6 +1,8 @@
 package br.com.breno.animallovers.model
 
-class Post {
+import java.io.Serializable
+
+class Post  : Serializable {
     var legenda = ""
     var dataHora = ""
     var pathPub = ""

@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.*
 import br.com.breno.animallovers.ui.activity.ProfilePetActivity
+import br.com.breno.animallovers.ui.activity.SinglePostActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
@@ -199,18 +200,33 @@ class FeedAdapter(
 
                     holder.numLikesPost.setOnClickListener {
                         val profilesLikesPostAdapter = ProfilesLikesPostService(post)
-                        var manager: FragmentManager = if (context is ProfilePetActivity) {
-                            context.supportFragmentManager
-                        } else {
-                            (context as AppCompatActivity).supportFragmentManager
+                        var manager: FragmentManager = when (context) {
+                            is ProfilePetActivity -> {
+                                context.supportFragmentManager
+                            }
+                            is SinglePostActivity -> {
+                                context.supportFragmentManager
+                            }
+                            else -> {
+                                (context as AppCompatActivity).supportFragmentManager
+                            }
                         }
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }
 
                     holder.commentPost.setOnClickListener {
                         val profilesLikesPostAdapter = CommentsPostService(post, arraylist)
-                        val manager: FragmentManager =
-                            (context as AppCompatActivity).supportFragmentManager
+                        var manager: FragmentManager = when (context) {
+                            is ProfilePetActivity -> {
+                                context.supportFragmentManager
+                            }
+                            is SinglePostActivity -> {
+                                context.supportFragmentManager
+                            }
+                            else -> {
+                                (context as AppCompatActivity).supportFragmentManager
+                            }
+                        }
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }
                 }
