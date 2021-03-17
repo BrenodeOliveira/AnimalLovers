@@ -1,6 +1,7 @@
 package br.com.breno.animallovers.service
 
 import android.content.Context
+import br.com.breno.animallovers.model.Comentario
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
@@ -39,6 +40,33 @@ class LikeService (context : Context){
             .setValue(DateUtils.dataFormatWithMilliseconds())
     }
 
+    fun dislikeComment(post : Post, comentario : Comentario) {
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(post.idOwner)//ID do dono do post
+            .child(post.idPet)//ID do pet do post
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+            .child(post.idPost)
+            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+            .child(comentario.idComentario)
+            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT_LIKES.nome)
+            .child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .setValue(null)
+    }
+
+    fun likeComment(post : Post, comentario : Comentario) {
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(post.idOwner)//ID do dono do post
+            .child(post.idPet)//ID do pet do post
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+            .child(post.idPost)
+            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+            .child(comentario.idComentario)
+            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT_LIKES.nome)
+            .child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .setValue(DateUtils.dataFormatWithMilliseconds())
+    }
     fun checkIfPetLikkedPost(snapshot: DataSnapshot) {
 
     }

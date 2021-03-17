@@ -2,13 +2,7 @@ package br.com.breno.animallovers.service
 
 import android.content.Context
 import android.os.Build
-import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Comentario
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
@@ -24,14 +18,13 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.fragment_publish.*
 
 class PostService(context : Context) {
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
     private var pet = Pet()
     val database = Firebase.database.reference
-    val commentsService = CommentsService()
+    val commentsService = CommentsService(context)
     val myPreferences = ProjectPreferences(context)
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -45,6 +45,28 @@ class PetService : AppCompatActivity() {
         return pet
     }
 
+    fun retrievePets (ownersPets: HashMap<String, HashMap<String, String>>, dataSnapshot: DataSnapshot): ArrayList<Pet> {
+        val petsArray = ArrayList<Pet>()
+
+        for (i in 0 until ownersPets.size) {
+            val idOwnerPet = ownersPets.keys.toMutableList()[i]
+            for (j in 0 until (ownersPets.toMutableMap()[idOwnerPet]?.values?.size!!)) {
+                pet = dataSnapshot.child(idOwnerPet)
+                    .child(ownersPets.toMutableMap()[idOwnerPet]?.keys?.toMutableList()!![j])
+                    .child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome)
+                    .getValue<Pet>()!!
+
+                petsArray.add(pet)
+            }
+        }
+        return petsArray
+    }
+
+    fun retrievePetInfoFromUnknownOwner (idOwner : String, idPet: String, dataSnapshot: DataSnapshot): Pet {
+        pet = dataSnapshot.child(idOwner).child(idPet).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
+        return pet
+    }
+
     fun registerNewPet(id: Int, pet: Pet) {
         database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
