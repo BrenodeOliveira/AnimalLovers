@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -146,7 +147,7 @@ class CommentsPostAdapter(
     private fun openMenusComment(holder : ViewHolder, comentario : Comentario) {
         holder.optionsOpenIcon.setOnClickListener {
             if (comentario.idOwner == auth.uid && comentario.idPet == myPreferences.getPetLogged()) {
-                val popupMenu = PopupMenu(context, holder.itemView)
+                val popupMenu = PopupMenu(context, holder.itemView, Gravity.LEFT)
                 popupMenu.setOnMenuItemClickListener {
                     when (it.itemId) {R.id.item_copy_menu_options_owner -> {
                         val clipboard: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -203,7 +204,7 @@ class CommentsPostAdapter(
                 popupMenu.inflate(R.menu.menu_options_owner)
                 popupMenu.show()
             } else {
-                val popupMenu = PopupMenu(context, holder.itemView)
+                val popupMenu = PopupMenu(context, holder.itemView, Gravity.LEFT)
                 popupMenu.setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.item_copy_menu_options -> {

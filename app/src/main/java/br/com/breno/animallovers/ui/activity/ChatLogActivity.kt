@@ -77,13 +77,33 @@ class ChatLogActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
                 recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
+
+                if (chatMessage != null) {
+
+                    if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
+                        val currentUser = ChatFragment.currentUser ?: return
+                        adapter.add(
+                            ChatFromItem(
+                                chatMessage.text,
+                                currentUser
+                            )
+                        )
+                    } else {
+                        adapter.add(
+                            ChatToItem(
+                                chatMessage.text,
+                                toUser!!
+                            )
+                        )
+                    }
+
+                }
             }
+
+            override fun onCancelled(error: DatabaseError) {}
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onChildRemoved(snapshot: DataSnapshot) {}
         })

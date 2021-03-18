@@ -6,39 +6,64 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:maxHeight="250dp"
+    app:cardCornerRadius="24dp"
     app:cardElevation="10dp">
 
-    <LinearLayout
-
-        android:id="@+id/linLayoutOpenPetProfile"
-        android:layout_width="182dp"
-        android:layout_height="185dp"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_add_friend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv_pet_name_search_pets"
-            android:layout_width="183dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
             android:textSize="26sp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintTop_toBottomOf="@id/card_icon_foto_perfil_search_pets"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_add_friend_search_pets"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="Nome" />
 
-        <ImageView
-            android:id="@+id/iv_icon_foto_perfil_search_pets"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_icon_foto_perfil_search_pets"
             android:layout_width="184dp"
-            android:layout_height="96dp"
-            android:layout_marginTop="5dp"
-            app:srcCompat="@drawable/animalovers_logo" />
+            android:layout_height="150dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_icon_foto_perfil_search_pets"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:scaleType="fitXY"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/animalovers_logo" />
+
+        </androidx.cardview.widget.CardView>
 
         <ImageView
             android:id="@+id/iv_add_friend_search_pets"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_pet_name_search_pets"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_pet_name_search_pets"
+            app:layout_constraintTop_toTopOf="@id/tv_pet_name_search_pets"
             app:srcCompat="@drawable/ic_coracao" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

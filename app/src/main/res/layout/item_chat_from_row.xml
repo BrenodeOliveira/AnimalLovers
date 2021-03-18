@@ -12,7 +12,6 @@
         android:layout_height="50dp"
         android:layout_margin="4dp"
         android:src="@drawable/animalovers_logo_simples"
-        app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

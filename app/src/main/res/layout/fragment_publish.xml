@@ -5,12 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_pet_photo_profile_publish"
         android:layout_width="75dp"
         android:layout_height="80dp"
-        android:layout_marginRight="5dp"
-        android:scaleType="fitXY"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/content_app_logo"

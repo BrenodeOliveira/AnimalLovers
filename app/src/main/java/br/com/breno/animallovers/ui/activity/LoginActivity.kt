@@ -6,6 +6,7 @@ import android.util.Patterns
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.ProjectPreferences

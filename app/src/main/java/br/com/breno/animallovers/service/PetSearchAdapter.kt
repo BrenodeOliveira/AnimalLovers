@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
@@ -186,7 +186,7 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         val name: TextView = itemView.tv_pet_name_search_pets
         var photoProfile: ImageView = itemView.iv_icon_foto_perfil_search_pets
         var icSendFriendShipRequest : ImageView = itemView.iv_add_friend_search_pets
-        var layoutItem : LinearLayout = itemView.linLayoutOpenPetProfile
+        var layoutItem : ConstraintLayout = itemView.constraint_add_friend
 
         fun bindView(post: Post, pet: Pet) {
             val name = itemView.tv_pet_name_search_pets

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -275,7 +276,7 @@ class FeedAdapter(
     }
 
     private fun showPopUpMenuForOtherPosts(holder: ViewHolder, post: Post) {
-        val popupMenu = PopupMenu(context, holder.itemView)
+        val popupMenu = PopupMenu(context, holder.itemView, Gravity.RIGHT)
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.item_copy_menu_options -> {
@@ -392,7 +393,7 @@ class FeedAdapter(
     }
 
     private fun showPopUpMenuForOwnerPost(holder : ViewHolder, post : Post) {
-        val popupMenu = PopupMenu(context, holder.itemView)
+        val popupMenu = PopupMenu(context, holder.itemView, Gravity.RIGHT)
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.item_copy_menu_options_owner -> {
