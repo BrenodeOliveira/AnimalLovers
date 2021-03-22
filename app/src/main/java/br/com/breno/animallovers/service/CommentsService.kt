@@ -31,7 +31,7 @@ class CommentsService(context : Context) {
     }
 
     fun getRootSnapshotForComment(post : Post, comentario : Comentario, dSnapshot: DataSnapshot) : DataSnapshot {
-        return dSnapshot.child(comentario.idOwner)
+        return dSnapshot.child(post.idOwner)
             .child(post.idPet)
             .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
             .child(post.idPost)
