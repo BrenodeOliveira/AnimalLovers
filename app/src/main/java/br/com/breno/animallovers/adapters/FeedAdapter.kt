@@ -1,4 +1,4 @@
-package br.com.breno.animallovers.service
+package br.com.breno.animallovers.adapters
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -21,10 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
-import br.com.breno.animallovers.model.Comentario
-import br.com.breno.animallovers.model.Pet
-import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.model.ReportPost
+import br.com.breno.animallovers.model.*
+import br.com.breno.animallovers.service.*
 import br.com.breno.animallovers.ui.activity.ProfilePetActivity
 import br.com.breno.animallovers.ui.activity.SinglePostActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -57,7 +55,8 @@ import java.time.format.DateTimeFormatter
 
 class FeedAdapter(
     private val posts: List<Post>,
-    private val context: Context
+    private val context: Context,
+    private val shouldInflateComments : Boolean
 ) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
@@ -68,6 +67,8 @@ class FeedAdapter(
     private var comentario = Comentario()
     private var postService = PostService(context)
     private var likeService = LikeService(context)
+    private var notificationService = NotificationService(context)
+
     private var dateUtils = DateUtils()
 
     private val myPreferences = ProjectPreferences(context)
@@ -107,17 +108,19 @@ class FeedAdapter(
         dt = Firebase.database.reference
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-            .child(post.idOwner)
-            .child(post.idPet)
+
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dSnap: DataSnapshot) {
                     var numLikes = 0
 
                     var hasPetLikedPost = false
 
-                    pet = (dSnap.child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>())!!
+                    val owner = dSnap.child(post.idOwner).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
 
-                    val snapshot = dSnap.child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                    pet = (dSnap.child(post.idOwner).child(post.idPet).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>())!!
+                    val petLoggedInfo = (dSnap.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>())!!
+
+                    val snapshot = dSnap.child(post.idOwner).child(post.idPet).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
                         .child(post.idPost)
                     if (snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)) {
                         val ownersPets: HashMap<String, HashMap<String, String>> = snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).value as HashMap<String, HashMap<String, String>>
@@ -153,6 +156,9 @@ class FeedAdapter(
                                 likeService.likePost(post)
                                 holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 numLikes++
+//                                if(post.idOwner == auth.uid) {
+                                notificationService.sendNotificationOfLikedPost(pet, petLoggedInfo, post, owner)
+//                                }
                                 true
                             }
                             holder.numLikesPost.text = numLikes.toString()
@@ -177,19 +183,24 @@ class FeedAdapter(
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }
 
-                    holder.commentPost.setOnClickListener {
-                        val profilesLikesPostAdapter = CommentsPostService(post, arraylist)
-                        var manager: FragmentManager = when (context) {
-                            is ProfilePetActivity -> {
-                                context.supportFragmentManager
-                            }
-                            is SinglePostActivity -> {
-                                context.supportFragmentManager
-                            }
-                            else -> {
-                                (context as AppCompatActivity).supportFragmentManager
-                            }
+                    val profilesLikesPostAdapter = CommentsPostService(post, arraylist, context)
+                    var manager: FragmentManager = when (context) {
+                        is ProfilePetActivity -> {
+                            context.supportFragmentManager
                         }
+                        is SinglePostActivity -> {
+                            context.supportFragmentManager
+                        }
+                        else -> {
+                            (context as AppCompatActivity).supportFragmentManager
+                        }
+                    }
+
+                    if(shouldInflateComments) {
+                        profilesLikesPostAdapter.show(manager, "likesPost")
+                    }
+
+                    holder.commentPost.setOnClickListener {
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }
                 }

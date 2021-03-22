@@ -1,24 +1,29 @@
 package br.com.breno.animallovers.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.adapters.ChatFromItem
-import br.com.breno.animallovers.model.ChatMessage
 import br.com.breno.animallovers.adapters.ChatToItem
+import br.com.breno.animallovers.model.ChatMessage
+import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.User
+import br.com.breno.animallovers.service.NotificationService
 import br.com.breno.animallovers.ui.fragment.ChatFragment
+import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_log.*
 
 class ChatLogActivity : AppCompatActivity() {
+
+    private var database: DatabaseReference = Firebase.database.reference
 
     companion object {
         const val TAG = "ChatLog"
@@ -144,5 +149,24 @@ class ChatLogActivity : AppCompatActivity() {
         val latestMessageToRef = FirebaseDatabase.getInstance()
             .getReference("/latest-messages/$toId/$fromId")
         latestMessageToRef.setValue(chatMessage)
+
+        sendNotificationOfNewMessage(fromId, toId, chatMessage)
+    }
+
+    private fun sendNotificationOfNewMessage(fromId : String, toId : String, message : ChatMessage) {
+        var notificationService = NotificationService(applicationContext)
+
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val fromUser = snapshot.child(fromId).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
+                val toUser = snapshot.child(toId).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
+
+                notificationService.sendNotificationOfNewChatMessage(fromUser, toUser, message, (System.currentTimeMillis() / 1000).toString())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println(error.toString())
+            }
+        })
     }
 }

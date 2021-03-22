@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.adapters.FeedAdapter
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.service.FeedAdapter
 import br.com.breno.animallovers.ui.activity.ProfileActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils.Companion.convertStringToDate
@@ -25,8 +25,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_feed.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 class FeedFragment : Fragment() {
@@ -136,7 +134,7 @@ class FeedFragment : Fragment() {
 
                             listPosts.sortBy { convertStringToDate(it.dataHora) }
                             recycler_feed.layoutManager = LinearLayoutManager(requireContext())
-                            recycler_feed.adapter = FeedAdapter(listPosts, requireContext())
+                            recycler_feed.adapter = FeedAdapter(listPosts, requireContext(), false)
 
                             val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                             recycler_feed.layoutManager = layoutManager
@@ -149,7 +147,7 @@ class FeedFragment : Fragment() {
                                     listPosts.add(post)
 
                                     recycler_feed.layoutManager = LinearLayoutManager(requireContext())
-                                    recycler_feed.adapter = FeedAdapter(listPosts, requireContext())
+                                    recycler_feed.adapter = FeedAdapter(listPosts, requireContext(), false)
 
                                     val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                                     recycler_feed.layoutManager = layoutManager

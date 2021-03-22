@@ -126,5 +126,10 @@
     <string name="criminal_content">Conteúdo criminoso</string>
     <string name="text_copied_to_clipboard">Comentário copiado para a área de transferência</string>
     <string name="choose_a_reason_to_report_comment">Escolha um dos motivos para realizar a denuncia do comentário, ou descreva a sua denuncia</string>
+    <string name="commented_your_post"> comentou na sua publicação</string>
+    <string name="liked_your_post"> curtiu sua publicação</string>
+    <string name="liked_your_comment"> curtiu seu comentário</string>
+    <string name="friendship_request_accepted">Solicitação de amizade aceita</string>
+    <string name="friendship_request_received">Solicitação de amizade recebida</string>
 
 </resources>

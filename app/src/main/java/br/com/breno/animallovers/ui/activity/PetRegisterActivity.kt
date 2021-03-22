@@ -39,12 +39,14 @@ private const val REQUEST_CODE = 42
 private lateinit var database: DatabaseReference
 private lateinit var auth: FirebaseAuth
 
-private val petService = PetService()
+
 private var pet = Pet()
 
 private var idPet: Int = 0
 
 class PetRegisterActivity : AppCompatActivity() {
+    private val petService = PetService(baseContext)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pet_register)

@@ -1,4 +1,4 @@
-package br.com.breno.animallovers.service
+package br.com.breno.animallovers.adapters
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -15,6 +15,8 @@ import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Comentario
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
+import br.com.breno.animallovers.service.CommentsPostService
+import br.com.breno.animallovers.service.ProfilesLikesPostService
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
@@ -158,7 +160,7 @@ class PetPostsAdapter (private val posts: List<Post>, val petPost: Pet, private 
                     }
 
                     holder.commentPost.setOnClickListener {
-                        val profilesLikesPostAdapter = CommentsPostService(post, arraylist)
+                        val profilesLikesPostAdapter = CommentsPostService(post, arraylist, context)
                         val manager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                         profilesLikesPostAdapter.show(manager, "likesPost")
                     }

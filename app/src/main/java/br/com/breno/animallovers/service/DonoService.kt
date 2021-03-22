@@ -1,22 +1,24 @@
 package br.com.breno.animallovers.service
 
 import br.com.breno.animallovers.model.Conta
+import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 
 class DonoService {
-    private lateinit var database: DatabaseReference
-    private lateinit var auth: FirebaseAuth
-    private lateinit var storage: FirebaseStorage
+    private var database: DatabaseReference = Firebase.database.reference
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private var storage: FirebaseStorage = FirebaseStorage.getInstance()
 
     fun persistOwner(conta : Conta) {
-        database = Firebase.database.reference
-        auth = FirebaseAuth.getInstance()
-
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
             .child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)
@@ -24,8 +26,6 @@ class DonoService {
     }
 
     fun uploadProfilePhotoOwner(dataPicture : ByteArray, conta : Conta) {
-        auth = FirebaseAuth.getInstance()
-        storage = FirebaseStorage.getInstance()
 
         //Referência de caminho às pastas filhas (Ex.: images/ownerPicture/{id do user}/{id do user.jpeg}
         var storageRef = storage.reference
@@ -47,4 +47,21 @@ class DonoService {
         }
     }
 
+    fun saveOwnerDeviceToken(conta : Conta) {
+        database = Firebase.database.reference
+
+        conta.deviceToken = FirebaseInstanceId.getInstance().token.toString()
+
+        persistOwner(conta)
+    }
+
+    fun retrieveOwnerToken(post : Post, snapshot: DataSnapshot) : String {
+        return snapshot.child(post.idOwner)
+            .child(AnimalLoversConstants.DATABASE_NODE_TOKEN.nome)
+            .value.toString()
+    }
+
+    fun retrieveOwnerInfo(dataSnapshot: DataSnapshot, uid : String) : Conta {
+        return dataSnapshot.child(uid).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
+    }
 }

@@ -21,11 +21,13 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
 
-class PetService : AppCompatActivity() {
+class PetService(context : Context) : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
     private var pet = Pet()
+    val myPreferences = ProjectPreferences(context)
+
     @RequiresApi(Build.VERSION_CODES.O)
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.dateFrmt())
 
@@ -266,4 +268,7 @@ class PetService : AppCompatActivity() {
 
         return dateDiffInTextFormat(start)
     }
+
+
+
 }

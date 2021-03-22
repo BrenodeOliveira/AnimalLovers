@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.adapters.PetSearchAdapter
 import br.com.breno.animallovers.model.Pet
-import br.com.breno.animallovers.service.PetSearchAdapter
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot

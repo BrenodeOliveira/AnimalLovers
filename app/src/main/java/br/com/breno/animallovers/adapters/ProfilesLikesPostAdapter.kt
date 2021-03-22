@@ -1,4 +1,4 @@
-package br.com.breno.animallovers.service
+package br.com.breno.animallovers.adapters
 
 import android.content.Context
 import android.content.Intent

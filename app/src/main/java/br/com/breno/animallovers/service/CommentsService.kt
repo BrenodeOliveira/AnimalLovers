@@ -16,6 +16,7 @@ class CommentsService(context : Context) {
     val database = Firebase.database.reference
     val myPreferences = ProjectPreferences(context)
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var cmt = Comentario()
 
     fun persistNewComment() {
 
@@ -31,14 +32,63 @@ class CommentsService(context : Context) {
 
     fun getRootSnapshotForComment(post : Post, comentario : Comentario, dSnapshot: DataSnapshot) : DataSnapshot {
         return dSnapshot.child(comentario.idOwner)
-            .child(comentario.idPet)
+            .child(post.idPet)
             .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
             .child(post.idPost)
             .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
             .child(comentario.idComentario)
     }
 
-    fun persistComment(post : Post, comentario : Comentario) {
+    fun getRootSnapshotForAllCommentsOfPost(post : Post, dSnapshot: DataSnapshot) : DataSnapshot {
+        return dSnapshot.child(post.idOwner)
+            .child(post.idPet)
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+            .child(post.idPost)
+            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+    }
+
+    fun getAllComments(post : Post, dSnapshot: DataSnapshot) : ArrayList<Comentario> {
+        val dataSnapshot = getRootSnapshotForAllCommentsOfPost(post, dSnapshot)
+
+        var arraylist = ArrayList<Comentario>()
+        arraylist.clear()
+
+        for (i in 1 until dataSnapshot.childrenCount + 1) {
+            if (dataSnapshot.hasChild(i.toString())) {
+                var rootNodeComment = dataSnapshot.child(i.toString()).child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome).value as HashMap<String, HashMap<String, HashMap<String, String>>>
+                val idOnwer = rootNodeComment.keys.toMutableList()[0]
+                val idPet = rootNodeComment[idOnwer]?.keys?.toMutableList()?.get(0)
+
+                cmt = (dataSnapshot.child(i.toString())
+                    .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
+                    .child(idOnwer)
+                    .child(idPet.toString())
+                    .getValue<Comentario>())!!
+                if (cmt.comentarioAtivo) {
+                    arraylist.add(cmt)
+                }
+            }
+        }
+        return arraylist
+    }
+
+    fun saveNewComment(post : Post, comentario : Comentario, dataSnapshot: DataSnapshot) {
+        comentario.idComentario = (getRootSnapshotForAllCommentsOfPost(post, dataSnapshot).childrenCount + 1).toString()
+
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(post.idOwner)
+            .child(post.idPet)
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+            .child(post.idPost)
+            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+            .child(comentario.idComentario)
+            .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
+            .child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .setValue(comentario)
+
+    }
+    fun updateOrDeleteComment(post : Post, comentario : Comentario) {
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(post.idOwner)
             .child(post.idPet)

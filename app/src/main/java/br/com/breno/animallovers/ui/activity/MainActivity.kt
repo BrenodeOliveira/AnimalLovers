@@ -18,10 +18,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Conta
-import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.service.DonoService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.AnimalLoversConstants
-import br.com.breno.animallovers.utils.ProjectPreferences
 import br.com.breno.animallovers.viewModel.EstadoAppViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -35,10 +34,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_profile.*
-
-import kotlinx.android.synthetic.main.activity_profile.iv_photo_owner_contact
-
 import kotlinx.android.synthetic.main.nav_header.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -50,6 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var storage: FirebaseStorage
     private lateinit var database: DatabaseReference
     private var accountInfo = Conta()
+    private var donoService = DonoService()
 
 
     private val controlador by lazy {
@@ -196,6 +192,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 accountInfo = dataSnapshot.child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
 
+                donoService.saveOwnerDeviceToken(accountInfo)
                 if(accountInfo.pathFotoPerfil != "") {
                     retrieveOwnerProfilePhoto()
                 }

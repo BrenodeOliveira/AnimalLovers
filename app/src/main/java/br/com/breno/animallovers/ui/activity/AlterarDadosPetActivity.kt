@@ -25,7 +25,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_alterar_dados_pet.*
-import kotlinx.android.synthetic.main.activity_pet_register.*
 import java.io.ByteArrayOutputStream
 
 private const val CAMERA_RQ = 102
@@ -35,7 +34,7 @@ private const val REQUEST_CODE = 42
 
 class AlterarDadosPetActivity : AppCompatActivity() {
     private var petInfo = Pet()
-    val petService = PetService()
+    val petService = PetService(baseContext)
 
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth

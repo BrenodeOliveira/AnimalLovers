@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.adapters.PetSearchAdapter
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +24,7 @@ class PetFriendsService : Activity() {
     private lateinit var dBase: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private var pet = Pet()
-    private var petService = PetService()
+    private var petService = PetService(baseContext)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

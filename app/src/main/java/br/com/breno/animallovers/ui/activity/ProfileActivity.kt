@@ -27,9 +27,9 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
-    var modalBottomSheet = ModalBottomSheet()
 
-    private val petService = PetService()
+
+
     private var petInfo = Pet()
     private var idPet: String = ""
     private var accountInfo = Conta()
@@ -54,6 +54,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun clickChangeProfile() {
+        var modalBottomSheet = ModalBottomSheet(applicationContext)
         btn_trocar_perfil_pet.setOnClickListener {
             modalBottomSheet.show(supportFragmentManager, "modalMenu")
         }
@@ -67,6 +68,8 @@ class ProfileActivity : AppCompatActivity() {
     private fun retrieveUserInfo() {
         database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
+
+        val petService = PetService(applicationContext)
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

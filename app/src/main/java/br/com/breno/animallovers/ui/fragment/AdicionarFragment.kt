@@ -53,7 +53,7 @@ private lateinit var database: DatabaseReference
 private lateinit var auth: FirebaseAuth
 
 
-private val petService = PetService()
+
 private var accountInfo = Conta()
 private var post = Post()
 private var pet = Pet()
@@ -62,6 +62,8 @@ private var idPet: String = ""
 private lateinit var storage: FirebaseStorage
 
 class AdicionarFragment : Fragment() {
+
+
 
     private val controlador by lazy {
         findNavController()
@@ -80,7 +82,7 @@ class AdicionarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requestingPermissionToUser()
 
-        getPetsName()
+        getPetsName(view.context)
         clickButtonCamera()
         clickButtonGallery()
         clickPublishPost(view.context)
@@ -92,8 +94,8 @@ class AdicionarFragment : Fragment() {
 
     }
 
-    private fun getPetsName() {
-
+    private fun getPetsName(context: Context) {
+        val petService = PetService(context)
         database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
 

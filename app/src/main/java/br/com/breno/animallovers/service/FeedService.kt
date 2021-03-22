@@ -2,11 +2,11 @@ package br.com.breno.animallovers.service
 
 import android.content.Context
 import android.view.View
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.adapters.FeedAdapter
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -18,7 +18,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.fragment_publish.*
 
 class FeedService {
     private lateinit var database: DatabaseReference
@@ -53,7 +52,7 @@ class FeedService {
                         val recyclerView
                                 = vi.findViewById(R.id.recycler_feed) as RecyclerView
                         recyclerView.layoutManager = LinearLayoutManager(context1)
-                        recyclerView.adapter = FeedAdapter(listPosts, context1)
+                        recyclerView.adapter = FeedAdapter(listPosts, context1, false)
 
                         val layoutManager = StaggeredGridLayoutManager(1
                             , StaggeredGridLayoutManager.VERTICAL)

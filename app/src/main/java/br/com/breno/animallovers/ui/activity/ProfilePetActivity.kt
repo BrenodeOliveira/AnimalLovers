@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.adapters.FeedAdapter
 import br.com.breno.animallovers.constants.StatusSolicitacaoAmizade
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.service.FeedAdapter
 import br.com.breno.animallovers.service.PetFriendsService
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.service.PostService
@@ -59,7 +59,7 @@ class ProfilePetActivity : AppCompatActivity() {
     }
 
     private fun loadPetInfo(pet: Pet) {
-        val petService = PetService()
+        val petService = PetService(applicationContext)
 
         database = Firebase.database.reference
 
@@ -162,7 +162,7 @@ class ProfilePetActivity : AppCompatActivity() {
 
                     val recyclerView = findViewById<RecyclerView>(R.id.recycler_posts_profile_pet)
                     recyclerView.layoutManager = LinearLayoutManager(this@ProfilePetActivity)
-                    recyclerView.adapter = FeedAdapter(listPosts, this@ProfilePetActivity)
+                    recyclerView.adapter = FeedAdapter(listPosts, this@ProfilePetActivity, false)
 
                     val layoutManager = StaggeredGridLayoutManager(
                         1, StaggeredGridLayoutManager.VERTICAL

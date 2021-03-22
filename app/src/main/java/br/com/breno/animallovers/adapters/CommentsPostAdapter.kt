@@ -1,4 +1,4 @@
-package br.com.breno.animallovers.service
+package br.com.breno.animallovers.adapters
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -24,6 +24,10 @@ import br.com.breno.animallovers.model.Comentario
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.model.ReportComment
+import br.com.breno.animallovers.service.CommentsService
+import br.com.breno.animallovers.service.LikeService
+import br.com.breno.animallovers.service.NotificationService
+import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.ProfilePetActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
@@ -53,15 +57,14 @@ class CommentsPostAdapter(
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
-    private lateinit var db: DatabaseReference
-    private lateinit var dBase: DatabaseReference
-    private lateinit var dtBase: DatabaseReference
     private lateinit var dt: DatabaseReference
     var listOfReasonsReportted = ArrayList<String>()
-    private var petService = PetService()
+    private var petService = PetService(context)
     private var dateUtils = DateUtils()
     private var likeService = LikeService(context)
     private var commentService = CommentsService(context)
+    private var notificationService = NotificationService(context)
+
     var hasPetLikedComment = false
     var numLikes = 0
     val myPreferences = ProjectPreferences(context)
@@ -81,9 +84,6 @@ class CommentsPostAdapter(
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         database = Firebase.database.reference
-        db = Firebase.database.reference
-        dBase = Firebase.database.reference
-        dtBase = Firebase.database.reference
         dt = Firebase.database.reference
         var pet: Pet
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
@@ -129,7 +129,7 @@ class CommentsPostAdapter(
 
                         loadProfilePhoto(pet, holder)
 
-                        likePostClick(holder, comentario)
+                        likePostClick(holder, comentario, snapshot)
 
                         numLikesCommentClick(holder, comentario, snapshot, ownersPets)
 
@@ -173,7 +173,7 @@ class CommentsPostAdapter(
                                 if (mAlertDialog.tv_comment_text_edit_comment.text != mAlertDialog.et_input_comment_edit_comment.text) {
                                     comentario.textoComentario = mAlertDialog.et_input_comment_edit_comment.text.toString()
 
-                                    commentService.persistComment(post, comentario)
+                                    commentService.updateOrDeleteComment(post, comentario)
                                     mAlertDialog.dismiss()
                                 }
                             }
@@ -189,7 +189,7 @@ class CommentsPostAdapter(
 
                                     comentario.comentarioAtivo = false
 
-                                    commentService.persistComment(post, comentario)
+                                    commentService.updateOrDeleteComment(post, comentario)
                                 }
                                 .setNegativeButton(R.string.no, null)
                                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -308,26 +308,24 @@ class CommentsPostAdapter(
         }
     }
 
-    private fun likePostClick(holder : ViewHolder, comentario : Comentario) {
+    private fun likePostClick(holder : ViewHolder, comentario : Comentario, snapshot: DataSnapshot) {
         holder.likeComment.setOnClickListener {
-            if (holder.numLikesComment.text != "") {
+            hasPetLikedComment = if (hasPetLikedComment) {
+                likeService.dislikeComment(post, comentario)
 
-                hasPetLikedComment = if (hasPetLikedComment) {
-                    likeService.dislikeComment(post, comentario)
-
-                    holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.icon_tint), android.graphics.PorterDuff.Mode.MULTIPLY)
-                    numLikes--
-                    false
-                } else {
-                    likeService.likeComment(post, comentario)
-                    holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
-                    numLikes++
-                    true
-                }
-                holder.numLikesComment.text = numLikes.toString()
+                holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.icon_tint), android.graphics.PorterDuff.Mode.MULTIPLY)
+                numLikes--
+                false
             } else {
-                holder.numLikesComment.text = "0"
+                likeService.likeComment(post, comentario)
+                holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
+                numLikes++
+
+                notificationService.sendNotificationOfLikedComment(post, comentario, snapshot)
+
+                true
             }
+            holder.numLikesComment.text = numLikes.toString()
         }
     }
 

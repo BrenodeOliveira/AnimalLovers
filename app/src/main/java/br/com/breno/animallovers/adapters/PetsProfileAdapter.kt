@@ -1,4 +1,4 @@
-package br.com.breno.animallovers.service
+package br.com.breno.animallovers.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.service.ModalBottomSheet
 import br.com.breno.animallovers.ui.activity.MainActivity
 import br.com.breno.animallovers.ui.activity.ProfileActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants

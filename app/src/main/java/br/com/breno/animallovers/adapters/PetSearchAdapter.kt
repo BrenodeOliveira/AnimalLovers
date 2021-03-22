@@ -1,4 +1,4 @@
-package br.com.breno.animallovers.service
+package br.com.breno.animallovers.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -17,9 +17,13 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.constants.StatusSolicitacaoAmizade
+import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.model.SolicitacaoAmizade
+import br.com.breno.animallovers.service.FriendShipService
+import br.com.breno.animallovers.service.NotificationService
+import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.ProfilePetActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
@@ -40,8 +44,6 @@ import kotlinx.android.synthetic.main.cancel_friendship_request.view.*
 import kotlinx.android.synthetic.main.pet_search_item.view.*
 import kotlinx.android.synthetic.main.undo_friendship.*
 import kotlinx.android.synthetic.main.undo_friendship.view.*
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
 
 
@@ -50,14 +52,16 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var dBase: DatabaseReference
+    private var friendShipService = FriendShipService(context)
+    private var notificationService = NotificationService(context)
     private var solicitacao = SolicitacaoAmizade()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PetSearchAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.pet_search_item, parent, false)
-        return PetSearchAdapter.ViewHolder(view)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: PetSearchAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val pet = pets[(pets.size - 1) - position]
 
         storage = FirebaseStorage.getInstance()
@@ -94,10 +98,11 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         }
 
         holder.let {
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).addListenerForSingleValueEvent(
+            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(
                 object :
                     ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
+                    override fun onDataChange(snapshots: DataSnapshot) {
+                        var snapshot = snapshots.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString())
                         if (snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)) {
                             if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome).hasChild(pet.idOwner)) {
                                 if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome).child(pet.idOwner).hasChild(pet.id)) {
@@ -130,11 +135,16 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
 
             it.icSendFriendShipRequest.setOnClickListener {
 
-                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).addListenerForSingleValueEvent(
+                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(
                     object :
                         ValueEventListener {
                         @RequiresApi(Build.VERSION_CODES.O)
-                        override fun onDataChange(snapshot: DataSnapshot) {
+                        override fun onDataChange(snapshots: DataSnapshot) {
+
+                            var owner = snapshots.child(auth.uid.toString()).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
+
+                            var snapshot = snapshots.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString())
+                            val petLogged = snapshot.child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
                             if (snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)) {
                                 if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome).hasChild(pet.idOwner)) {
                                     if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome).child(pet.idOwner).hasChild(pet.id)) {
@@ -145,23 +155,23 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
 
                                         when (solicitacaoAmizade.statusSolicitacao) {
                                             StatusSolicitacaoAmizade.SENT.status -> chamarMyDialogCancelFriendshipRequest(pet, solicitacaoAmizade)
-                                            StatusSolicitacaoAmizade.WAITING.status -> chamarMyDialogAnalizeFriendshipRequest(pet, solicitacaoAmizade)
+                                            StatusSolicitacaoAmizade.WAITING.status -> chamarMyDialogAnalizeFriendshipRequest(pet, petLogged, solicitacaoAmizade, owner)
                                             StatusSolicitacaoAmizade.ACCEPTED.status -> chamarMyDialogUndoFriendship(pet, solicitacaoAmizade)
                                             StatusSolicitacaoAmizade.CANCELLED.status -> {
-                                                sendFriendShipRequest(pet, solicitacao)
+                                                sendFriendShipRequest(pet, petLogged, solicitacao, owner)
                                                 it.iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_espera)
                                             }
                                         }
                                     } else {
-                                        sendFriendShipRequest(pet, solicitacao)
+                                        sendFriendShipRequest(pet, petLogged, solicitacao, owner)
                                         it.iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_espera)
                                     }
                                 } else {
-                                    sendFriendShipRequest(pet, solicitacao)
+                                    sendFriendShipRequest(pet, petLogged, solicitacao, owner)
                                     it.iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_espera)
                                 }
                             } else {
-                                sendFriendShipRequest(pet, solicitacao)
+                                sendFriendShipRequest(pet, petLogged, solicitacao, owner)
                                 it.iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_espera)
                             }
                         }
@@ -191,35 +201,23 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         fun bindView(post: Post, pet: Pet) {
             val name = itemView.tv_pet_name_search_pets
 
-
             name.text = pet.nome
         }
     }
 
-    fun sendFriendShipRequest(pet: Pet, solicitacao: SolicitacaoAmizade) {
-        val myPreferences = ProjectPreferences(context)
-
+    fun sendFriendShipRequest(pet: Pet, petLogged : Pet, solicitacao: SolicitacaoAmizade, owner : Conta) {
         //Adiciona no perfil desse usuário
         solicitacao.dataEnvioSolicitacao = DateUtils.dataFormatWithMilliseconds()
         solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.SENT.status
 
-        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-            .child(auth.uid.toString())
-            .child(myPreferences.getPetLogged().toString())
-            .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-            .child(pet.idOwner)
-            .child(pet.id)
-            .setValue(solicitacao)
+        friendShipService.persistFriendShipRequestInReceiver(solicitacao, pet)
 
         //Adiciona no perfil da solicitação enviada
         solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.WAITING.status
-        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-            .child(pet.idOwner)
-            .child(pet.id)
-            .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-            .child(auth.uid.toString())
-            .child(myPreferences.getPetLogged().toString())
-            .setValue(solicitacao)
+
+        friendShipService.persistFriendShipRequestInSender(solicitacao, pet)
+
+        notificationService.sendNotificationOfFriendshiRequestReceived(pet, petLogged, owner)
     }
 
     fun chamarMyDialogCancelFriendshipRequest(pet: Pet, solicitacao: SolicitacaoAmizade) {
@@ -244,26 +242,14 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
             }
         }
         mDialogView.btn_cancel_friendship_request.setOnClickListener {
-            val myPreferences = ProjectPreferences(context)
             dBase = Firebase.database.reference
 
             //Desfaz a solicitação no usuário
-            dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .setValue(null)
+            friendShipService.undoFriendshipInSender(pet)
 
             //Desfaz a solicitação no perfil do pet que enviou
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .setValue(null)
+            friendShipService.undoFriendshipInReceiver(pet)
+
 
             mAlertDialog.dismiss()
         }
@@ -272,7 +258,7 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         }
     }
 
-    fun chamarMyDialogAnalizeFriendshipRequest(pet: Pet, solicitacao: SolicitacaoAmizade) {
+    fun chamarMyDialogAnalizeFriendshipRequest(pet: Pet, petLogged : Pet, solicitacao: SolicitacaoAmizade, owner : Conta) {
         val mDialogView = LayoutInflater.from(context).inflate(R.layout.analize_friendship_request, null)
         val mBuilder = AlertDialog.Builder(context).setView(mDialogView).setTitle("Solicitação de amizade")
         val mAlertDialog = mBuilder.show()
@@ -301,73 +287,31 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
             val dataInicioAmizade = DateUtils.dataFormatWithMilliseconds()
             solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.ACCEPTED.status
             //Persiste a solicitação aceita no usuário
-            dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .setValue(solicitacao)
+            friendShipService.persistFriendShipRequestInReceiver(solicitacao, pet)
 
             //Persiste na lista de amigos o novo amigo
-            dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .setValue(dataInicioAmizade)
+            friendShipService.saveNewFriendShipReceiver(dataInicioAmizade, pet)
 
             //-----------------------------------------------------------------------//
             //Desfaz a solicitação no perfil do pet que enviou
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .setValue(solicitacao)
+            friendShipService.persistFriendShipRequestInSender(solicitacao, pet)
 
             //Persiste na lista de amigos o novo amigo
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .setValue(dataInicioAmizade)
+            friendShipService.saveNewFriendShipSender(dataInicioAmizade, pet)
 
             mAlertDialog.dismiss()
+
+            notificationService.sendNotificationOfFriendshipAccepted(pet, petLogged, owner)
         }
         mDialogView.btn_decline_friendship_request.setOnClickListener {
 
             //Desfaz a solicitação no usuário
-            dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .setValue(null)
+            friendShipService.undoFriendshipInSender(pet)
 
             //Desfaz a solicitação no perfil do pet que enviou
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .setValue(null)
+            friendShipService.undoFriendShipRequestInReceiver(pet)
             mAlertDialog.dismiss()
         }
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun dateToDateTime(dateToConvert: Date): LocalDateTime? {
-        return dateToConvert.toInstant()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDateTime()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -382,7 +326,7 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         mAlertDialog.tv_pet_name_undo_friendship.text = pet.nome
 
 
-        val petService = PetService()
+        val petService = PetService(context)
 
         mAlertDialog.tv_friends_since_undo_friendship.text = "Amigos há " + petService.friendlyTextFriendshipStatusSince(solicitacao)
 
@@ -452,39 +396,15 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         }
         mDialogView.btn_undo_friendship.setOnClickListener {
             //Desfaz a solicitação no usuário
-            dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .setValue(null)
+            friendShipService.undoFriendShipRequestInSender(pet)
 
             solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.CANCELLED.status
-            dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .setValue(solicitacao)
+            friendShipService.persistFriendShipRequestInReceiver(solicitacao, pet)
 
             //Desfaz a solicitação no perfil do pet que enviou
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .setValue(null)
+            friendShipService.undoFriendShipRequestInReceiver(pet)
 
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(pet.idOwner)
-                .child(pet.id)
-                .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
-                .child(auth.uid.toString())
-                .child(myPreferences.getPetLogged().toString())
-                .setValue(solicitacao)
+            friendShipService.persistFriendShipRequestInSender(solicitacao, pet)
 
             mAlertDialog.dismiss()
         }

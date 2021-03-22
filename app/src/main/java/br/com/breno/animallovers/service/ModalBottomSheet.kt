@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.adapters.PetsProfileAdapter
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.ui.activity.RegisterActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -27,9 +28,9 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.modal_escolha_perfil_pet.*
 
 
-class ModalBottomSheet : BottomSheetDialogFragment() {
+class ModalBottomSheet(context: Context) : BottomSheetDialogFragment() {
 
-    private var service = PetService()
+    private var service = PetService(context)
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
