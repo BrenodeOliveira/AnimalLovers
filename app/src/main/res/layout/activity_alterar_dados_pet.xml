@@ -38,45 +38,47 @@
         android:contentDescription="@string/txt_space_to_publicate"
         android:scaleType="fitXY"
         android:src="@drawable/animalovers_logo_simples"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_change_pet" />
+        app:layout_constraintBottom_toBottomOf="@id/btn_camera_change_pet"
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintStart_toEndOf="@id/guideline_start"
+        app:layout_constraintTop_toTopOf="@+id/btn_galery_change_pet" />
 
     <Button
         android:id="@+id/btn_camera_change_pet"
-        android:layout_width="25dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/background_button_publish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_button_galery"
         android:drawableStart="@drawable/ic_action_camera_alt"
-        android:scaleType="fitXY"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
         android:textAllCaps="false"
-        app:layout_constraintStart_toEndOf="@+id/iv_photo_to_profile_change_pet"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_change_pet" />
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintTop_toBottomOf="@+id/btn_galery_change_pet" />
 
     <Button
         android:id="@+id/btn_galery_change_pet"
-        android:layout_width="25dp"
-        android:layout_height="28dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/background_button_publish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_button_galery"
         android:drawableStart="@drawable/ic_action_photo_library"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
         android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="@id/btn_camera_change_pet"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintTop_toBottomOf="@id/btn_camera_change_pet" />
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintTop_toTopOf="@+id/tv_sex_pet_change_pet" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nome_change_pet"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:focusable="true"
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         app:layout_constraintEnd_toStartOf="@id/guideline_end"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/iv_photo_to_profile_change_pet">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_change_pet"
+        tools:layout_editor_absoluteY="160dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -188,47 +190,40 @@
         android:id="@+id/tv_sex_pet_change_pet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="168dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/txt_sex_pet"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
         app:layout_constraintTop_toBottomOf="@id/resumo_change_pet" />
 
-
-
-
     <Button
         android:id="@+id/btn_alterar_pet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginTop="168dp"
+        android:layout_margin="32dp"
         android:background="@drawable/background_button_red"
         android:padding="16dp"
+        android:textAllCaps="false"
         android:text="@string/txt_alterar"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintHorizontal_bias="0.559"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radio_sexo_animal_change_pet" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_photo_to_profile_change_pet" />
 
     <RadioGroup
         android:id="@+id/radio_sexo_animal_change_pet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="4dp"
         android:orientation="vertical"
-        app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/tv_sex_pet_change_pet">
+        app:layout_constraintStart_toStartOf="@+id/tv_sex_pet_change_pet"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sex_pet_change_pet">
 
         <RadioButton
             android:id="@+id/macho_change_pet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:padding="8dp"
             android:text="@string/txt_masc_pet"
             app:layout_constraintBottom_toTopOf="@+id/btn_alterar_pet"
@@ -242,8 +237,6 @@
             android:id="@+id/femea_change_pet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="44dp"
             android:padding="8dp"
             android:text="@string/txt_fem_pet"
             app:layout_constraintEnd_toEndOf="@+id/btn_alterar_pet"

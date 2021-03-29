@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/imgpsh_fullsize_escurinho"
     tools:context=".ui.activity.ChatLogActivity">
 
     <EditText
@@ -12,14 +13,14 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:autofillHints="message"
         android:background="@color/colorWhite"
         android:hint="@string/txt_enter_message"
         android:inputType="text"
         android:paddingStart="0dp"
         android:paddingEnd="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_send_message_log"
+        app:layout_constraintBottom_toBottomOf="@id/btn_send_message_log"
         app:layout_constraintEnd_toStartOf="@id/btn_send_message_log"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -28,8 +29,10 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_margin="8dp"
-        android:background="@drawable/background_button_send_message"
+        android:background="@drawable/background_button_red"
+        android:textColor="@color/colorWhite"
         android:text="@string/txt_send_message"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -38,12 +41,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/colorAnimaLovers"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/btn_send_message_log"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

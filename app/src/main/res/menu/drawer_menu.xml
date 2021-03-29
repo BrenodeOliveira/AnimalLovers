@@ -5,7 +5,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/alter_data"
-            android:title="@string/txt_alterar" />
+            android:title="@string/txt_alter_data_user" />
     </group>
 
     <group android:checkableBehavior="all">

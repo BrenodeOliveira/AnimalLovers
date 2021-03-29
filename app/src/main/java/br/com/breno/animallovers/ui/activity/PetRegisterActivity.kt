@@ -45,7 +45,6 @@ private var pet = Pet()
 private var idPet: Int = 0
 
 class PetRegisterActivity : AppCompatActivity() {
-    private val petService = PetService(baseContext)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +57,7 @@ class PetRegisterActivity : AppCompatActivity() {
     }
 
     private fun clickButtonRegisterPet() {
+        val petService = PetService(baseContext)
         database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
 

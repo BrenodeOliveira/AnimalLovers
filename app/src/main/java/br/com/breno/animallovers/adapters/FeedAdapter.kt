@@ -134,7 +134,7 @@ class FeedAdapter(
 
                         if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).hasChild(auth.uid.toString())) {
                             if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).child(auth.uid.toString()).hasChild(myPreferences.getPetLogged().toString())) {
-                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
+                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorLiked), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 hasPetLikedPost = true
                             }
                         }
@@ -154,7 +154,7 @@ class FeedAdapter(
                                 false
                             } else {
                                 likeService.likePost(post)
-                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
+                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorLiked), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 numLikes++
 //                                if(post.idOwner == auth.uid) {
                                 notificationService.sendNotificationOfLikedPost(pet, petLoggedInfo, post, owner)

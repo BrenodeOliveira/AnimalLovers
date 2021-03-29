@@ -21,7 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/background_button_to_publish"
+        android:background="@drawable/background_button_red"
+        android:textColor="@color/colorWhite"
         android:fontFamily="sans-serif"
         android:text="@string/txt_publish"
         android:textAllCaps="false"
@@ -36,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:textColor="@color/colorBlack"
         android:text="@string/string_empty"
         app:layout_constraintBottom_toBottomOf="@id/iv_pet_photo_profile_publish"
         app:layout_constraintStart_toEndOf="@id/iv_pet_photo_profile_publish"
@@ -46,8 +48,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/background_edittext_publish"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_edittext_publish_from_row"
         android:hint="@string/txt_demonstrate"
         android:importantForAutofill="no"
         android:inputType="text"
@@ -57,26 +59,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_pet_photo_profile_publish" />
 
-    <ImageView
-        android:id="@+id/iv_photo_to_publish"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_photo_to_publish"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_margin="16dp"
-        android:contentDescription="@string/txt_space_to_publicate"
-        android:scaleType="fitXY"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
         app:layout_constraintBottom_toTopOf="@id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_comment"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintVertical_bias="0.1">
+
+        <ImageView
+            android:id="@+id/iv_photo_to_publish"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/txt_space_to_publicate"
+            android:scaleType="fitXY" />
+
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/btn_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:background="@drawable/background_button_publish"
+        android:background="@drawable/background_button_galery"
         android:drawableStart="@drawable/ic_action_camera_alt"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
@@ -93,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/background_button_publish"
+        android:background="@drawable/background_button_galery"
         android:drawableStart="@drawable/ic_action_photo_library"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
@@ -109,7 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:layout_marginBottom="96dp"
-        android:background="#000"
+        android:background="#D3D3D3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

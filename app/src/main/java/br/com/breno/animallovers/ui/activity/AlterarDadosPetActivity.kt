@@ -34,7 +34,6 @@ private const val REQUEST_CODE = 42
 
 class AlterarDadosPetActivity : AppCompatActivity() {
     private var petInfo = Pet()
-    val petService = PetService(baseContext)
 
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
@@ -90,6 +89,8 @@ class AlterarDadosPetActivity : AppCompatActivity() {
 
     private fun updatePetInfo(pet: Pet) {
         btn_alterar_pet.setOnClickListener {
+
+            val petService = PetService(baseContext)
 
             if(nome_change_pet.editText!!.text.toString() != "") {
                 pet.nome = nome_change_pet.editText!!.text.toString()
@@ -193,6 +194,8 @@ class AlterarDadosPetActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val petService = PetService(baseContext)
+
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val takenImage = data?.extras?.get("data") as Bitmap
             iv_photo_to_profile_change_pet.setImageBitmap(takenImage)

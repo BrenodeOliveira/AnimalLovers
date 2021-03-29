@@ -11,10 +11,6 @@ import kotlinx.android.synthetic.main.item_chat_to_row.view.*
 class ChatFromItem(val text: String, val user: User) : Item<ViewHolder>() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.tv_chat_from_row.text = text
-
-        val uri = user.pathFotoPerfil
-        val targerImageView = viewHolder.itemView.iv_person_from_row
-//        Picasso.get().load(uri).into(targerImageView)
     }
 
     override fun getLayout(): Int {
@@ -25,11 +21,6 @@ class ChatFromItem(val text: String, val user: User) : Item<ViewHolder>() {
 class ChatToItem(val text: String, val user: User) : Item<ViewHolder>() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.tv_chat_to_row.text = text
-
-        //load our user image inte the animallovers logo
-        val uri = user.pathFotoPerfil
-        val targerImageView = viewHolder.itemView.iv_person_to_row
-//        Picasso.get().load(uri).into(targerImageView)
     }
 
     override fun getLayout(): Int {

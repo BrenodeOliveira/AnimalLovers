@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="CADASTRO DE PET" />
+        app:title="Cadastrar pet" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nome_pet_register"
@@ -189,7 +189,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/background_button_publish"
+        android:background="@drawable/background_button_galery"
         android:drawableStart="@drawable/ic_action_camera_alt"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
@@ -203,7 +203,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@drawable/background_button_publish"
+        android:background="@drawable/background_button_galery"
         android:drawableStart="@drawable/ic_action_photo_library"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
@@ -233,7 +233,8 @@
         android:layout_marginTop="148dp"
         android:background="@drawable/background_button_red"
         android:padding="16dp"
-        android:text="@string/txt_cadastrar"
+        android:textAllCaps="false"
+        android:text="@string/txt_alterar"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"

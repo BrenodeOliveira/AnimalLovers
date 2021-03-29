@@ -27,9 +27,6 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
-
-
-
     private var petInfo = Pet()
     private var idPet: String = ""
     private var accountInfo = Conta()
@@ -95,6 +92,7 @@ class ProfileActivity : AppCompatActivity() {
                 tv_animal_weight_write.text = petInfo.peso
                 tv_summary_text.text = petInfo.resumo
                 tv_name_contact_person.text = accountInfo.usuario
+                tv_email_contact_person.text = accountInfo.email
             }
 
             override fun onCancelled(error: DatabaseError) {

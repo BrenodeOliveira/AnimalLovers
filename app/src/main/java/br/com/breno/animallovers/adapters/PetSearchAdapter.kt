@@ -112,7 +112,7 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                                         .getValue<SolicitacaoAmizade>()!!
 
                                     when (solicitacaoAmizade.statusSolicitacao) {
-                                        StatusSolicitacaoAmizade.ACCEPTED.status -> it.icSendFriendShipRequest.setImageResource(R.drawable.ic_coracao_check)
+                                        StatusSolicitacaoAmizade.ACCEPTED.status -> it.icSendFriendShipRequest.setImageResource(R.drawable.ic_coracao_aceitar)
                                         StatusSolicitacaoAmizade.WAITING.status -> it.icSendFriendShipRequest.setImageResource(R.drawable.ic_relogio_waiting_friend_request)
                                         StatusSolicitacaoAmizade.SENT.status -> it.icSendFriendShipRequest.setImageResource(R.drawable.ic_coracao_espera)
                                     }

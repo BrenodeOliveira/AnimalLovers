@@ -108,7 +108,7 @@ class ProfilePetActivity : AppCompatActivity() {
                             StatusSolicitacaoAmizade.CANCELLED.status -> tv_status_friendship_profile_pet.text = "Enviar solicitação"
 
                             StatusSolicitacaoAmizade.ACCEPTED.status -> {
-                                iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_check)
+                                iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_aceitar)
                                 tv_status_friendship_profile_pet.text = "Amigos há " + petService.friendlyTextFriendshipStatusSince(pet, snapshot, applicationContext)
                             }
 

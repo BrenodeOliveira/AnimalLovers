@@ -28,7 +28,7 @@
     <string name="txt_clinicas">Clínicas Veterinarias</string>
 
     <string name="txt_pet_search">Busque por nomes</string>
-    <string name="txt_alterar">Alterar dados</string>
+    <string name="txt_alterar">Salvar</string>
     <string name="txt_configs">Configurações</string>
     <string name="txt_nome_padrao">Guilherme</string>
     <string name="txt_local_padrao">Brasil - SP</string>
@@ -48,7 +48,7 @@
     <string name="txt_gui_taka">Guilherme Takahashi</string>
     <string name="txt_summary">Resumo</string>
     <string name="txt_animal_name">Nome do animal</string>
-    <string name="txt_add_publi">Adicione uma foto/vídeo</string>
+    <string name="txt_add_publi">Adicionar foto</string>
     <string name="txt_demonstrate">Insira uma legenda...</string>
     <string name="txt_space_to_publicate">Espaço para a imagem da publicação</string>
     <string name="txt_name_pet">Nome</string>
@@ -69,14 +69,14 @@
     <string name="txt_publish">Publicar</string>
     <string name="content_profile_pet">Botão para acessar perfil do pet</string>
     <string name="content_user_photo">Foto usuário</string>
-    <string name="txt_change_profile">Trocar Perfil</string>
-    <string name="txt_register">Cadastrar</string>
-    <string name="txt_animal_sex">Sexo:</string>
-    <string name="txt_animal_age">Idade:</string>
-    <string name="txt_animal_heigt">Peso:</string>
+    <string name="txt_change_profile">Selecionar pet</string>
+    <string name="txt_register">Adicionar pet</string>
+    <string name="txt_animal_sex">Sexo</string>
+    <string name="txt_animal_age">Idade</string>
+    <string name="txt_animal_heigt">Peso</string>
     <string name="txt_animal_masc">Macho</string>
-    <string name="txt_animal_age_example">3 anos</string>
-    <string name="txt_animal_heigt_example">5 Kilos</string>
+    <string name="txt_animal_age_example">3</string>
+    <string name="txt_animal_heigt_example">5</string>
     <string name="txt_animal_resume">Animal muito amigável e bem comportado.</string>
     <string name="txt_personal_contact">Contato pessoal</string>
     <string name="txt_notify">Notificações</string>
@@ -131,5 +131,9 @@
     <string name="liked_your_comment"> curtiu seu comentário</string>
     <string name="friendship_request_accepted">Solicitação de amizade aceita</string>
     <string name="friendship_request_received">Solicitação de amizade recebida</string>
+    <string name="txt_anos">anos</string>
+    <string name="txt_kilos">Kilos</string>
+    <string name="txt_email_example">lakjsdfbhlkasjbfhl@gmail.com</string>
+    <string name="txt_alter_data_user">Alterar dados</string>
 
 </resources>

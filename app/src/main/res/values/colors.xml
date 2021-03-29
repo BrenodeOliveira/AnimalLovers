@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#FC3768</color>
     <color name="colorPrimaryDark">#AEB8B8</color>
-    <color name="colorAccent">#FC0D1B</color>
+    <color name="colorAccent">#656C6C</color>
     <color name="color_button_login">#F72349</color>
     <color name="color_login_button_transparent">#FC0D1B</color>
     <color name="colorLogin">#A1A1A1</color>
@@ -12,4 +12,5 @@
     <color name="colorWhite">#FFF</color>
     <color name="colorPressed">#FC3768</color>
     <color name="icon_tint">#333333</color>
+    <color name="colorLiked">#FF0000</color>
 </resources>

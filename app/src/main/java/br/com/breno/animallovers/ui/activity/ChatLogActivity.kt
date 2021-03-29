@@ -1,5 +1,6 @@
 package br.com.breno.animallovers.ui.activity
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import br.com.breno.animallovers.model.ChatMessage
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.User
 import br.com.breno.animallovers.service.NotificationService
+import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.ui.fragment.ChatFragment
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
@@ -43,8 +45,14 @@ class ChatLogActivity : AppCompatActivity() {
 
         listenForMessages()
 
+
+        if (et_chat_log.isPressed) {
+            recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
+            mostraToast("Teste")
+        }
+
+
         btn_send_message_log.setOnClickListener {
-            Log.d(TAG, "Attempt to send message......")
             perfomeSendMessage()
         }
     }
@@ -168,5 +176,10 @@ class ChatLogActivity : AppCompatActivity() {
                 println(error.toString())
             }
         })
+    }
+
+    private fun keyboardUpdate() {
+        //Checkar se o teclado abriu para que o chat atualize
+        // recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
     }
 }
