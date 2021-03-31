@@ -1,5 +1,6 @@
 package br.com.breno.animallovers.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,6 +14,7 @@ import br.com.breno.animallovers.R
 import br.com.breno.animallovers.adapters.PetSearchAdapter
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.utils.AnimalLoversConstants
+import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -42,7 +44,7 @@ class PesquisarFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         btn_search_pets.setOnClickListener{
-            buscarPets()
+            buscarPets(view.context)
         }
         et_name_pet_search.editText!!.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -54,12 +56,13 @@ class PesquisarFragment:Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                buscarPets()
+                buscarPets(view.context)
             }
         })
     }
 
-    private fun buscarPets() {
+    private fun buscarPets(context: Context) {
+        var myPreferences = ProjectPreferences(context)
         dBase = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
         val listPets = ArrayList<Pet>()
@@ -79,7 +82,10 @@ class PesquisarFragment:Fragment() {
                                     .getValue<Pet>()!!
                                 pet.id = "pet$i"
                                 pet.idOwner = dataSnapshot.key.toString()
-                                listPets.add(pet)
+
+                                if(pet.idOwner != auth.uid && pet.id != myPreferences.getPetLogged().toString()) {
+                                    listPets.add(pet)
+                                }
                             }
                         }
                     }
@@ -113,7 +119,9 @@ class PesquisarFragment:Fragment() {
                                     if(pet.nome.toUpperCase().contains(petNameSearch.toString().toUpperCase())) {
                                         pet.id = "pet$i"
                                         pet.idOwner = dataSnapshot.key.toString()
-                                        listPets.add(pet)
+                                        if(pet.id != myPreferences.getPetLogged().toString() && pet.idOwner != auth.uid) {
+                                            listPets.add(pet)
+                                        }
                                     }
                                 }
                             }

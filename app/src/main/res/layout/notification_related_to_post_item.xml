@@ -59,7 +59,8 @@
                 android:layout_margin="3dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic__coracoees" />
+                app:srcCompat="@drawable/ic__coracoees"
+                android:contentDescription="opçoes" />
 
             <TextView
                 android:id="@+id/tv_pet_name_post_notification_item"

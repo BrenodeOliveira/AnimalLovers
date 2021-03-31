@@ -55,6 +55,14 @@ class DonoService {
         persistOwner(conta)
     }
 
+    fun unsaveOwnerDeviceToken(conta : Conta) {
+        database = Firebase.database.reference
+
+        conta.deviceToken = ""
+
+        persistOwner(conta)
+    }
+
     fun retrieveOwnerToken(post : Post, snapshot: DataSnapshot) : String {
         return snapshot.child(post.idOwner)
             .child(AnimalLoversConstants.DATABASE_NODE_TOKEN.nome)

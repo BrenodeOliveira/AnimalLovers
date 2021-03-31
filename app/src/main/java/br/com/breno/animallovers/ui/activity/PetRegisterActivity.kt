@@ -71,7 +71,12 @@ class PetRegisterActivity : AppCompatActivity() {
                             idPet = petService.idLastPet(dataSnapshot) + 1 //Incrementa os ids dos pets
                             val checkedRadio: Int = radio_sexo_animal.checkedRadioButtonId
                             val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
-                            val checkedBox = checkedRadioButton.text.toString()
+                            var checkedBox: String
+                            checkedBox = try {
+                                checkedRadioButton.text.toString()
+                            } catch (ex : Exception) {
+                                AnimalLoversConstants.MALE.nome
+                            }
 
                             pet.resumo = resumo_pet_register.editText?.text.toString()
                             pet.idade = idade_pet_register.editText?.text.toString()

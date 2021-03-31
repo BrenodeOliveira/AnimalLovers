@@ -7,5 +7,5 @@ class Comentario {
     var idOwner : String = ""
     var idPet : String = ""
     var comentarioAtivo = true
-
+    var uniqueIdComment = ""
 }

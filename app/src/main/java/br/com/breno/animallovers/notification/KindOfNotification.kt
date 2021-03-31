@@ -8,6 +8,7 @@ enum class KindOfNotification (val nome: String) {
 
     FRIENDSHIP_REQUEST_RECEIVED("friendShipRequestReceived"),
     FRIENDSHIP_REQUEST_ACCEPTED("friendShipRequestAccepted"),
+    FRIENDSHIP_REQUEST_SENT("friendShipRequestSent"),
 
     NEW_CHAT_MESSAGE_RECEIVED("newChatMessageReceived")
 }

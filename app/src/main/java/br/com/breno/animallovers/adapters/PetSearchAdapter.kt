@@ -155,23 +155,23 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
 
                                         when (solicitacaoAmizade.statusSolicitacao) {
                                             StatusSolicitacaoAmizade.SENT.status -> chamarMyDialogCancelFriendshipRequest(pet, solicitacaoAmizade)
-                                            StatusSolicitacaoAmizade.WAITING.status -> chamarMyDialogAnalizeFriendshipRequest(pet, petLogged, solicitacaoAmizade, owner)
+                                            StatusSolicitacaoAmizade.WAITING.status -> chamarMyDialogAnalizeFriendshipRequest(pet, petLogged, solicitacaoAmizade, owner, snapshots)
                                             StatusSolicitacaoAmizade.ACCEPTED.status -> chamarMyDialogUndoFriendship(pet, solicitacaoAmizade)
                                             StatusSolicitacaoAmizade.CANCELLED.status -> {
-                                                sendFriendShipRequest(pet, petLogged, solicitacao, owner)
+                                                sendFriendShipRequest(pet, petLogged, solicitacao, owner, snapshots)
                                                 it.iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_espera)
                                             }
                                         }
                                     } else {
-                                        sendFriendShipRequest(pet, petLogged, solicitacao, owner)
+                                        sendFriendShipRequest(pet, petLogged, solicitacao, owner, snapshots)
                                         it.iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_espera)
                                     }
                                 } else {
-                                    sendFriendShipRequest(pet, petLogged, solicitacao, owner)
+                                    sendFriendShipRequest(pet, petLogged, solicitacao, owner, snapshots)
                                     it.iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_espera)
                                 }
                             } else {
-                                sendFriendShipRequest(pet, petLogged, solicitacao, owner)
+                                sendFriendShipRequest(pet, petLogged, solicitacao, owner, snapshots)
                                 it.iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_espera)
                             }
                         }
@@ -205,7 +205,7 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         }
     }
 
-    fun sendFriendShipRequest(pet: Pet, petLogged : Pet, solicitacao: SolicitacaoAmizade, owner : Conta) {
+    fun sendFriendShipRequest(pet: Pet, petLogged : Pet, solicitacao: SolicitacaoAmizade, owner : Conta, snapshots: DataSnapshot) {
         //Adiciona no perfil desse usuário
         solicitacao.dataEnvioSolicitacao = DateUtils.dataFormatWithMilliseconds()
         solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.SENT.status
@@ -217,6 +217,7 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
 
         friendShipService.persistFriendShipRequestInSender(solicitacao, pet)
 
+        notificationService.persistNotificationOfNewFriendshipRequest(petLogged, pet, snapshots, solicitacao)
         notificationService.sendNotificationOfFriendshiRequestReceived(pet, petLogged, owner)
     }
 
@@ -243,22 +244,24 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         }
         mDialogView.btn_cancel_friendship_request.setOnClickListener {
             dBase = Firebase.database.reference
+            solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.CANCELLED.status
 
             //Desfaz a solicitação no usuário
-            friendShipService.undoFriendshipInSender(pet)
+            friendShipService.undoFriendshipInSender(pet, solicitacao)
 
             //Desfaz a solicitação no perfil do pet que enviou
-            friendShipService.undoFriendshipInReceiver(pet)
+            friendShipService.undoFriendshipInReceiver(pet, solicitacao)
 
 
             mAlertDialog.dismiss()
         }
+
         mDialogView.btn_donot_cancel_friendship_request.setOnClickListener {
             mAlertDialog.dismiss()
         }
     }
 
-    fun chamarMyDialogAnalizeFriendshipRequest(pet: Pet, petLogged : Pet, solicitacao: SolicitacaoAmizade, owner : Conta) {
+    fun chamarMyDialogAnalizeFriendshipRequest(pet: Pet, petLogged : Pet, solicitacao: SolicitacaoAmizade, owner : Conta, snapshots : DataSnapshot) {
         val mDialogView = LayoutInflater.from(context).inflate(R.layout.analize_friendship_request, null)
         val mBuilder = AlertDialog.Builder(context).setView(mDialogView).setTitle("Solicitação de amizade")
         val mAlertDialog = mBuilder.show()
@@ -295,6 +298,7 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
             //-----------------------------------------------------------------------//
             //Desfaz a solicitação no perfil do pet que enviou
             friendShipService.persistFriendShipRequestInSender(solicitacao, pet)
+            notificationService.persistNotificationOfNewFriendshipAccepted(petLogged, pet, snapshots, solicitacao)
 
             //Persiste na lista de amigos o novo amigo
             friendShipService.saveNewFriendShipSender(dataInicioAmizade, pet)
@@ -303,13 +307,14 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
 
             notificationService.sendNotificationOfFriendshipAccepted(pet, petLogged, owner)
         }
-        mDialogView.btn_decline_friendship_request.setOnClickListener {
 
+        mDialogView.btn_decline_friendship_request.setOnClickListener {
+            solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.CANCELLED.status
             //Desfaz a solicitação no usuário
-            friendShipService.undoFriendshipInSender(pet)
+            friendShipService.undoFriendshipInSender(pet, solicitacao)
 
             //Desfaz a solicitação no perfil do pet que enviou
-            friendShipService.undoFriendShipRequestInReceiver(pet)
+            friendShipService.undoFriendShipRequestInReceiver(pet, solicitacao)
             mAlertDialog.dismiss()
         }
     }
@@ -395,14 +400,16 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
             }
         }
         mDialogView.btn_undo_friendship.setOnClickListener {
-            //Desfaz a solicitação no usuário
-            friendShipService.undoFriendShipRequestInSender(pet)
-
             solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.CANCELLED.status
+
+            //Desfaz a solicitação no usuário
+            friendShipService.undoFriendShipRequestInSender(pet, solicitacao)
+
+
             friendShipService.persistFriendShipRequestInReceiver(solicitacao, pet)
 
             //Desfaz a solicitação no perfil do pet que enviou
-            friendShipService.undoFriendShipRequestInReceiver(pet)
+            friendShipService.undoFriendShipRequestInReceiver(pet, solicitacao)
 
             friendShipService.persistFriendShipRequestInSender(solicitacao, pet)
 

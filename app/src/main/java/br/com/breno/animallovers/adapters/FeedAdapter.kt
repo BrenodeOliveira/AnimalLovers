@@ -109,7 +109,7 @@ class FeedAdapter(
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
 
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dSnap: DataSnapshot) {
                     var numLikes = 0
 
@@ -144,21 +144,24 @@ class FeedAdapter(
                     holder.numCommentsPost.text = arraylist.size.toString()
 
                     holder.likePost.setOnClickListener {
+                        val likePostModel = likeService.checkIfUserLikedPost(snapshot)
+                        val notificationModel = notificationService.getNotificationModelOfLikeInPost(dSnap, post, likePostModel)
+
                         if (holder.numLikesPost.text != "") {
 
                             hasPetLikedPost = if (hasPetLikedPost) {
-                                likeService.dislikePost(post)
+                                likeService.dislikePost(post, likePostModel, notificationModel)
 
                                 holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.icon_tint), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 numLikes--
                                 false
                             } else {
-                                likeService.likePost(post)
+                                val likeInPost = likeService.likePost(post, likePostModel)
                                 holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorLiked), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 numLikes++
-//                                if(post.idOwner == auth.uid) {
-                                notificationService.sendNotificationOfLikedPost(pet, petLoggedInfo, post, owner)
-//                                }
+                                if(post.idOwner != auth.uid) {
+                                notificationService.sendNotificationOfLikedPost(pet, petLoggedInfo, post, owner, notificationModel, likeInPost, dSnap)
+                                }
                                 true
                             }
                             holder.numLikesPost.text = numLikes.toString()

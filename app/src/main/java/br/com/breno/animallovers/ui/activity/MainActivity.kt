@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.get_out -> {
                 FirebaseAuth.getInstance().signOut()
-
+                donoService.unsaveOwnerDeviceToken(accountInfo)//Ao fazer logout, remove o token salvo para não receber mais notificações
                 finish()
                 val intent = Intent(this, SplashActivity::class.java)
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP)

@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Comentario
+import br.com.breno.animallovers.model.LikeComment
+import br.com.breno.animallovers.model.Notification
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.model.ReportComment
@@ -87,7 +89,7 @@ class CommentsPostAdapter(
         dt = Firebase.database.reference
         var pet: Pet
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-            .addListenerForSingleValueEvent(
+            .addValueEventListener(
                 object : ValueEventListener {
                     @RequiresApi(Build.VERSION_CODES.O)
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -129,7 +131,7 @@ class CommentsPostAdapter(
 
                         loadProfilePhoto(pet, holder)
 
-                        likePostClick(holder, comentario, snapshot)
+                        likeCommentClick(holder, comentario, snapshot)
 
                         numLikesCommentClick(holder, comentario, snapshot, ownersPets)
 
@@ -308,20 +310,25 @@ class CommentsPostAdapter(
         }
     }
 
-    private fun likePostClick(holder : ViewHolder, comentario : Comentario, snapshot: DataSnapshot) {
+    private fun likeCommentClick(holder : ViewHolder, comentario : Comentario, snapshot: DataSnapshot) {
+        val likeComment = likeService.checkIfUserLikedComment(snapshot, post, comentario)
+        val notificationModel = notificationService.getNotificationModelOfLikeInComment(snapshot, comentario, likeComment)
+
         holder.likeComment.setOnClickListener {
             hasPetLikedComment = if (hasPetLikedComment) {
-                likeService.dislikeComment(post, comentario)
+                likeService.dislikeComment(post, comentario, likeComment, notificationModel)
 
                 holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.icon_tint), android.graphics.PorterDuff.Mode.MULTIPLY)
                 numLikes--
                 false
             } else {
-                likeService.likeComment(post, comentario)
+                val likeInComment = likeService.likeComment(post, comentario, likeComment)
                 holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
                 numLikes++
 
-                notificationService.sendNotificationOfLikedComment(post, comentario, snapshot)
+                if(comentario.idOwner != auth.uid) {
+                    notificationService.sendNotificationOfLikedComment(post, comentario, snapshot, likeInComment, notificationModel)
+                }
 
                 true
             }

@@ -70,6 +70,14 @@ class PostService(context : Context) {
 
                     post.idPost = idNewPost.toString()
                     post.postAtivo = true
+                    var ref = database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+                        .child(auth.uid.toString())
+                        .child(id)
+                        .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                        .push()
+
+                         post.uniqueIdPost = ref.key!!
+
                     database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
                         .child(auth.uid.toString())
                         .child(id)

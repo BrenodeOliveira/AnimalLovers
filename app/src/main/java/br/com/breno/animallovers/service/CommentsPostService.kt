@@ -57,7 +57,7 @@ class CommentsPostService(private val post: Post, private val listComentario: Ar
         val myPreferences = ProjectPreferences(view.context)
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if(listComentario.isNullOrEmpty()) {
                         var arraylist = commentService.getAllComments(post, dataSnapshot)
@@ -115,7 +115,7 @@ class CommentsPostService(private val post: Post, private val listComentario: Ar
                         comentario.textoComentario = tvComment.text.toString()
                         comentario.comentarioAtivo = true
 
-                        commentService.saveNewComment(post, comentario, dataSnapshot)
+                        comentario = commentService.saveNewComment(post, comentario, dataSnapshot)
 
                         //Adicionar o comentário ao RecyclerView e atualizá-lo
                         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -123,9 +123,9 @@ class CommentsPostService(private val post: Post, private val listComentario: Ar
 
                         tvComment.text.clear()
 
-//                        if(comentario.idOwner == post.idOwner) {
+                        if(comentario.idOwner != auth.uid) {
                             notificacaoService.sendNotificationOfCommentInPost(post, comentario, dataSnapshot)
-//                        }
+                        }
                     }
                 }
 

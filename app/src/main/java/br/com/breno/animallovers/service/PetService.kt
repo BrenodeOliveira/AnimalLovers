@@ -175,7 +175,9 @@ class PetService(context : Context) : AppCompatActivity() {
                         .child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome)
                         .getValue<Pet>()!!
 
-                    listPetsFriends.add(petFriend)
+                    if((petFriend.id != myPreferences.getPetLogged().toString() && petFriend.idOwner != auth.uid)) {
+                        listPetsFriends.add(petFriend)
+                    }
                 }
 
             }

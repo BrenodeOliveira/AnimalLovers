@@ -1,6 +1,7 @@
 package br.com.breno.animallovers.service
 
 import android.content.Context
+import br.com.breno.animallovers.constants.StatusSolicitacaoAmizade
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.SolicitacaoAmizade
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -14,27 +15,36 @@ class FriendShipService(context : Context) {
     private var database: DatabaseReference = FirebaseDatabase.getInstance().reference
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    fun undoFriendShipRequestInSender( pet : Pet) {
+    fun undoFriendShipRequestInSender( pet : Pet, solicitacao: SolicitacaoAmizade) {
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
             .child(myPreferences.getPetLogged().toString())
             .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
             .child(pet.idOwner)
             .child(pet.id)
-            .setValue(null)
+            .setValue(solicitacao)
     }
 
-    fun undoFriendShipRequestInReceiver( pet : Pet) {
+    fun undoFriendShipRequestInReceiver( pet : Pet, solicitacao: SolicitacaoAmizade) {
+
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(pet.idOwner)
             .child(pet.id)
             .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
             .child(auth.uid.toString())
             .child(myPreferences.getPetLogged().toString())
-            .setValue(null)
+            .setValue(solicitacao)
     }
 
     fun persistFriendShipRequestInSender(solicitacao : SolicitacaoAmizade, pet : Pet) {
+        var ref = database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(pet.idOwner)
+            .child(pet.id)
+            .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
+            .push()
+
+        solicitacao.uniqueId = ref.key!!
+
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(pet.idOwner)
             .child(pet.id)
@@ -45,6 +55,13 @@ class FriendShipService(context : Context) {
     }
 
     fun persistFriendShipRequestInReceiver(solicitacao : SolicitacaoAmizade, pet : Pet) {
+        var ref = database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
+            .push()
+
+        solicitacao.uniqueId = ref.key!!
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
             .child(myPreferences.getPetLogged().toString())
@@ -55,36 +72,60 @@ class FriendShipService(context : Context) {
     }
 
     fun saveNewFriendShipSender(dataInicioAmizade : String, pet : Pet) {
+        var ref = database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(pet.idOwner)
+            .child(pet.id)
+            .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
+            .push()
+
+        var friendship = SolicitacaoAmizade()
+
+        friendship.dataEnvioSolicitacao = dataInicioAmizade
+        friendship.statusSolicitacao = StatusSolicitacaoAmizade.ACCEPTED.status
+        friendship.uniqueId = ref.key!!
+
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(pet.idOwner)
             .child(pet.id)
             .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
             .child(auth.uid.toString())
             .child(myPreferences.getPetLogged().toString())
-            .setValue(dataInicioAmizade)
+            .setValue(friendship)
     }
 
     fun saveNewFriendShipReceiver(dataInicioAmizade : String, pet : Pet) {
+        var ref = database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
+            .push()
+
+        var friendship = SolicitacaoAmizade()
+
+        friendship.dataEnvioSolicitacao = dataInicioAmizade
+        friendship.statusSolicitacao = StatusSolicitacaoAmizade.ACCEPTED.status
+        friendship.uniqueId = ref.key!!
+
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
             .child(myPreferences.getPetLogged().toString())
             .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
             .child(pet.idOwner)
             .child(pet.id)
-            .setValue(dataInicioAmizade)
+            .setValue(friendship)
     }
 
-    fun undoFriendshipInSender(pet : Pet) {
+    fun undoFriendshipInSender(pet : Pet, solicitacao: SolicitacaoAmizade) {
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
             .child(myPreferences.getPetLogged().toString())
             .child(AnimalLoversConstants.DATABASE_NODE_PET_FRIENDS_REQUEST.nome)
             .child(pet.idOwner)
             .child(pet.id)
-            .setValue(null)
+            .setValue(solicitacao)
     }
 
-    fun undoFriendshipInReceiver(pet : Pet) {
+    fun undoFriendshipInReceiver(pet : Pet, solicitacao: SolicitacaoAmizade) {
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(pet.idOwner)
             .child(pet.id)

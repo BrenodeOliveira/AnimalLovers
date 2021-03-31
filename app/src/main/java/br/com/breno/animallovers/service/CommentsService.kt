@@ -2,6 +2,7 @@ package br.com.breno.animallovers.service
 
 import android.content.Context
 import br.com.breno.animallovers.model.Comentario
+import br.com.breno.animallovers.model.LikeComment
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.model.ReportComment
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -72,8 +73,18 @@ class CommentsService(context : Context) {
         return arraylist
     }
 
-    fun saveNewComment(post : Post, comentario : Comentario, dataSnapshot: DataSnapshot) {
+    fun saveNewComment(post : Post, comentario : Comentario, dataSnapshot: DataSnapshot) : Comentario {
         comentario.idComentario = (getRootSnapshotForAllCommentsOfPost(post, dataSnapshot).childrenCount + 1).toString()
+
+        var ref = database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(post.idOwner)
+            .child(post.idPet)
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+            .child(post.idPost)
+            .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+            .push()
+
+        comentario.uniqueIdComment = ref.key!!
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(post.idOwner)
@@ -87,6 +98,7 @@ class CommentsService(context : Context) {
             .child(myPreferences.getPetLogged().toString())
             .setValue(comentario)
 
+        return comentario
     }
     fun updateOrDeleteComment(post : Post, comentario : Comentario) {
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
@@ -112,7 +124,11 @@ class CommentsService(context : Context) {
         if (snapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT_LIKES.nome)) {
             if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT_LIKES.nome).hasChild(auth.uid.toString())) {
                 if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT_LIKES.nome).child(auth.uid.toString()).hasChild(myPreferences.getPetLogged().toString())) {
-                    return true
+                    val likeComment = snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT_LIKES.nome).child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).getValue<LikeComment>()
+
+                    if(likeComment!!.ativo) {
+                        return true
+                    }
                 }
             }
         }
@@ -129,7 +145,12 @@ class CommentsService(context : Context) {
             for (i in 0 until ownersPets.size) {
                 val idOwnerPet = ownersPets.keys.toMutableList()[i]
                 for (j in 0 until (ownersPets.toMutableMap()[idOwnerPet]?.values?.size!!)) {
-                    numLikes++
+                    val idPet = ownersPets.toMutableMap()[idOwnerPet]?.keys?.toMutableList()?.get(j)
+
+                    val likeComment = snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT_LIKES.nome).child(idOwnerPet).child(idPet!!).getValue<LikeComment>()
+                    if(likeComment!!.ativo) {
+                        numLikes ++
+                    }
                 }
             }
         }
