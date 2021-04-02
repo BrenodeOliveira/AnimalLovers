@@ -141,7 +141,7 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                         @RequiresApi(Build.VERSION_CODES.O)
                         override fun onDataChange(snapshots: DataSnapshot) {
 
-                            var owner = snapshots.child(auth.uid.toString()).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
+                            var owner = snapshots.child(pet.idOwner).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
 
                             var snapshot = snapshots.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString())
                             val petLogged = snapshot.child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!

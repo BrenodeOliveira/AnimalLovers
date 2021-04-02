@@ -1,10 +1,7 @@
 package br.com.breno.animallovers.service
 
 import android.content.Context
-import br.com.breno.animallovers.model.Comentario
-import br.com.breno.animallovers.model.LikeComment
-import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.model.ReportComment
+import br.com.breno.animallovers.model.*
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +18,36 @@ class CommentsService(context : Context) {
 
     fun persistNewComment() {
 
+    }
+
+    fun getCommentByUniqueIdOfCommentInPost(snapshot: DataSnapshot, uniquePostId : String, petRemetente : Pet) : Comentario {
+        var comentario = Comentario()
+
+        var dataSnapshot = snapshot.child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+
+        var numOfPosts = dataSnapshot.childrenCount
+
+        for (i in 1 until numOfPosts + 1) {
+            if(dataSnapshot.child(i.toString()).hasChild(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)) {
+                var numOfComments = dataSnapshot.child(i.toString()).child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome).childrenCount
+
+                for(j in 1 until numOfComments + 1) {
+                    var commentPost = dataSnapshot.child(i.toString())
+                        .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+                        .child(j.toString())
+                        .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
+                        .child(petRemetente.idOwner)
+                        .child(petRemetente.id)
+                        .getValue<Comentario>()
+                    if(commentPost!!.uniqueIdComment == uniquePostId && commentPost.comentarioAtivo) {
+                        return commentPost
+                    }
+                }
+            }
+        }
+        return comentario
     }
 
     fun retrieveComment(indexComment : Long, dSnapshot : DataSnapshot, idOwner : String, idPet : String) : Comentario {
@@ -100,6 +127,7 @@ class CommentsService(context : Context) {
 
         return comentario
     }
+
     fun updateOrDeleteComment(post : Post, comentario : Comentario) {
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(post.idOwner)

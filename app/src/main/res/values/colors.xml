@@ -13,4 +13,6 @@
     <color name="colorPressed">#FC3768</color>
     <color name="icon_tint">#333333</color>
     <color name="colorLiked">#FF0000</color>
+    <color name="backgroundNotificationItem">#F0F0F0</color>
+    <color name="backgroundNotificationItemUnread">#FFE3F3</color>
 </resources>

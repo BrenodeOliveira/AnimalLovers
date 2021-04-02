@@ -8,7 +8,10 @@ class Notification : Serializable {
     var ativo = true
     var visualizada = false
     var petRemetente = Pet()
+    var postNotification = Post()
+
     var incrementIdNotification = ""
     var uniqueIdNotification = ""
     var idActionNotification = ""
+    var notificationType = 0
 }

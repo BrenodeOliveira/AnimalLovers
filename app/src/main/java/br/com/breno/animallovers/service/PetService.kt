@@ -256,7 +256,8 @@ class PetService(context : Context) : AppCompatActivity() {
         val dateBeginningFriendship : String = dataSnapshot.child(pet.id)
             .child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
             .child(auth.uid.toString())
-            .child(myPreferences.getPetLogged().toString()).value.toString()
+            .child(myPreferences.getPetLogged().toString())
+            .child("dataEnvioSolicitacao").value.toString()
 
         val start: LocalDateTime = LocalDateTime.parse(dateBeginningFriendship, formatter)
 

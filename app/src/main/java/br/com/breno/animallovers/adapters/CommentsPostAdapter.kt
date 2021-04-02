@@ -123,7 +123,7 @@ class CommentsPostAdapter(
                         var ownersPets = commentService.getOwnersPetsComments(post, comentario, snapshot)
 
                         if (hasPetLikedComment) {
-                            holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
+                            holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY)
                         }
                         else {
                             holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.icon_tint), android.graphics.PorterDuff.Mode.MULTIPLY)
@@ -131,7 +131,7 @@ class CommentsPostAdapter(
 
                         loadProfilePhoto(pet, holder)
 
-                        likeCommentClick(holder, comentario, snapshot)
+                        likeCommentClick(holder, comentario, snapshot, post)
 
                         numLikesCommentClick(holder, comentario, snapshot, ownersPets)
 
@@ -310,7 +310,7 @@ class CommentsPostAdapter(
         }
     }
 
-    private fun likeCommentClick(holder : ViewHolder, comentario : Comentario, snapshot: DataSnapshot) {
+    private fun likeCommentClick(holder : ViewHolder, comentario : Comentario, snapshot: DataSnapshot, post : Post) {
         val likeComment = likeService.checkIfUserLikedComment(snapshot, post, comentario)
         val notificationModel = notificationService.getNotificationModelOfLikeInComment(snapshot, comentario, likeComment)
 
@@ -323,7 +323,7 @@ class CommentsPostAdapter(
                 false
             } else {
                 val likeInComment = likeService.likeComment(post, comentario, likeComment)
-                holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
+                holder.likeComment.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY)
                 numLikes++
 
                 if(comentario.idOwner != auth.uid) {

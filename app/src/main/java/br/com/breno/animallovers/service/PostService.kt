@@ -3,10 +3,7 @@ package br.com.breno.animallovers.service
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import br.com.breno.animallovers.model.Comentario
-import br.com.breno.animallovers.model.Pet
-import br.com.breno.animallovers.model.Post
-import br.com.breno.animallovers.model.ReportPost
+import br.com.breno.animallovers.model.*
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
@@ -20,7 +17,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 
 class PostService(context : Context) {
-    private lateinit var auth: FirebaseAuth
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var storage: FirebaseStorage
     private var pet = Pet()
     val database = Firebase.database.reference
@@ -164,4 +161,85 @@ class PostService(context : Context) {
         }
     }
 
+    fun getPostByUniqueIdOfLikeInPost(snapshot: DataSnapshot, uniquePostId : String, petRemetente : Pet) : Post {
+        var post = Post()
+
+
+        var dataSnapshot = snapshot.child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+
+        var numOfPosts = dataSnapshot.childrenCount
+
+        for (i in 1 until numOfPosts + 1) {
+            var loopPost = dataSnapshot.child(i.toString()).getValue<Post>()
+
+            var likePost = dataSnapshot.child(i.toString())
+                .child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome)
+                .child(petRemetente.idOwner)
+                .child(petRemetente.id)
+                .getValue<LikePost>()
+            if(likePost!!.uniqueId == uniquePostId && likePost.ativo) {
+                return loopPost!!
+            }
+        }
+        return post
+    }
+
+    fun getPostByUniqueIdOfCommentInPost(snapshot: DataSnapshot, uniquePostId : String, petRemetente : Pet) : Post {
+        var post = Post()
+
+        var dataSnapshot = snapshot.child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+
+        var numOfPosts = dataSnapshot.childrenCount
+
+        for (i in 1 until numOfPosts + 1) {
+            var loopPost = dataSnapshot.child(i.toString()).getValue<Post>()
+
+            if(dataSnapshot.child(i.toString()).hasChild(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)) {
+                var numOfComments = dataSnapshot.child(i.toString()).child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome).childrenCount
+
+                for(j in 1 until numOfComments + 1) {
+                    var commentPost = dataSnapshot.child(i.toString())
+                        .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
+                        .child(j.toString())
+                        .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
+                        .child(petRemetente.idOwner)
+                        .child(petRemetente.id)
+                        .getValue<Comentario>()
+                    if(commentPost!!.uniqueIdComment == uniquePostId && commentPost.comentarioAtivo) {
+                        return loopPost!!
+                    }
+                }
+            }
+        }
+        return post
+    }
+
+    fun getPostByUniqueIdOfLikeInCommentPost(snapshot: DataSnapshot, uniquePostId : String, petRemetente : Pet) : Post {
+        var post = Post()
+
+
+        var dataSnapshot = snapshot.child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+
+        var numOfPosts = dataSnapshot.childrenCount
+
+        for (i in 1 until numOfPosts + 1) {
+            var loopPost = dataSnapshot.child(i.toString()).getValue<Post>()
+
+            var likePost = dataSnapshot.child(i.toString())
+                .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT_LIKES.nome)
+                .child(petRemetente.idOwner)
+                .child(petRemetente.id)
+                .getValue<LikeComment>()
+            if(likePost!!.uniqueId == uniquePostId && likePost.ativo) {
+                return loopPost!!
+            }
+        }
+        return post
+    }
 }

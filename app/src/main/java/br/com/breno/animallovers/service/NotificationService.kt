@@ -38,6 +38,15 @@ class NotificationService(context: Context) {
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     val database = Firebase.database.reference
 
+    fun updateNotificationInReceiver(notification: Notification) {
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .child(auth.uid.toString())
+            .child(myPreferences.getPetLogged().toString())
+            .child(AnimalLoversConstants.DATABASE_NODE_NOTIFICATIONS.nome)
+            .child(notification.incrementIdNotification)
+            .setValue(notification)
+    }
+
     private fun persistNotificationOfNewComment(petWhoCommented: Pet, petReceiver: Pet, snapshot: DataSnapshot, comentario: Comentario) {
         var notification = Notification()
 
@@ -53,6 +62,7 @@ class NotificationService(context: Context) {
         notification.uniqueIdNotification = ref.key!!
         notification.incrementIdNotification = getIdOfLastNotification(snapshot, petReceiver).toString()
         notification.idActionNotification = comentario.uniqueIdComment
+        notification.notificationType = 0//Serve para saber qual tupo de layout será inflado na NotificationFragment
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
@@ -85,6 +95,7 @@ class NotificationService(context: Context) {
         notification.uniqueIdNotification = ref.key!!
         notification.incrementIdNotification = getIdOfLastNotification(snapshot, petReceiver).toString()
         notification.idActionNotification = solicitacao.uniqueId
+        notification.notificationType = 1//Serve para saber qual tipo de layout será inflado na NotificationFragment
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
@@ -117,6 +128,7 @@ class NotificationService(context: Context) {
         notification.uniqueIdNotification = ref.key!!
         notification.incrementIdNotification = getIdOfLastNotification(snapshot, petReceiver).toString()
         notification.idActionNotification = solicitacao.uniqueId
+        notification.notificationType = 1//Serve para saber qual tupo de layout será inflado na NotificationFragment
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
@@ -134,7 +146,7 @@ class NotificationService(context: Context) {
             .setValue(notification)
     }
 
-    private fun persistNotificationOfNewLikedComment(notification: Notification, petReceiver: Pet, petWhoCommented : Pet, snapshot: DataSnapshot, comentario: Comentario, likeComment: LikeComment) : Notification{
+    private fun persistNotificationOfNewLikedComment(notification: Notification, petReceiver: Pet, petWhoCommented : Pet, snapshot: DataSnapshot, comentario: Comentario, likeComment: LikeComment, post : Post) : Notification{
 
         //Saber se o usuário já curtiu o comentário alguma vez
         val sSnap = snapshot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString())
@@ -166,6 +178,8 @@ class NotificationService(context: Context) {
         notification.uniqueIdNotification = ref.key!!
         notification.incrementIdNotification = getIdOfLastNotification(snapshot, petReceiver).toString()
         notification.idActionNotification = likeComment.uniqueId
+        notification.notificationType = 0//Serve para saber qual tupo de layout será inflado na NotificationFragment
+        notification.postNotification = post
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
@@ -216,6 +230,7 @@ class NotificationService(context: Context) {
         notification.uniqueIdNotification = ref.key!!
         notification.incrementIdNotification = getIdOfLastNotification(snapshot, petReceiver).toString()
         notification.idActionNotification = likePost.uniqueId
+        notification.notificationType = 0//Serve para saber qual tupo de layout será inflado na NotificationFragment
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
@@ -313,7 +328,7 @@ class NotificationService(context: Context) {
         val petWhoReceivedComment = petService.retrievePetInfo(comentario.idPet, snapshot.child(comentario.idOwner))
 
 
-        val sentNotification = persistNotificationOfNewLikedComment(notification, petWhoReceivedComment, petWhoCommented, snapshot, comentario, likeComment)
+        val sentNotification = persistNotificationOfNewLikedComment(notification, petWhoReceivedComment, petWhoCommented, snapshot, comentario, likeComment, post)
 
         val bodyText = "[" + petWhoReceivedComment.nome + "]: " + petWhoCommented.nome + " curtiu um comentário seu deixado em uma publicação"
         val title = petWhoCommented.nome + " " + ctx.getString(R.string.liked_your_comment)

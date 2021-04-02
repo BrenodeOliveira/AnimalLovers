@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_change_viewed_notification_options"
+        android:title="Marcar como visto/não visto" />
+    <item
+        android:id="@+id/item_remove_notification_options"
+        android:title="Excluir"/>
+</menu>

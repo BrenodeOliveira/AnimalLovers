@@ -34,8 +34,6 @@ class FcmMessagingService: FirebaseMessagingService() {
     private val description = "AnimalLovers"
     private var storage: FirebaseStorage = FirebaseStorage.getInstance()
 
-
-
     var type = ""
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if (remoteMessage.data.isNotEmpty()) {
@@ -82,6 +80,7 @@ class FcmMessagingService: FirebaseMessagingService() {
 
                 when {
                     messageBody["kindOfNotification"] == KindOfNotification.COMMENTED_POST.nome -> {
+                        shouldOpenCommentsInIntent = true
                     }
                     messageBody["kindOfNotification"] == KindOfNotification.LIKED_POST.nome -> {
 
@@ -95,9 +94,7 @@ class FcmMessagingService: FirebaseMessagingService() {
                 intent.putExtra("POST_INFO", postInfo)
                 intent.putExtra("CAME_FROM_NOTIFICATION", true)
                 intent.putExtra("SHOULD_INFLATE_COMMENT", shouldOpenCommentsInIntent)
-                val iUniqueId = (System.currentTimeMillis() and 0xfffffff).toInt()
                 val pendingIntent = PendingIntent.getActivity(this, Random().nextInt(), intent, 0)
-
 
                 val ref = storage.reference
                     .child(AnimalLoversConstants.STORAGE_ROOT.nome)

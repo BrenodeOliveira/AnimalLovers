@@ -123,7 +123,7 @@ class CommentsPostService(private val post: Post, private val listComentario: Ar
 
                         tvComment.text.clear()
 
-                        if(comentario.idOwner != auth.uid) {
+                        if(comentario.idOwner != post.idOwner) {
                             notificacaoService.sendNotificationOfCommentInPost(post, comentario, dataSnapshot)
                         }
                     }

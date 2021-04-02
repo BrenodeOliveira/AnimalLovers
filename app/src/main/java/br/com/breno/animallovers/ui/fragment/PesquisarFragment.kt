@@ -83,7 +83,7 @@ class PesquisarFragment:Fragment() {
                                 pet.id = "pet$i"
                                 pet.idOwner = dataSnapshot.key.toString()
 
-                                if(pet.idOwner != auth.uid && pet.id != myPreferences.getPetLogged().toString()) {
+                                if(!(pet.idOwner == auth.uid && pet.id == myPreferences.getPetLogged().toString())) {
                                     listPets.add(pet)
                                 }
                             }

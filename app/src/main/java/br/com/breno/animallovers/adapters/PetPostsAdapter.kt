@@ -110,7 +110,7 @@ class PetPostsAdapter (private val posts: List<Post>, val petPost: Pet, private 
                             println(snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).child(auth.uid.toString()))
 
                             if (snapshot.child(AnimalLoversConstants.DATABASE_NODE_POST_LIKE.nome).child(auth.uid.toString()).hasChild(myPreferences.getPetLogged().toString())) {
-                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
+                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 hasPetLikedPost = true
                             }
                         }
@@ -143,7 +143,7 @@ class PetPostsAdapter (private val posts: List<Post>, val petPost: Pet, private 
                                     .child(auth.uid.toString())
                                     .child(myPreferences.getPetLogged().toString())
                                     .setValue(DateUtils.dataFormatWithMilliseconds())
-                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY)
+                                holder.likePost.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY)
                                 numLikes++
                                 hasPetLikedPost = true
                             }

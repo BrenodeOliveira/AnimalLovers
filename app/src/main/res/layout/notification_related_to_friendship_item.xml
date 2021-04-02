@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
@@ -11,36 +11,65 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:cardElevation="2dp">
+        app:cardElevation="7dp"
+        android:layout_marginTop="3dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:id="@+id/cons_lay_friendship_notification"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@color/backgroundNotificationItem"
+            >
 
-            <ImageView
-                android:id="@+id/iv_icon_options_friendship_notification_item"
-                android:layout_width="30dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center|center_horizontal|end"
-                android:layout_margin="3dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic__coracoees" />
+            <TextView
+                android:id="@+id/tv_datetime_notification_friendship_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="128dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="10sp"
+                android:padding="1dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_friendship_notification_description_notification_item"
+                app:layout_constraintStart_toEndOf="@+id/tv_pet_name_friendship_notification_item"
+                tools:text="{dd/mm/yyyy}" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_end3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="395dp" />
 
             <Button
                 android:id="@+id/btn_confirm_friendship_request_notification_item"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="28dp"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_marginTop="20dp"
                 android:background="@android:color/transparent"
                 android:foreground="@drawable/ic_coracao_aceitar"
                 android:text="@string/cancel"
                 android:textAllCaps="false"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintEnd_toStartOf="@+id/btn_decline_friendship_request_notification_item"
-                app:layout_constraintHorizontal_bias="0.628"
+                app:layout_constraintHorizontal_bias="0.666"
                 app:layout_constraintStart_toEndOf="@+id/tv_friendship_notification_description_notification_item"
                 app:layout_constraintTop_toBottomOf="@+id/iv_icon_options_friendship_notification_item" />
+
+            <ImageView
+                android:id="@+id/iv_icon_options_friendship_notification_item"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center|center_horizontal|end"
+                android:layout_margin="3dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="36dp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_friendship_notification_description_notification_item"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_end3"
+                app:srcCompat="@drawable/ic__coracoees" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_icon_profile_photo_friendship_notification"
@@ -54,15 +83,16 @@
 
             <Button
                 android:id="@+id/btn_decline_friendship_request_notification_item"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="27dp"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/background_button_transparent_login"
                 android:foreground="@drawable/ic_coracao_cancelar"
                 android:text="@string/cancel"
                 android:textAllCaps="false"
                 android:textColor="@color/colorWhite"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/iv_icon_options_friendship_notification_item"
                 app:layout_constraintTop_toBottomOf="@+id/iv_icon_options_friendship_notification_item" />
 
             <TextView
@@ -72,7 +102,7 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="sans-serif-thin"
                 android:padding="1dp"
-                android:textSize="16sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_icon_profile_photo_friendship_notification"
@@ -92,14 +122,14 @@
 
             <ImageView
                 android:id="@+id/iv_status_of_notification_friendship_notification_item"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="44dp"
                 android:clickable="true"
                 android:contentDescription="@string/content_comment"
                 android:focusable="true"
-                android:src="@drawable/ic_action_round"
+                android:src="@drawable/ic_read_notiication"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

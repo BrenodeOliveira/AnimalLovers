@@ -60,7 +60,7 @@ class BroadcastReceiverNotificationFriendship : BroadcastReceiver() {
                 //Persiste na lista de amigos o novo amigo
                 friendshipService.saveNewFriendShipSender(dataInicioAmizade, petInfo)
 
-                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(petInfo.idOwner).addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val petLogged = snapshot.child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
                         val owner = snapshot.getValue<Conta>()!!

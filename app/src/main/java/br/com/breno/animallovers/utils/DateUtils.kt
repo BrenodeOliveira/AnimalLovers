@@ -59,6 +59,16 @@ class DateUtils {
                     }
                 }
             }
+            ChronoUnit.HOURS.between(start, end) > 24 -> {
+                resultToReturn = when {
+                    ChronoUnit.HOURS.between(start, end) > 24 && ChronoUnit.DAYS.between(start, end) < 2-> {
+                        ChronoUnit.DAYS.between(start, end).toString() + " dia"
+                    }
+                    else -> {
+                        ChronoUnit.DAYS.between(start, end).toString() + " dias"
+                    }
+                }
+            }
             else -> {
                 resultToReturn = ChronoUnit.DAYS.between(start, end).toString() + " dias"
             }
