@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.constants.StatusSolicitacaoAmizade
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
@@ -91,9 +92,20 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
         else {
             holder.let {
                 it.name.text = pet.nome
-                val layoutParams: ViewGroup.LayoutParams = it.photoProfile.getLayoutParams()
-                layoutParams.height = 50
-                it.photoProfile.setLayoutParams(layoutParams)
+                when (pet.tipo) {
+                    KindOfPet.DOG.tipo -> {
+                        it.photoProfile.setImageResource(R.drawable.ic_dog_pet)
+                    }
+                    KindOfPet.CAT.tipo -> {
+                        it.photoProfile.setImageResource(R.drawable.ic_cat_pet)
+                    }
+                    KindOfPet.BIRD.tipo -> {
+                        it.photoProfile.setImageResource(R.drawable.ic_bird_pet)
+                    }
+                    else -> {
+                        it.photoProfile.setImageResource(R.drawable.ic_unkown_pet)
+                    }
+                }
             }
         }
 
@@ -242,6 +254,22 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                 }
             }
         }
+        else {
+            when (pet.tipo) {
+                KindOfPet.DOG.tipo -> {
+                    mAlertDialog.iv_icon_foto_perfil_cancel_friendship_request.setImageResource(R.drawable.ic_dog_pet)
+                }
+                KindOfPet.CAT.tipo -> {
+                    mAlertDialog.iv_icon_foto_perfil_cancel_friendship_request.setImageResource(R.drawable.ic_cat_pet)
+                }
+                KindOfPet.BIRD.tipo -> {
+                    mAlertDialog.iv_icon_foto_perfil_cancel_friendship_request.setImageResource(R.drawable.ic_bird_pet)
+                }
+                else -> {
+                    mAlertDialog.iv_icon_foto_perfil_cancel_friendship_request.setImageResource(R.drawable.ic_unkown_pet)
+                }
+            }
+        }
         mDialogView.btn_cancel_friendship_request.setOnClickListener {
             dBase = Firebase.database.reference
             solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.CANCELLED.status
@@ -282,6 +310,22 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
 
                 if(mAlertDialog.iv_icon_foto_perfil_analize_friendship_request.drawable == null) {
                     mAlertDialog.iv_icon_foto_perfil_analize_friendship_request.visibility = View.INVISIBLE
+                }
+            }
+        }
+        else {
+            when (pet.tipo) {
+                KindOfPet.DOG.tipo -> {
+                    mAlertDialog.iv_icon_foto_perfil_analize_friendship_request.setImageResource(R.drawable.ic_dog_pet)
+                }
+                KindOfPet.CAT.tipo -> {
+                    mAlertDialog.iv_icon_foto_perfil_analize_friendship_request.setImageResource(R.drawable.ic_cat_pet)
+                }
+                KindOfPet.BIRD.tipo -> {
+                    mAlertDialog.iv_icon_foto_perfil_analize_friendship_request.setImageResource(R.drawable.ic_bird_pet)
+                }
+                else -> {
+                    mAlertDialog.iv_icon_foto_perfil_analize_friendship_request.setImageResource(R.drawable.ic_unkown_pet)
                 }
             }
         }
@@ -367,12 +411,16 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                         }
                     }
 
-                    if (numMutualFriends == 0) {
-                        mAlertDialog.tv_mutual_friends_undo_friendship.text = "Nenhum amigo em comum"
-                    } else if (numMutualFriends == 1) {
-                        mAlertDialog.tv_mutual_friends_undo_friendship.text = numMutualFriends.toString() + " amigo em comum"
-                    } else {
-                        mAlertDialog.tv_mutual_friends_undo_friendship.text = numMutualFriends.toString() + " amigos em comum"
+                    when (numMutualFriends) {
+                        0 -> {
+                            mAlertDialog.tv_mutual_friends_undo_friendship.text = "Nenhum amigo em comum"
+                        }
+                        1 -> {
+                            mAlertDialog.tv_mutual_friends_undo_friendship.text = numMutualFriends.toString() + " amigo em comum"
+                        }
+                        else -> {
+                            mAlertDialog.tv_mutual_friends_undo_friendship.text = numMutualFriends.toString() + " amigos em comum"
+                        }
                     }
                 } else {
                     mAlertDialog.tv_mutual_friends_undo_friendship.text = "Nenhum amigo em comum"
@@ -396,6 +444,22 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
 
                 if(mAlertDialog.iv_icon_foto_perfil_undo_friendship.drawable == null) {
                     mAlertDialog.iv_icon_foto_perfil_undo_friendship.visibility = View.INVISIBLE
+                }
+            }
+        }
+        else {
+            when (pet.tipo) {
+                KindOfPet.DOG.tipo -> {
+                    mAlertDialog.iv_icon_foto_perfil_undo_friendship.setImageResource(R.drawable.ic_dog_pet)
+                }
+                KindOfPet.CAT.tipo -> {
+                    mAlertDialog.iv_icon_foto_perfil_undo_friendship.setImageResource(R.drawable.ic_cat_pet)
+                }
+                KindOfPet.BIRD.tipo -> {
+                    mAlertDialog.iv_icon_foto_perfil_undo_friendship.setImageResource(R.drawable.ic_bird_pet)
+                }
+                else -> {
+                    mAlertDialog.iv_icon_foto_perfil_undo_friendship.setImageResource(R.drawable.ic_unkown_pet)
                 }
             }
         }

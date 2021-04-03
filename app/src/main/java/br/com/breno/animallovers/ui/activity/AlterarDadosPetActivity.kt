@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
@@ -82,6 +83,22 @@ class AlterarDadosPetActivity : AppCompatActivity() {
 
             }.addOnFailureListener {
                 println(it.toString())
+            }
+        }
+        else {
+            when (petInfo.tipo) {
+                KindOfPet.DOG.tipo -> {
+                    iv_photo_to_profile_change_pet.setImageResource(R.drawable.ic_dog_pet)
+                }
+                KindOfPet.CAT.tipo -> {
+                    iv_photo_to_profile_change_pet.setImageResource(R.drawable.ic_cat_pet)
+                }
+                KindOfPet.BIRD.tipo -> {
+                    iv_photo_to_profile_change_pet.setImageResource(R.drawable.ic_bird_pet)
+                }
+                else -> {
+                    iv_photo_to_profile_change_pet.setImageResource(R.drawable.ic_unkown_pet)
+                }
             }
         }
 

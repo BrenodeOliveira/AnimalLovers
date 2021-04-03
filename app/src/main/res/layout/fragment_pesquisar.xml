@@ -51,6 +51,15 @@
             android:gravity="bottom|center_horizontal" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_search_pets"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_search_pets"
         android:scrollbars="horizontal"
@@ -59,5 +68,6 @@
         android:layout_marginStart="5dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_pet_register.*
+import kotlinx.android.synthetic.main.fragment_publish.*
 import java.io.ByteArrayOutputStream
 
 
@@ -87,12 +88,12 @@ class PetRegisterActivity : AppCompatActivity() {
                             pet.sexo = checkedBox
                             pet.id = AnimalLoversConstants.DATABASE_NODE_PET.nome + idPet.toString()
                             pet.idOwner = auth.uid.toString()
+
                             if (null != iv_photo_to_profile.drawable) {
                                 val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
                                 val baos = ByteArrayOutputStream()
                                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                                 val dataPicture = baos.toByteArray()
-
 
                                 petService.uploadProfilePhotoPet(idPet, dataPicture, pet)
                             } else {

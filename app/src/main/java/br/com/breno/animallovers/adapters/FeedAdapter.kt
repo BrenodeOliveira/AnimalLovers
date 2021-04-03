@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -99,6 +100,10 @@ class FeedAdapter(
                 val layoutParams: ViewGroup.LayoutParams = it.photoPost.layoutParams
                 layoutParams.height = 15
                 it.photoPost.layoutParams = layoutParams
+
+                val layoutParamsCard: ViewGroup.LayoutParams = it.photoPostCard.layoutParams
+                layoutParamsCard.height = 15
+                it.photoPostCard.layoutParams = layoutParamsCard
             }
         }
 
@@ -282,6 +287,7 @@ class FeedAdapter(
 
                 if(it.photoPost.drawable == null) {
                     it.photoPost.visibility = View.INVISIBLE
+                    it.photoPostCard.visibility = View.INVISIBLE
                 }
             }
         }.addOnFailureListener {
@@ -397,6 +403,7 @@ class FeedAdapter(
         val dateTime: TextView = itemView.tv_date_time_post_feed
         var description: TextView = itemView.tv_pet_description_post_feed
         var photoPost: ImageView = itemView.iv_photo_post_feed
+        var photoPostCard: CardView = itemView.card_iv_photo_post_feed
         var likePost: ImageView = itemView.iv_action_fav
         var commentPost: ImageView = itemView.iv_action_comment
         var numLikesPost: TextView = itemView.tv_num_likes_post

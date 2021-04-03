@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
@@ -114,6 +115,22 @@ class AdicionarFragment : Fragment() {
 
                     if(pet.pathFotoPerfil != "") {
                         retrieveProfilePhoto(idPet)
+                    }
+                    else {
+                        when (pet.tipo) {
+                            KindOfPet.DOG.tipo -> {
+                                iv_pet_photo_profile_publish.setImageResource(R.drawable.ic_dog_pet)
+                            }
+                            KindOfPet.CAT.tipo -> {
+                                iv_pet_photo_profile_publish.setImageResource(R.drawable.ic_cat_pet)
+                            }
+                            KindOfPet.BIRD.tipo -> {
+                                iv_pet_photo_profile_publish.setImageResource(R.drawable.ic_bird_pet)
+                            }
+                            else -> {
+                                iv_pet_photo_profile_publish.setImageResource(R.drawable.ic_unkown_pet)
+                            }
+                        }
                     }
                     tv_name_user.text = pet.nome
                 } else {

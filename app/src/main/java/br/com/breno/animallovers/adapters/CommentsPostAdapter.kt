@@ -20,9 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.model.Comentario
-import br.com.breno.animallovers.model.LikeComment
-import br.com.breno.animallovers.model.Notification
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.model.ReportComment
@@ -353,6 +352,26 @@ class CommentsPostAdapter(
             }.addOnFailureListener {
 
             }
+        }
+        else {
+            holder.let {
+                when (pet.tipo) {
+                    KindOfPet.DOG.tipo -> {
+                        it.photo.setImageResource(R.drawable.ic_dog_pet)
+                    }
+                    KindOfPet.CAT.tipo -> {
+                        it.photo.setImageResource(R.drawable.ic_cat_pet)
+                    }
+                    KindOfPet.BIRD.tipo -> {
+                        it.photo.setImageResource(R.drawable.ic_bird_pet)
+                    }
+                    else -> {
+                        it.photo.setImageResource(R.drawable.ic_unkown_pet)
+                    }
+                }
+
+            }
+
         }
     }
 

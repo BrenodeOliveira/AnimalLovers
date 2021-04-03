@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.service.ModalBottomSheet
@@ -80,6 +81,22 @@ class ProfileActivity : AppCompatActivity() {
 
                     if (petInfo.pathFotoPerfil != "") {
                         retrieveProfilePhoto(idPet)
+                    }
+                    else {
+                        when (petInfo.tipo) {
+                            KindOfPet.DOG.tipo -> {
+                                iv_animal_photo.setImageResource(R.drawable.ic_dog_pet)
+                            }
+                            KindOfPet.CAT.tipo -> {
+                                iv_animal_photo.setImageResource(R.drawable.ic_cat_pet)
+                            }
+                            KindOfPet.BIRD.tipo -> {
+                                iv_animal_photo.setImageResource(R.drawable.ic_bird_pet)
+                            }
+                            else -> {
+                                iv_animal_photo.setImageResource(R.drawable.ic_unkown_pet)
+                            }
+                        }
                     }
                 }
                 if(accountInfo.pathFotoPerfil != "") {

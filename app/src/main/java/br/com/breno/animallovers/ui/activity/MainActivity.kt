@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,7 @@ import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -69,25 +71,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         inicializaNavDrawer()
         clickUserPage()
 
-//        controlador.addOnDestinationChangedListener { controller, destination, arguments ->
-//
-//            title = destination.label
-//
-//            viewModel.componentes.observe(this, Observer {
-//                it?.let { temComponentes ->
-//                    if (temComponentes.appBar) {
-//                        supportActionBar?.show()
-//                    } else {
-//                        supportActionBar?.hide()
-//                    }
-//                    if (temComponentes.bottomNavigation) {
-//                        bottomNavigationView.visibility = VISIBLE
-//                    } else {
-//                        bottomNavigationView.visibility = GONE
-//                    }
-//                }
-//            }).........
-//        }
 
         bottomNavigationView.setupWithNavController(controlador)
     }
@@ -182,7 +165,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dialog.show()
     }
 
-
     private fun retrieveUserInfo() {
         database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
@@ -196,9 +178,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 if(accountInfo.pathFotoPerfil != "") {
                     retrieveOwnerProfilePhoto()
                 }
-                val paisEstado = accountInfo.cidade + " - " + accountInfo.pais
-                txt_name_owner_account_main.text = accountInfo.usuario
-                txt_local_account_main.text = paisEstado
+                try {
+                    val paisEstado = accountInfo.cidade + " - " + accountInfo.pais
+                    txt_name_owner_account_main.text = accountInfo.usuario
+                    txt_local_account_main.text = paisEstado
+                }
+                catch (ex : Exception) {
+                    println("Ocorreu um erro ao buscar as informações do dono")
+                }
+
             }
 
             override fun onCancelled(error: DatabaseError) {

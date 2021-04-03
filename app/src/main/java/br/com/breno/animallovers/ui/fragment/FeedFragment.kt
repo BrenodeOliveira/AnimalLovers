@@ -116,22 +116,6 @@ class FeedFragment : Fragment() {
                                 }
                             }
 
-                            for (x in 0..numChildren) {
-                                if (sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).hasChild(x.toString())) {
-                                    val post: Post = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).child(x.toString()).getValue<Post>()!!
-
-                                    if(post.postAtivo) {
-                                        pet = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
-
-                                        post.idPet = myPreferences.getPetLogged().toString()
-                                        post.nomePet = pet.nome
-                                        post.idOwner = auth.uid.toString()
-                                        listPosts.add(post)
-                                    }
-
-                                }
-                            }
-
                             listPosts.sortBy { convertStringToDate(it.dataHora) }
                             recycler_feed.layoutManager = LinearLayoutManager(requireContext())
                             recycler_feed.adapter = FeedAdapter(listPosts, requireContext(), false)

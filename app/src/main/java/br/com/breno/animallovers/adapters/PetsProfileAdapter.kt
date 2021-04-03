@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.service.ModalBottomSheet
 import br.com.breno.animallovers.ui.activity.MainActivity
@@ -58,6 +59,21 @@ class PetsProfileAdapter(
             holder.let {
                 it.title.text = pets.nome
                 it.description.text = pets.resumo
+
+                when (pets.tipo) {
+                    KindOfPet.DOG.tipo -> {
+                        it.photo.setImageResource(R.drawable.ic_dog_pet)
+                    }
+                    KindOfPet.CAT.tipo -> {
+                        it.photo.setImageResource(R.drawable.ic_cat_pet)
+                    }
+                    KindOfPet.BIRD.tipo -> {
+                        it.photo.setImageResource(R.drawable.ic_bird_pet)
+                    }
+                    else -> {
+                        it.photo.setImageResource(R.drawable.ic_unkown_pet)
+                    }
+                }
             }
         }
         holder.let {

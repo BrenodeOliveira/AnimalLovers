@@ -1,7 +1,5 @@
 package br.com.breno.animallovers.adapters
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -21,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.constants.StatusSolicitacaoAmizade
 import br.com.breno.animallovers.model.*
 import br.com.breno.animallovers.notification.KindOfNotification
@@ -268,6 +267,22 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
 
                 }
             }
+            else {
+                when (pet.tipo) {
+                    KindOfPet.DOG.tipo -> {
+                        petProfilePhoto.setImageResource(R.drawable.ic_dog_pet)
+                    }
+                    KindOfPet.CAT.tipo -> {
+                        petProfilePhoto.setImageResource(R.drawable.ic_cat_pet)
+                    }
+                    KindOfPet.BIRD.tipo -> {
+                        petProfilePhoto.setImageResource(R.drawable.ic_bird_pet)
+                    }
+                    else -> {
+                        petProfilePhoto.setImageResource(R.drawable.ic_unkown_pet)
+                    }
+                }
+            }
 
             if(!notification.visualizada) {
                 layoutPost.setBackgroundColor(itemView.context.getColor(R.color.backgroundNotificationItemUnread))
@@ -325,6 +340,22 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
                     petProfilePhoto.setImageBitmap(bmp)
                 }.addOnFailureListener {
 
+                }
+            }
+            else {
+                when (pet.tipo) {
+                    KindOfPet.DOG.tipo -> {
+                        petProfilePhoto.setImageResource(R.drawable.ic_dog_pet)
+                    }
+                    KindOfPet.CAT.tipo -> {
+                        petProfilePhoto.setImageResource(R.drawable.ic_cat_pet)
+                    }
+                    KindOfPet.BIRD.tipo -> {
+                        petProfilePhoto.setImageResource(R.drawable.ic_bird_pet)
+                    }
+                    else -> {
+                        petProfilePhoto.setImageResource(R.drawable.ic_unkown_pet)
+                    }
                 }
             }
 

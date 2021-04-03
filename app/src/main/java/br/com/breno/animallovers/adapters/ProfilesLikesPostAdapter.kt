@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.ui.activity.ProfilePetActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -56,6 +57,20 @@ class ProfilesLikesPostAdapter(private val pets: List<Pet>, private val context:
         }
         else {
             holder?.let {
+                when (pet.tipo) {
+                    KindOfPet.DOG.tipo -> {
+                        it.photo.setImageResource(R.drawable.ic_dog_pet)
+                    }
+                    KindOfPet.CAT.tipo -> {
+                        it.photo.setImageResource(R.drawable.ic_cat_pet)
+                    }
+                    KindOfPet.BIRD.tipo -> {
+                        it.photo.setImageResource(R.drawable.ic_bird_pet)
+                    }
+                    else -> {
+                        it.photo.setImageResource(R.drawable.ic_unkown_pet)
+                    }
+                }
                 it.title.text = pet.nome
                 it.description.text = pet.resumo
             }

@@ -59,6 +59,14 @@ class PesquisarFragment:Fragment() {
                 buscarPets(view.context)
             }
         })
+
+        refreshSearch(view.context)
+    }
+
+    private fun refreshSearch(context: Context) {
+        swipe_refresh_search_pets.setOnRefreshListener {
+            buscarPets(context)
+        }
     }
 
     private fun buscarPets(context: Context) {
@@ -89,7 +97,7 @@ class PesquisarFragment:Fragment() {
                             }
                         }
                     }
-
+                    swipe_refresh_search_pets.isRefreshing = false
                     recycler_search_pets.layoutManager = LinearLayoutManager(requireContext())
                     recycler_search_pets.adapter = PetSearchAdapter(listPets, requireContext())
 

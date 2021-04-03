@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
-import br.com.breno.animallovers.adapters.FeedAdapter
 import br.com.breno.animallovers.adapters.NotificationAdapter
 import br.com.breno.animallovers.model.Notification
 import br.com.breno.animallovers.model.Pet
@@ -26,8 +25,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_profile_pet.*
-import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_notificacao.*
 
 class NotificacaoFragment: Fragment() {
@@ -96,10 +93,15 @@ class NotificacaoFragment: Fragment() {
         var myPreferences = ProjectPreferences(context)
         var pet = petService.retrievePetInfo(myPreferences.getPetLogged().toString(), snapshot)
 
-        tv_pet_name_notification_fragment.text = pet.nome
+        try {
+            tv_pet_name_notification_fragment.text = pet.nome
 
-        if(pet.pathFotoPerfil != "") {
-            retrieveOwnerProfilePhoto(pet)
+            if(pet.pathFotoPerfil != "") {
+                retrieveOwnerProfilePhoto(pet)
+            }
+        }
+        catch (ex : Exception) {
+            println("Erro ao buscar as informações do pet")
         }
     }
 
@@ -113,7 +115,9 @@ class NotificacaoFragment: Fragment() {
 
         storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
             val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
-            iv_icon_profile_photo_notification.setImageBitmap(bmp)
+            if(iv_icon_profile_photo_notification != null) {
+                iv_icon_profile_photo_notification.setImageBitmap(bmp)
+            }
         }.addOnFailureListener {
 
         }

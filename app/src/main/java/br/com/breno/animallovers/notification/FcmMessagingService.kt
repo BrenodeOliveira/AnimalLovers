@@ -89,6 +89,7 @@ class FcmMessagingService: FirebaseMessagingService() {
                         shouldOpenCommentsInIntent = true
                     }
                 }
+
                 notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 val intent = Intent(this, SinglePostActivity::class.java)
                 intent.putExtra("POST_INFO", postInfo)
@@ -96,20 +97,17 @@ class FcmMessagingService: FirebaseMessagingService() {
                 intent.putExtra("SHOULD_INFLATE_COMMENT", shouldOpenCommentsInIntent)
                 val pendingIntent = PendingIntent.getActivity(this, Random().nextInt(), intent, 0)
 
-                val ref = storage.reference
-                    .child(AnimalLoversConstants.STORAGE_ROOT.nome)
-                    .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
-                    .child(petInfo.idOwner)
-                    .child(petInfo.id + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
                 try {
+                    val ref = storage.reference
+                        .child(AnimalLoversConstants.STORAGE_ROOT.nome)
+                        .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
+                        .child(petInfo.idOwner)
+                        .child(petInfo.id + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+
+
                     ref.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
                         val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            notificationChannel = NotificationChannel(
-                                channelId,
-                                description,
-                                NotificationManager.IMPORTANCE_HIGH
-                            )
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { notificationChannel = NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_DEFAULT)
                             notificationChannel.enableLights(false)
                             notificationChannel.lightColor = Color.WHITE
                             notificationChannel.enableVibration(false)
@@ -136,48 +134,35 @@ class FcmMessagingService: FirebaseMessagingService() {
                         }
                     }.addOnFailureListener { itException ->
                         println(itException.toString())
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            notificationChannel = NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_DEFAULT)
+                            notificationChannel.enableLights(false)
+                            notificationChannel.lightColor = Color.WHITE
+                            notificationChannel.enableVibration(false)
+                            notificationManager.createNotificationChannel(notificationChannel)
+
+                            builder = Notification.Builder(this, channelId)
+                                .setSmallIcon(R.drawable.ic_coracao)
+                                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.animalovers_logo_simples))
+                                .setContentIntent(pendingIntent)
+                                .setContentTitle(messageBody["title"])
+                                .setContentText(messageBody["body"])
+                            notificationManager.notify(idNotification!!.toInt(), builder.build())
+
+                        }
+                        else {
+                            builder = Notification.Builder(this)
+                                .setSmallIcon(R.drawable.ic_coracao)
+                                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.animalovers_logo_simples))
+                                .setContentIntent(pendingIntent)
+                                .setContentTitle(messageBody["title"])
+                                .setContentText(messageBody["body"])
+                            notificationManager.notify(idNotification!!.toInt(), builder.build())
+
+                        }
                     }
                 } catch (ex: Exception) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        notificationChannel = NotificationChannel(
-                            channelId,
-                            description,
-                            NotificationManager.IMPORTANCE_HIGH
-                        )
-                        notificationChannel.enableLights(false)
-                        notificationChannel.lightColor = Color.WHITE
-                        notificationChannel.enableVibration(false)
-                        notificationManager.createNotificationChannel(notificationChannel)
 
-                        builder = Notification.Builder(this, channelId)
-                            .setSmallIcon(R.drawable.ic_coracao)
-                            .setLargeIcon(
-                                BitmapFactory.decodeResource(
-                                    resources,
-                                    R.drawable.animalovers_logo_simples
-                                )
-                            )
-                            .setContentIntent(pendingIntent)
-                            .setContentTitle(messageBody["title"])
-                            .setContentText(messageBody["body"])
-                        notificationManager.notify(idNotification!!.toInt(), builder.build())
-
-                    }
-                    else {
-                        builder = Notification.Builder(this)
-                            .setSmallIcon(R.drawable.ic_coracao)
-                            .setLargeIcon(
-                                BitmapFactory.decodeResource(
-                                    resources,
-                                    R.drawable.animalovers_logo_simples
-                                )
-                            )
-                            .setContentIntent(pendingIntent)
-                            .setContentTitle(messageBody["title"])
-                            .setContentText(messageBody["body"])
-                        notificationManager.notify(idNotification!!.toInt(), builder.build())
-
-                    }
                 }
             } catch (e: JSONException) {
                 println(e.toString())
@@ -206,12 +191,7 @@ class FcmMessagingService: FirebaseMessagingService() {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
                 intent.putExtra("PET_INFO_PROFILE", petInfo)
-                val pendingIntent = PendingIntent.getActivity(
-                    this,
-                    0,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                )
+                val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
                 val buttonIntent = Intent(this, BroadcastReceiverNotificationFriendship::class.java)
                 buttonIntent.apply {
@@ -220,28 +200,19 @@ class FcmMessagingService: FirebaseMessagingService() {
                     putExtra("PET_LOGGED_INFO_PROFILE", petLoggedInfo)
                     putExtra("KIND_OF_FRIENDSHIP_REQUEST", kindOfNotification)
                 }
-                val buttonPendingIntent = PendingIntent.getBroadcast(
-                    this,
-                    Random().nextInt(),
-                    buttonIntent,
-                    0
-                )
+                val buttonPendingIntent = PendingIntent.getBroadcast(this, Random().nextInt(), buttonIntent, 0)
 
-
-                val ref = storage.reference
-                    .child(AnimalLoversConstants.STORAGE_ROOT.nome)
-                    .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
-                    .child(petInfo.idOwner)
-                    .child(petInfo.id + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
                 try {
+                    val ref = storage.reference
+                        .child(AnimalLoversConstants.STORAGE_ROOT.nome)
+                        .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
+                        .child(petInfo.idOwner)
+                        .child(petInfo.id + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+
                     ref.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
                         val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            notificationChannel = NotificationChannel(
-                                channelId,
-                                description,
-                                NotificationManager.IMPORTANCE_HIGH
-                            )
+                            notificationChannel = NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_DEFAULT)
                             notificationChannel.enableLights(false)
                             notificationChannel.lightColor = Color.WHITE
                             notificationChannel.enableVibration(false)
@@ -253,11 +224,7 @@ class FcmMessagingService: FirebaseMessagingService() {
                                 .setContentIntent(pendingIntent)
                                 .setContentTitle(messageBody["title"])
                                 .setContentText(messageBody["body"])
-                                .addAction(
-                                    R.drawable.animalovers_logo_simples,
-                                    titleOfNotificationButton,
-                                    buttonPendingIntent
-                                )
+                                .addAction(R.drawable.animalovers_logo_simples, titleOfNotificationButton, buttonPendingIntent)
                             notificationManager.notify(idNotification!!.toInt(), builder.build())
                         }
                         else {
@@ -267,68 +234,43 @@ class FcmMessagingService: FirebaseMessagingService() {
                                 .setContentIntent(pendingIntent)
                                 .setContentTitle(messageBody["title"])
                                 .setContentText(messageBody["body"])
-                                .addAction(
-                                    R.drawable.animalovers_logo_simples,
-                                    titleOfNotificationButton,
-                                    buttonPendingIntent
-                                )
+                                .addAction(R.drawable.animalovers_logo_simples, titleOfNotificationButton, buttonPendingIntent)
                             notificationManager.notify(idNotification!!.toInt(), builder.build())
 
                         }
                     }.addOnFailureListener { itException ->
                         println(itException.toString())
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            notificationChannel = NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_HIGH)
+                            notificationChannel.enableLights(false)
+                            notificationChannel.lightColor = Color.WHITE
+                            notificationChannel.enableVibration(false)
+                            notificationManager.createNotificationChannel(notificationChannel)
+
+                            builder = Notification.Builder(this, channelId)
+                                .setSmallIcon(R.drawable.ic_coracao)
+                                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.animalovers_logo_simples))
+                                .setContentIntent(pendingIntent)
+                                .setContentTitle(messageBody["title"])
+                                .setContentText(messageBody["body"])
+                                .addAction(R.drawable.animalovers_logo_simples, titleOfNotificationButton, buttonPendingIntent)
+                            notificationManager.notify(idNotification!!.toInt(), builder.build())
+
+                        }
+                        else {
+                            builder = Notification.Builder(this)
+                                .setSmallIcon(R.drawable.ic_coracao)
+                                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.animalovers_logo_simples))
+                                .setContentIntent(pendingIntent)
+                                .setContentTitle(messageBody["title"])
+                                .setContentText(messageBody["body"])
+                                .addAction(R.drawable.animalovers_logo_simples, titleOfNotificationButton, buttonPendingIntent)
+                            notificationManager.notify(idNotification!!.toInt(), builder.build())
+
+                        }
                     }
                 } catch (ex: Exception) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        notificationChannel = NotificationChannel(
-                            channelId,
-                            description,
-                            NotificationManager.IMPORTANCE_HIGH
-                        )
-                        notificationChannel.enableLights(false)
-                        notificationChannel.lightColor = Color.WHITE
-                        notificationChannel.enableVibration(false)
-                        notificationManager.createNotificationChannel(notificationChannel)
 
-                        builder = Notification.Builder(this, channelId)
-                            .setSmallIcon(R.drawable.ic_coracao)
-                            .setLargeIcon(
-                                BitmapFactory.decodeResource(
-                                    resources,
-                                    R.drawable.animalovers_logo_simples
-                                )
-                            )
-                            .setContentIntent(pendingIntent)
-                            .setContentTitle(messageBody["title"])
-                            .setContentText(messageBody["body"])
-                            .addAction(
-                                R.drawable.animalovers_logo_simples,
-                                titleOfNotificationButton,
-                                buttonPendingIntent
-                            )
-                        notificationManager.notify(idNotification!!.toInt(), builder.build())
-
-                    }
-                    else {
-                        builder = Notification.Builder(this)
-                            .setSmallIcon(R.drawable.ic_coracao)
-                            .setLargeIcon(
-                                BitmapFactory.decodeResource(
-                                    resources,
-                                    R.drawable.animalovers_logo_simples
-                                )
-                            )
-                            .setContentIntent(pendingIntent)
-                            .setContentTitle(messageBody["title"])
-                            .setContentText(messageBody["body"])
-                            .addAction(
-                                R.drawable.animalovers_logo_simples,
-                                titleOfNotificationButton,
-                                buttonPendingIntent
-                            )
-                        notificationManager.notify(idNotification!!.toInt(), builder.build())
-
-                    }
                 }
             } catch (e: JSONException) {
                 println(e.toString())

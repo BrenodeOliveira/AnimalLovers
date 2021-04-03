@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.adapters.FeedAdapter
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.constants.StatusSolicitacaoAmizade
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
@@ -91,6 +92,22 @@ class ProfilePetActivity : AppCompatActivity() {
 
                         }.addOnFailureListener {
 
+                        }
+                    }
+                    else {
+                        when (pet.tipo) {
+                            KindOfPet.DOG.tipo -> {
+                                iv_photo_profile_pet.setImageResource(R.drawable.ic_dog_pet)
+                            }
+                            KindOfPet.CAT.tipo -> {
+                                iv_photo_profile_pet.setImageResource(R.drawable.ic_cat_pet)
+                            }
+                            KindOfPet.BIRD.tipo -> {
+                                iv_photo_profile_pet.setImageResource(R.drawable.ic_bird_pet)
+                            }
+                            else -> {
+                                iv_photo_profile_pet.setImageResource(R.drawable.ic_unkown_pet)
+                            }
                         }
                     }
 
