@@ -6,14 +6,15 @@ import android.util.Patterns
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.broadcast.ManageDisconnectionFromApp
+import br.com.breno.animallovers.model.Login
+import br.com.breno.animallovers.service.DonoService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.ProjectPreferences
 import br.com.breno.animallovers.viewModel.LoginActivityViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -21,6 +22,8 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private val viewModel: LoginActivityViewModel by viewModel()
+
+    private var donoService = DonoService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +87,15 @@ class LoginActivity : AppCompatActivity() {
                 val myPreferences = ProjectPreferences(baseContext)
                 myPreferences.setPetLogged("")
                 progress_login.visibility = GONE
+
+                startService(Intent(baseContext, ManageDisconnectionFromApp::class.java))
+
+                var login = Login()
+                login.logged = true
+                login.authUid = auth.uid.toString()
+
+                donoService.persistOwnerLoginStatus(login)
+
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {

@@ -18,7 +18,9 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.broadcast.ManageDisconnectionFromApp
 import br.com.breno.animallovers.model.Conta
+import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.service.DonoService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -73,6 +75,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         bottomNavigationView.setupWithNavController(controlador)
+
+        startService(Intent(baseContext, ManageDisconnectionFromApp::class.java))
+
+        var login = Login()
+        login.logged = true
+        login.authUid = auth.uid.toString()
+
+        donoService.persistOwnerLoginStatus(login)
     }
 
     private fun clickUserPage() {
@@ -98,6 +108,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(Intent(this, MapsActivity::class.java))
             }
             R.id.get_out -> {
+
+                var login = Login()
+                login.logged = false
+                login.lastLogin = System.currentTimeMillis() / 1000
+                login.authUid = auth.uid.toString()
+
+                donoService.persistOwnerLoginStatus(login)
+
                 donoService.unsaveOwnerDeviceToken(accountInfo)//Ao fazer logout, remove o token salvo para não receber mais notificações
                 FirebaseAuth.getInstance().signOut()
                 finish()

@@ -1,6 +1,7 @@
 package br.com.breno.animallovers.service
 
 import br.com.breno.animallovers.model.Conta
+import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
@@ -71,5 +72,11 @@ class DonoService {
 
     fun retrieveOwnerInfo(dataSnapshot: DataSnapshot, uid : String) : Conta {
         return dataSnapshot.child(uid).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
+    }
+
+    fun persistOwnerLoginStatus(login : Login) {
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTROL_LOGIN.nome)
+            .child(login.authUid)
+            .setValue(login)
     }
 }

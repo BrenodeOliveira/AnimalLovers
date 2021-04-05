@@ -20,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".broadcast.ManageDisconnectionFromApp" android:stopWithTask="false" />
         <receiver android:name=".broadcast.BroadcastReceiverNotificationFriendship"/>
         <receiver android:name=".broadcast.BroadcastReceiverNotificationChat"/>
         <activity android:name=".ui.activity.SinglePostActivity"></activity>

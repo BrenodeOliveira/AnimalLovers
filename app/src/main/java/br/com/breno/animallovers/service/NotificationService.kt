@@ -47,7 +47,7 @@ class NotificationService(context: Context) {
             .setValue(notification)
     }
 
-    private fun persistNotificationOfNewComment(petWhoCommented: Pet, petReceiver: Pet, snapshot: DataSnapshot, comentario: Comentario) {
+    private fun persistNotificationOfNewComment(petWhoCommented: Pet, petReceiver: Pet, snapshot: DataSnapshot, comentario: Comentario, post : Post) {
         var notification = Notification()
 
         var ref = database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
@@ -63,6 +63,7 @@ class NotificationService(context: Context) {
         notification.incrementIdNotification = getIdOfLastNotification(snapshot, petReceiver).toString()
         notification.idActionNotification = comentario.uniqueIdComment
         notification.notificationType = 0//Serve para saber qual tupo de layout será inflado na NotificationFragment
+        notification.postNotification = post
 
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
@@ -317,7 +318,7 @@ class NotificationService(context: Context) {
         val bodyText = "[" + petWhoReceivedComment.nome + "]: " + petWhoCommented.nome + " comentou na sua publicação"
         val title = petWhoCommented.nome + " " + ctx.getString(R.string.commented_your_post)
 
-        persistNotificationOfNewComment(petWhoCommented, petWhoReceivedComment, snapshot, comentario)
+        persistNotificationOfNewComment(petWhoCommented, petWhoReceivedComment, snapshot, comentario, post)
         sendNotificationsRelatedToPosts(post, petWhoCommented, owner.deviceToken, title, bodyText, KindOfNotification.COMMENTED_POST.nome, "1")
     }
 

@@ -116,6 +116,12 @@ class FeedAdapter(
 
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dSnap: DataSnapshot) {
+
+                    if(FirebaseAuth.getInstance().currentUser == null || myPreferences.getPetLogged().equals("")) {
+                        database.removeEventListener(this)
+                        return
+                    }
+
                     var numLikes = 0
 
                     var hasPetLikedPost = false

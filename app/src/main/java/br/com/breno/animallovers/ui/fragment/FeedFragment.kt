@@ -79,6 +79,12 @@ class FeedFragment : Fragment() {
             dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(object : ValueEventListener {
 
                 override fun onDataChange(sShot: DataSnapshot) {
+
+                    if(FirebaseAuth.getInstance().currentUser == null || myPreferences.getPetLogged().equals("")) {
+                        database.removeEventListener(this)
+                        return
+                    }
+
                     val listPosts = ArrayList<Post>()
                     if (sShot.value != null) {
                         pet = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
@@ -113,6 +119,22 @@ class FeedFragment : Fragment() {
                                             }
                                         }
                                     }
+                                }
+                            }
+
+                            for (x in 0..numChildren) {
+                                if (sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).hasChild(x.toString())) {
+                                    val post: Post = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).child(x.toString()).getValue<Post>()!!
+
+                                    if(post.postAtivo) {
+                                        pet = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
+
+                                        post.idPet = myPreferences.getPetLogged().toString()
+                                        post.nomePet = pet.nome
+                                        post.idOwner = auth.uid.toString()
+                                        listPosts.add(post)
+                                    }
+
                                 }
                             }
 

@@ -12,20 +12,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.adapters.FeedAdapter
+import br.com.breno.animallovers.adapters.LatestMessageRow
 import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.constants.StatusSolicitacaoAmizade
-import br.com.breno.animallovers.model.Conta
-import br.com.breno.animallovers.model.Pet
-import br.com.breno.animallovers.model.Post
+import br.com.breno.animallovers.model.*
+import br.com.breno.animallovers.service.DonoService
 import br.com.breno.animallovers.service.PetFriendsService
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.service.PostService
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
@@ -34,6 +31,7 @@ import kotlinx.android.synthetic.main.activity_profile_pet.*
 
 class ProfilePetActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
+    private var base: DatabaseReference = FirebaseDatabase.getInstance().reference
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
 
@@ -49,6 +47,39 @@ class ProfilePetActivity : AppCompatActivity() {
         loadPetPosts(petInfo)
 
         seeFriends(petInfo)
+        getOwnerLoginStatus(petInfo)
+    }
+
+    private fun openChatWithPetOwner(petInfo: Pet, conta : Conta) {
+        if(petInfo.idOwner == auth.uid.toString()) {
+            return
+        }
+
+        var user = User(conta.id, conta.email, conta.usuario, conta.cidade, conta.pais, conta.pathFotoPerfil)
+
+        val intent = Intent(applicationContext, ChatLogActivity::class.java)
+
+        intent.putExtra(NewMessageActivity.USER_KEY, user)
+        startActivity(intent)
+    }
+
+    private fun getOwnerLoginStatus(petInfo: Pet) {
+        var donoService = DonoService()
+
+        base.child(AnimalLoversConstants.DATABASE_ENTITY_CONTROL_LOGIN.nome).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var ownerLogin = snapshot.child(petInfo.idOwner).getValue<Login>()!!
+
+                if(ownerLogin.logged) {
+                    tv_status_pet_profile_pet.background = applicationContext.getDrawable(R.drawable.logged_owner_icon)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println(error.toString())
+            }
+
+        })
     }
 
     private fun refreshPetInfo(pet : Pet) {
@@ -186,6 +217,10 @@ class ProfilePetActivity : AppCompatActivity() {
                     )
                     recyclerView.layoutManager = layoutManager
                     swipe_refresh_pet_profile.isRefreshing = false
+
+                    iv_open_chat_profile_pet.setOnClickListener {
+                        openChatWithPetOwner(petInfo, dono)
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {

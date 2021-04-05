@@ -171,7 +171,7 @@ class PostService(context : Context) {
 
         var numOfPosts = dataSnapshot.childrenCount
 
-        for (i in 1 until numOfPosts + 1) {
+        for (i in 1 until numOfPosts) {
             var loopPost = dataSnapshot.child(i.toString()).getValue<Post>()
 
             var likePost = dataSnapshot.child(i.toString())
@@ -201,7 +201,7 @@ class PostService(context : Context) {
             if(dataSnapshot.child(i.toString()).hasChild(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)) {
                 var numOfComments = dataSnapshot.child(i.toString()).child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome).childrenCount
 
-                for(j in 1 until numOfComments + 1) {
+                for(j in 1 until numOfComments) {
                     var commentPost = dataSnapshot.child(i.toString())
                         .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
                         .child(j.toString())
