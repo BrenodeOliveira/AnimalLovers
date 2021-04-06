@@ -54,6 +54,12 @@ class DateUtils {
                     ChronoUnit.HOURS.between(start, end).toInt() == 1 -> {
                         ChronoUnit.HOURS.between(start, end).toString() + " hora"
                     }
+                    ChronoUnit.MINUTES.between(start, end).toInt() == 1 -> {
+                        ChronoUnit.MINUTES.between(start, end).toString() + " minuto"
+                    }
+                    ChronoUnit.MINUTES.between(start, end).toInt() < 1 -> {
+                        ChronoUnit.SECONDS.between(start, end).toString() + " segundos"
+                    }
                     else -> {
                         ChronoUnit.MINUTES.between(start, end).toString() + " minutos"
                     }

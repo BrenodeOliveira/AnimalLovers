@@ -135,5 +135,6 @@
     <string name="txt_kilos">Kilos</string>
     <string name="txt_email_example">lakjsdfbhlkasjbfhl@gmail.com</string>
     <string name="txt_alter_data_user">Alterar dados</string>
-
+    <string name="online">Online</string>
+    <string name="empty"></string>
 </resources>

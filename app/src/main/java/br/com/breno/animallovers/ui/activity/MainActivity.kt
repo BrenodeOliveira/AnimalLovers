@@ -40,6 +40,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.lang.Exception
+import java.lang.RuntimeException
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -76,7 +77,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         bottomNavigationView.setupWithNavController(controlador)
 
-        startService(Intent(baseContext, ManageDisconnectionFromApp::class.java))
+        try {
+            startService(Intent(baseContext, ManageDisconnectionFromApp::class.java))
+        }
+        catch (ex : RuntimeException) {
+            println(ex.toString())
+        }
 
         var login = Login()
         login.logged = true

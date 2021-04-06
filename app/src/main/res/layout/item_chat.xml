@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_person_chat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -27,11 +28,26 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tv_status_pet_chat_list"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/likes_post_count"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_message_chat"
+            app:layout_constraintEnd_toStartOf="@+id/tv_name_chat" />
+
+        <TextView
             android:id="@+id/tv_name_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:text="@string/txt_gui_taka"
+            android:text="@string/empty"
             android:textColor="#000"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -42,7 +58,7 @@
             android:id="@+id/tv_message_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/txt_chat_default"
+            android:text="@string/empty"
             app:layout_constraintBottom_toBottomOf="@id/iv_profile_chat_picture"
             app:layout_constraintStart_toStartOf="@id/tv_name_chat"
             app:layout_constraintTop_toBottomOf="@id/tv_name_chat" />
