@@ -29,11 +29,26 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tv_status_pet_chat_list_new_message"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/likes_post_count"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tv_name_user_row"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/tv_name_user_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:text="@string/txt_gui_taka"
+            android:text="@string/empty"
             android:textColor="#000"
             android:textSize="20sp"
             android:textStyle="bold"

@@ -1,25 +1,22 @@
 package br.com.breno.animallovers.adapters
 
-import android.content.Context
-import android.graphics.BitmapFactory
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.ChatMessage
 import br.com.breno.animallovers.model.Conta
-import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.model.User
 import br.com.breno.animallovers.service.DonoService
-import br.com.breno.animallovers.service.PetService
-import br.com.breno.animallovers.ui.activity.MainActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
-import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.item_latest_message.view.*
-import org.koin.dsl.koinApplication
-import kotlin.coroutines.coroutineContext
 
 class LatestMessageRow(val chatMessage: ChatMessage): Item<ViewHolder>() {
 
@@ -28,6 +25,7 @@ class LatestMessageRow(val chatMessage: ChatMessage): Item<ViewHolder>() {
     private var accountInfo = Conta()
     private var donoService = DonoService()
     var chatPartnerUser: User? = null
+    private var base: DatabaseReference = FirebaseDatabase.getInstance().reference
 
     override fun getLayout(): Int {
         return R.layout.item_latest_message
@@ -44,6 +42,29 @@ class LatestMessageRow(val chatMessage: ChatMessage): Item<ViewHolder>() {
         } else {
             chatPartnerId = chatMessage.fromId
         }
+
+        base.child(AnimalLoversConstants.DATABASE_ENTITY_CONTROL_LOGIN.nome).addValueEventListener(object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.O)
+            @SuppressLint("UseCompatLoadingForDrawables")
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.hasChild(chatMessage.fromId)) {
+                    val ownerLogin = snapshot.child(chatMessage.fromId).getValue<Login>()!!
+
+                    if(ownerLogin.logged) {
+                        viewHolder.itemView.tv_status_pet_chat_list.background = viewHolder.itemView.context.getDrawable(R.drawable.logged_owner_icon)
+                    }
+                    else {
+                        viewHolder.itemView.tv_status_pet_chat_list.background = viewHolder.itemView.context.getDrawable(R.drawable.likes_post_count)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println(error.toString())
+            }
+
+        })
+
 
         val ref = FirebaseDatabase.getInstance().getReference("/conta/$chatPartnerId/dono")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {

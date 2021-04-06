@@ -52,7 +52,6 @@ class ManageDisconnectionFromApp : Service() {
     }
 
     override fun onCreate() {
-        println("fw")
         super.onCreate()
     }
 }
