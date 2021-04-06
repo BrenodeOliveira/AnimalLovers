@@ -2,7 +2,7 @@ package br.com.breno.animallovers.model
 
 import java.io.Serializable
 
-class Pet  : Serializable {
+class Pet : Serializable {
     var idade: String = ""
     var nome: String = ""
     var peso: String = ""

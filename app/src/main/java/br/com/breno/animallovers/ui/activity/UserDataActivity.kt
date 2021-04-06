@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isEmpty
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.service.DonoService
@@ -92,31 +93,35 @@ class UserDataActivity : AppCompatActivity() {
             database = Firebase.database.reference
             auth = FirebaseAuth.getInstance()
 
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(
-                object :
-                    ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+            if (tv_nome_dono.text.toString().isNotEmpty() and tv_pais_dono.text.toString().isNotEmpty() and tv_cidade_dono.text.toString().isNotEmpty()) {
+                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(
+                    object :
+                        ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                        accountInfo.usuario = tv_nome_dono.text.toString()
-                        accountInfo.cidade = tv_cidade_dono.text.toString()
-                        accountInfo.pais = tv_pais_dono.text.toString()
+                            accountInfo.usuario = tv_nome_dono.text.toString()
+                            accountInfo.cidade = tv_cidade_dono.text.toString()
+                            accountInfo.pais = tv_pais_dono.text.toString()
 
-                        if (iv_photo_to_profile_owner.drawable == null) {
-                            donoService.persistOwner(accountInfo)
-                        } else {
-                            val bitmap = (iv_photo_to_profile_owner.drawable as BitmapDrawable).bitmap
-                            val baos = ByteArrayOutputStream()
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                            val dataPicture = baos.toByteArray()
+                            if (iv_photo_to_profile_owner.drawable == null) {
+                                donoService.persistOwner(accountInfo)
+                            } else {
+                                val bitmap = (iv_photo_to_profile_owner.drawable as BitmapDrawable).bitmap
+                                val baos = ByteArrayOutputStream()
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                                val dataPicture = baos.toByteArray()
 
-                            donoService.uploadProfilePhotoOwner(dataPicture, accountInfo)
+                                donoService.uploadProfilePhotoOwner(dataPicture, accountInfo)
+                            }
                         }
-                    }
 
-                    override fun onCancelled(error: DatabaseError) {
-                    }
-                })
-            finish()
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
+                finish()
+            } else {
+                mostraToast("Preencha os campos requeridos")
+            }
         }
     }
 

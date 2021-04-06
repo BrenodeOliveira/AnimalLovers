@@ -116,8 +116,8 @@
 
     <ProgressBar
         android:id="@+id/progress_login"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:indeterminateTint="@color/colorPressed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

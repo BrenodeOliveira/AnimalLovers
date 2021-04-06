@@ -63,50 +63,59 @@ class PetRegisterActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         btn_cadastrar_pet.setOnClickListener {
-            database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
-                .child(auth.uid.toString()).addListenerForSingleValueEvent(
-                    object :
-                        ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                            idPet = petService.idLastPet(dataSnapshot) + 1 //Incrementa os ids dos pets
-                            val checkedRadio: Int = radio_sexo_animal.checkedRadioButtonId
-                            val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
-                            var checkedBox: String
-                            checkedBox = try {
-                                checkedRadioButton.text.toString()
-                            } catch (ex : Exception) {
-                                AnimalLoversConstants.MALE.nome
+            if (nome_pet_register.editText?.text.toString().isNotEmpty() and
+                idade_pet_register.editText?.text.toString().isNotEmpty() and
+                peso_pet_register.editText?.text.toString().isNotEmpty() and
+                tipo_pet_register.editText?.text.toString().isNotEmpty() and
+                raca_pet_register.editText?.text.toString().isNotEmpty() and
+                resumo_pet_register.editText?.text.toString().isNotEmpty()) {
+
+                database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+                    .child(auth.uid.toString()).addListenerForSingleValueEvent(
+                        object :
+                            ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                                idPet = petService.idLastPet(dataSnapshot) + 1 //Incrementa os ids dos pets
+                                val checkedRadio: Int = radio_sexo_animal.checkedRadioButtonId
+                                val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
+                                var checkedBox: String
+                                checkedBox = try {
+                                    checkedRadioButton.text.toString()
+                                } catch (ex : Exception) {
+                                    AnimalLoversConstants.MALE.nome
+                                }
+
+                                pet.resumo = resumo_pet_register.editText?.text.toString()
+                                pet.idade = idade_pet_register.editText?.text.toString()
+                                pet.nome = nome_pet_register.editText?.text.toString()
+                                pet.peso = peso_pet_register.editText?.text.toString()
+                                pet.raca = raca_pet_register.editText?.text.toString()
+                                pet.tipo = tipo_pet_register.editText?.text.toString()
+                                pet.sexo = checkedBox
+                                pet.id = AnimalLoversConstants.DATABASE_NODE_PET.nome + idPet.toString()
+                                pet.idOwner = auth.uid.toString()
+
+                                if (null != iv_photo_to_profile.drawable) {
+                                    val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
+                                    val baos = ByteArrayOutputStream()
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                                    val dataPicture = baos.toByteArray()
+
+                                    petService.uploadProfilePhotoPet(idPet, dataPicture, pet)
+                                } else {
+                                    petService.registerNewPet(idPet, pet)
+                                }
+                                mostraToastySuccess("Novo pet registrado com sucesso")
+                                finish()
                             }
 
-                            pet.resumo = resumo_pet_register.editText?.text.toString()
-                            pet.idade = idade_pet_register.editText?.text.toString()
-                            pet.nome = nome_pet_register.editText?.text.toString()
-                            pet.peso = peso_pet_register.editText?.text.toString()
-                            pet.raca = raca_pet_register.editText?.text.toString()
-                            pet.tipo = tipo_pet_register.editText?.text.toString()
-                            pet.sexo = checkedBox
-                            pet.id = AnimalLoversConstants.DATABASE_NODE_PET.nome + idPet.toString()
-                            pet.idOwner = auth.uid.toString()
-
-                            if (null != iv_photo_to_profile.drawable) {
-                                val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
-                                val baos = ByteArrayOutputStream()
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                                val dataPicture = baos.toByteArray()
-
-                                petService.uploadProfilePhotoPet(idPet, dataPicture, pet)
-                            } else {
-                                petService.registerNewPet(idPet, pet)
-                            }
-                            mostraToastySuccess("Novo pet registrado com sucesso")
-                            finish()
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-
-                        }
-                    })
+                            override fun onCancelled(error: DatabaseError) {}
+                        })
+            } else {
+                mostraToast("Preencha todos os campos")
+            }
 
         }
     }

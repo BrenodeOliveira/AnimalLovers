@@ -55,7 +55,7 @@ class AlterarDadosPetActivity : AppCompatActivity() {
 
     }
 
-    private fun populatePetInfo(petInfo : Pet) {
+    private fun populatePetInfo(petInfo: Pet) {
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
 
@@ -66,13 +66,13 @@ class AlterarDadosPetActivity : AppCompatActivity() {
         raca_change_pet.editText!!.setText(petInfo.raca)
         resumo_change_pet.editText!!.setText(petInfo.resumo)
 
-        if(petInfo.sexo == AnimalLoversConstants.FEMALE.nome) {
+        if (petInfo.sexo == AnimalLoversConstants.FEMALE.nome) {
             radio_sexo_animal_change_pet.check(R.id.femea_change_pet)
         } else {
             radio_sexo_animal_change_pet.check(R.id.macho_change_pet)
         }
 
-        if(petInfo.pathFotoPerfil != "") {
+        if (petInfo.pathFotoPerfil != "") {
             val storageRef = storage.reference.child(AnimalLoversConstants.STORAGE_ROOT.nome)
                 .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
                 .child(petInfo.idOwner)
@@ -84,8 +84,7 @@ class AlterarDadosPetActivity : AppCompatActivity() {
             }.addOnFailureListener {
                 println(it.toString())
             }
-        }
-        else {
+        } else {
             when (petInfo.tipo) {
                 KindOfPet.DOG.tipo -> {
                     iv_photo_to_profile_change_pet.setImageResource(R.drawable.ic_dog_pet)
@@ -109,13 +108,19 @@ class AlterarDadosPetActivity : AppCompatActivity() {
 
             val petService = PetService(baseContext)
 
-            if(nome_change_pet.editText!!.text.toString() != "") {
-                pet.nome = nome_change_pet.editText!!.text.toString()
-                pet.idade = idade_change_pet.editText!!.text.toString()
-                pet.peso = peso_change_pet.editText!!.text.toString()
-                pet.tipo = tipo_change_pet.editText!!.text.toString()
-                pet.raca = raca_change_pet.editText!!.text.toString()
-                pet.resumo = resumo_change_pet.editText!!.text.toString()
+            if (nome_change_pet.editText?.text.toString().isNotEmpty() and
+                idade_change_pet.editText?.text.toString().isNotEmpty() and
+                peso_change_pet.editText?.text.toString().isNotEmpty() and
+                tipo_change_pet.editText?.text.toString().isNotEmpty() and
+                raca_change_pet.editText?.text.toString().isNotEmpty() and
+                resumo_change_pet.editText?.text.toString().isNotEmpty()
+            ) {
+                pet.nome = nome_change_pet.editText?.text.toString()
+                pet.idade = idade_change_pet.editText?.text.toString()
+                pet.peso = peso_change_pet.editText?.text.toString()
+                pet.tipo = tipo_change_pet.editText?.text.toString()
+                pet.raca = raca_change_pet.editText?.text.toString()
+                pet.resumo = resumo_change_pet.editText?.text.toString()
 
                 val checkedRadio: Int = radio_sexo_animal_change_pet.checkedRadioButtonId
                 val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
@@ -125,9 +130,11 @@ class AlterarDadosPetActivity : AppCompatActivity() {
                 petService.updatePetInfo(petInfo)
                 Toasty.info(baseContext, "Alteração realizada").show()
                 finish()
-            }
-            else {
-                Toasty.error(baseContext, "Digite um nome para o pet\nO valor não pode ficar em branco").show()
+            } else {
+                Toasty.error(
+                    baseContext,
+                    "Preencha todos os campos\nOs valores não podem ficar em branco"
+                ).show()
             }
 
         }

@@ -46,7 +46,7 @@ class ChatLogActivity : AppCompatActivity() {
         listenForMessages()
 
 
-        if (et_chat_log.isPressed) {
+        if (et_chat_log.performClick()) {
             recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
             mostraToast("Teste")
         }
@@ -176,10 +176,5 @@ class ChatLogActivity : AppCompatActivity() {
                 println(error.toString())
             }
         })
-    }
-
-    private fun keyboardUpdate() {
-        //Checkar se o teclado abriu para que o chat atualize
-        // recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
     }
 }

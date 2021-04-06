@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         inicializaNavDrawer()
         clickUserPage()
 
-
         bottomNavigationView.setupWithNavController(controlador)
 
         startService(Intent(baseContext, ManageDisconnectionFromApp::class.java))
