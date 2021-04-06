@@ -2,6 +2,7 @@ package br.com.breno.animallovers.ui.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import br.com.breno.animallovers.model.User
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
@@ -77,8 +79,9 @@ class NewMessageActivity : AppCompatActivity() {
 }
 
 class UserItem(val user: User) : Item<ViewHolder>() {
-    private var base: DatabaseReference = FirebaseDatabase.getInstance().reference
 
+    private var base: DatabaseReference = FirebaseDatabase.getInstance().reference
+    private lateinit var storage: FirebaseStorage
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.tv_name_user_row.text = user.usuario
@@ -102,6 +105,31 @@ class UserItem(val user: User) : Item<ViewHolder>() {
             override fun onCancelled(error: DatabaseError) {
                 println(error.toString())
             }
+
+        })
+
+        val ref = FirebaseDatabase.getInstance().getReference("/conta/dono")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (user.pathFotoPerfil != "") {
+                    storage = FirebaseStorage.getInstance()
+                    var storageRef = storage.reference
+                        .child(AnimalLoversConstants.STORAGE_ROOT.nome)
+                        .child(AnimalLoversConstants.STORAGE_ROOT_OWNER_PHOTOS.nome)
+                        .child(user?.id.toString())
+                        .child(user?.id.toString() +
+                                AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+
+                    storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
+                        val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
+                        viewHolder.itemView.iv_profile_user_picture_row.setImageBitmap(bmp)
+                    }.addOnFailureListener {
+
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
 
         })
 

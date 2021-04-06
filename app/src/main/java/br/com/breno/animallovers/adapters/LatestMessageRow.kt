@@ -1,6 +1,7 @@
 package br.com.breno.animallovers.adapters
 
 import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.annotation.RequiresApi
 import br.com.breno.animallovers.R
@@ -16,9 +17,10 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.action_bar_chat_log.view.*
 import kotlinx.android.synthetic.main.item_latest_message.view.*
 
-class LatestMessageRow(val chatMessage: ChatMessage): Item<ViewHolder>() {
+class LatestMessageRow(val chatMessage: ChatMessage) : Item<ViewHolder>() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
@@ -32,8 +34,6 @@ class LatestMessageRow(val chatMessage: ChatMessage): Item<ViewHolder>() {
     }
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
-
-
         viewHolder.itemView.tv_message_latest.text = chatMessage.text
 
         val chatPartnerId: String
@@ -43,28 +43,29 @@ class LatestMessageRow(val chatMessage: ChatMessage): Item<ViewHolder>() {
             chatPartnerId = chatMessage.fromId
         }
 
-        base.child(AnimalLoversConstants.DATABASE_ENTITY_CONTROL_LOGIN.nome).addValueEventListener(object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.O)
-            @SuppressLint("UseCompatLoadingForDrawables")
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.hasChild(chatMessage.fromId)) {
-                    val ownerLogin = snapshot.child(chatMessage.fromId).getValue<Login>()!!
+        base.child(AnimalLoversConstants.DATABASE_ENTITY_CONTROL_LOGIN.nome)
+            .addValueEventListener(object : ValueEventListener {
+                @RequiresApi(Build.VERSION_CODES.O)
+                @SuppressLint("UseCompatLoadingForDrawables")
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.hasChild(chatMessage.fromId)) {
+                        val ownerLogin = snapshot.child(chatMessage.fromId).getValue<Login>()!!
 
-                    if(ownerLogin.logged) {
-                        viewHolder.itemView.tv_status_pet_chat_list.background = viewHolder.itemView.context.getDrawable(R.drawable.logged_owner_icon)
-                    }
-                    else {
-                        viewHolder.itemView.tv_status_pet_chat_list.background = viewHolder.itemView.context.getDrawable(R.drawable.likes_post_count)
+                        if (ownerLogin.logged) {
+                            viewHolder.itemView.tv_status_pet_chat_list.background =
+                                viewHolder.itemView.context.getDrawable(R.drawable.logged_owner_icon)
+                        } else {
+                            viewHolder.itemView.tv_status_pet_chat_list.background =
+                                viewHolder.itemView.context.getDrawable(R.drawable.likes_post_count)
+                        }
                     }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                println(error.toString())
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    println(error.toString())
+                }
 
-        })
-
+            })
 
         val ref = FirebaseDatabase.getInstance().getReference("/conta/$chatPartnerId/dono")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -74,10 +75,22 @@ class LatestMessageRow(val chatMessage: ChatMessage): Item<ViewHolder>() {
 
                 viewHolder.itemView.tv_username_latest.text = chatPartnerUser?.usuario
 
-                val targetImageView = viewHolder.itemView.iv_latest_message
+                if (chatPartnerUser?.pathFotoPerfil != "") {
+                    storage = FirebaseStorage.getInstance()
+                    var storageRef = storage.reference
+                        .child(AnimalLoversConstants.STORAGE_ROOT.nome)
+                        .child(AnimalLoversConstants.STORAGE_ROOT_OWNER_PHOTOS.nome)
+                        .child(chatPartnerUser?.id.toString())
+                        .child(chatPartnerUser?.id.toString() +
+                                AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
 
-                //Adicionar a parte de storage pq sem isso não vai
+                    storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
+                        val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
+                        viewHolder.itemView.iv_latest_message.setImageBitmap(bmp)
+                    }.addOnFailureListener {
 
+                    }
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {}

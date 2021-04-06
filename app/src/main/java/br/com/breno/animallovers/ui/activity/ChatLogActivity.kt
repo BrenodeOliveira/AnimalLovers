@@ -112,12 +112,6 @@ class ChatLogActivity : AppCompatActivity() {
         view.tv_username_chat_log.text = toUser?.usuario
         listenForMessages()
 
-
-        if (et_chat_log.performClick()) {
-            recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
-            mostraToast("Teste")
-        }
-
         iv_back_chat_log.setOnClickListener {
             super.onBackPressed()
         }
@@ -192,6 +186,7 @@ class ChatLogActivity : AppCompatActivity() {
         })
     }
 
+    //Verificar a performance
     private fun perfomeSendMessage() {
         val text = et_chat_log.text.toString()
 
