@@ -17,7 +17,6 @@ import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.model.User
 import br.com.breno.animallovers.service.NotificationService
-import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.ui.fragment.ChatFragment
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
@@ -64,7 +63,7 @@ class ChatLogActivity : AppCompatActivity() {
         supportActionBar!!.elevation = 0f
         val view: View = supportActionBar!!.customView
 
-        if(toUser?.pathFotoPerfil != "") {
+        if (toUser?.pathFotoPerfil != "") {
             storage = FirebaseStorage.getInstance()
             var storageRef = storage.reference
                 .child(AnimalLoversConstants.STORAGE_ROOT.nome)
@@ -80,34 +79,38 @@ class ChatLogActivity : AppCompatActivity() {
             }
         }
 
-        base.child(AnimalLoversConstants.DATABASE_ENTITY_CONTROL_LOGIN.nome).addValueEventListener(object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.O)
-            @SuppressLint("UseCompatLoadingForDrawables")
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(!snapshot.hasChild(toUser?.id.toString())) {
-                    return
-                }
-                val ownerLogin = snapshot.child(toUser?.id.toString()).getValue<Login>()!!
+        base.child(AnimalLoversConstants.DATABASE_ENTITY_CONTROL_LOGIN.nome)
+            .addValueEventListener(object : ValueEventListener {
+                @RequiresApi(Build.VERSION_CODES.O)
+                @SuppressLint("UseCompatLoadingForDrawables")
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (!snapshot.hasChild(toUser?.id.toString())) {
+                        return
+                    }
+                    val ownerLogin = snapshot.child(toUser?.id.toString()).getValue<Login>()!!
 
-                if(ownerLogin.logged) {
-                    view.tv_status_owner_chat_log.background = applicationContext.getDrawable(R.drawable.logged_owner_icon)
-                    view.tv_detailed_status_owner.text = applicationContext.getText(R.string.online)
+                    if (ownerLogin.logged) {
+                        view.tv_status_owner_chat_log.background =
+                            applicationContext.getDrawable(R.drawable.logged_owner_icon)
+                        view.tv_detailed_status_owner.text =
+                            applicationContext.getText(R.string.online)
+                    } else {
+                        val dt = Instant.ofEpochSecond(ownerLogin.lastLogin)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime()
+                        var dateUtils = DateUtils()
+                        view.tv_status_owner_chat_log.background =
+                            applicationContext.getDrawable(R.drawable.likes_post_count)
+                        view.tv_detailed_status_owner.text =
+                            "Último acesso há " + dateUtils.dateDiffInTextFormat(dt)
+                    }
                 }
-                else {
-                    val dt = Instant.ofEpochSecond(ownerLogin.lastLogin)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime()
-                    var dateUtils = DateUtils()
-                    view.tv_status_owner_chat_log.background = applicationContext.getDrawable(R.drawable.likes_post_count)
-                    view.tv_detailed_status_owner.text = "Último acesso há " + dateUtils.dateDiffInTextFormat(dt)
+
+                override fun onCancelled(error: DatabaseError) {
+                    println(error.toString())
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                println(error.toString())
-            }
-
-        })
+            })
 
         view.tv_username_chat_log.text = toUser?.usuario
         listenForMessages()
@@ -130,28 +133,19 @@ class ChatLogActivity : AppCompatActivity() {
         reference.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
+
                 if (chatMessage != null) {
                     Log.d(TAG, chatMessage.text)
 
                     if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
                         val currentUser = ChatFragment.currentUser ?: return
-                        adapter.add(
-                            ChatFromItem(
-                                chatMessage.text,
-                                currentUser
-                            )
-                        )
+                        adapter.add(ChatFromItem(chatMessage.text, currentUser))
                     } else {
-                        adapter.add(
-                            ChatToItem(
-                                chatMessage.text,
-                                toUser!!
-                            )
-                        )
+                        adapter.add(ChatToItem(chatMessage.text, toUser!!))
                     }
-
                 }
+
+                recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -229,27 +223,30 @@ class ChatLogActivity : AppCompatActivity() {
     private fun sendNotificationOfNewMessage(fromId: String, toId: String, message: ChatMessage) {
         var notificationService = NotificationService(applicationContext)
 
-        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(
-            object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val fromUser =
-                        snapshot.child(fromId).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)
-                            .getValue<Conta>()!!
-                    val toUser =
-                        snapshot.child(toId).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)
-                            .getValue<Conta>()!!
+        database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
+            .addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val fromUser =
+                            snapshot.child(fromId)
+                                .child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)
+                                .getValue<Conta>()!!
+                        val toUser =
+                            snapshot.child(toId)
+                                .child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)
+                                .getValue<Conta>()!!
 
-                    notificationService.sendNotificationOfNewChatMessage(
-                        fromUser,
-                        toUser,
-                        message,
-                        (System.currentTimeMillis() / 1000).toString()
-                    )
-                }
+                        notificationService.sendNotificationOfNewChatMessage(
+                            fromUser,
+                            toUser,
+                            message,
+                            (System.currentTimeMillis() / 1000).toString()
+                        )
+                    }
 
-                override fun onCancelled(error: DatabaseError) {
-                    println(error.toString())
-                }
-            })
+                    override fun onCancelled(error: DatabaseError) {
+                        println(error.toString())
+                    }
+                })
     }
 }

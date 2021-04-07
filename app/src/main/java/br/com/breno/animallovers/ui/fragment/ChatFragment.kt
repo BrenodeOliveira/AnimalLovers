@@ -73,6 +73,7 @@ class ChatFragment:Fragment() {
             .addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
         clickGoToUser()
+        fetchCurrentUser()
         listenForLatestMessages()
     }
 
@@ -116,6 +117,19 @@ class ChatFragment:Fragment() {
         latestMessagesMap.values.forEach {
             adapter.add(LatestMessageRow(it))
         }
+    }
+
+    private fun fetchCurrentUser() {
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/conta/$uid")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                currentUser = snapshot.getValue(User::class.java)
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+
     }
 
 }
