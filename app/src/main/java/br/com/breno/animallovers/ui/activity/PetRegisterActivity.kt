@@ -67,7 +67,7 @@ class PetRegisterActivity : AppCompatActivity() {
             if (nome_pet_register.editText?.text.toString().isNotEmpty() and
                 idade_pet_register.editText?.text.toString().isNotEmpty() and
                 peso_pet_register.editText?.text.toString().isNotEmpty() and
-                tipo_pet_register.editText?.text.toString().isNotEmpty() and
+//                tipo_pet_register.editText?.text.toString().isNotEmpty() and
                 raca_pet_register.editText?.text.toString().isNotEmpty() and
                 resumo_pet_register.editText?.text.toString().isNotEmpty()) {
 
@@ -92,7 +92,7 @@ class PetRegisterActivity : AppCompatActivity() {
                                 pet.nome = nome_pet_register.editText?.text.toString()
                                 pet.peso = peso_pet_register.editText?.text.toString()
                                 pet.raca = raca_pet_register.editText?.text.toString()
-                                pet.tipo = tipo_pet_register.editText?.text.toString()
+//                                pet.tipo = tipo_pet_register.editText?.text.toString()
                                 pet.sexo = checkedBox
                                 pet.id = AnimalLoversConstants.DATABASE_NODE_PET.nome + idPet.toString()
                                 pet.idOwner = auth.uid.toString()

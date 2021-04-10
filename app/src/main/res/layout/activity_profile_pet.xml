@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_pet_profile"
@@ -18,220 +18,297 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarStyle="insideOverlay"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="-26dp">
+            android:scrollbarStyle="insideOverlay">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
+                android:layout_height="0dp"
+                android:paddingBottom="10dp">
 
-                <TextView
-                    android:id="@+id/tv_pet_owner_user_profile_pet"
-                    android:layout_width="136dp"
-                    android:layout_height="22dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:padding="2dp"
-                    android:textAlignment="viewStart"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toEndOf="@+id/iv_icon_photo_owner_profile_pet"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name_owner_profile_pet"
-                    tools:text="Usuário" />
-
-                <TextView
-                    android:id="@+id/tv_pet_description_profile_pet"
-                    android:layout_width="153dp"
-                    android:layout_height="19dp"
-                    android:layout_marginTop="7dp"
-                    android:textAlignment="viewStart"
-                    android:textSize="14sp"
+                <ImageView
+                    android:id="@+id/iv_photo_profile_pet"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:contentDescription="@string/content_feed"
+                    android:scaleType="fitXY"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_name_profile_pet"
-                    tools:text="Descrição" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/animalovers_logo" />
 
-                <TextView
-                    android:id="@+id/tv_pet_name_owner_profile_pet"
-                    android:layout_width="100dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="8dp"
-                    android:padding="2dp"
-                    android:textAlignment="viewStart"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@+id/iv_icon_photo_owner_profile_pet"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView"
-                    tools:text="Dono" />
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView"
+                    android:id="@+id/card_infos_animal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxHeight="250dp"
-                    app:cardElevation="8dp"
+                    android:layout_marginTop="240dp"
+                    app:cardCornerRadius="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="@id/iv_photo_profile_pet">
 
-                    <ImageView
-                        android:id="@+id/iv_photo_profile_pet"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="20dp"
-                        android:contentDescription="@string/content_feed"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/animalovers_logo" />
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/tv_pet_description_profile_pet"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="12dp"
+                            android:maxWidth="250dp"
+                            android:maxHeight="64dp"
+                            android:padding="2dp"
+                            android:textAlignment="viewStart"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_pet_name_profile_pet"
+                            tools:text="Descrição" />
+
+                        <TextView
+                            android:id="@+id/tv_pet_name_profile_pet"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:maxWidth="128dp"
+                            android:textAlignment="viewStart"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="Nome" />
+
+                        <TextView
+                            android:id="@+id/tv_pet_name_owner_profile_pet"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="32dp"
+                            android:maxWidth="130dp"
+                            android:padding="2dp"
+                            android:textAlignment="viewStart"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_pet_name_profile_pet"
+                            tools:text="Dono" />
+
+                        <ImageView
+                            android:id="@+id/iv_open_chat_profile_pet"
+                            android:layout_width="34dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_pet_name_profile_pet"
+                            app:layout_constraintEnd_toEndOf="@+id/card_solicita"
+                            app:layout_constraintStart_toStartOf="@+id/card_solicita"
+                            app:layout_constraintTop_toTopOf="@+id/tv_pet_name_profile_pet"
+                            app:srcCompat="@drawable/ic_love_chat" />
+
+                        <TextView
+                            android:id="@+id/tv_status_pet_profile_pet"
+                            android:layout_width="wrap_content"
+                            android:layout_height="10dp"
+                            android:layout_marginStart="24dp"
+                            android:background="@drawable/likes_post_count"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="@+id/iv_open_chat_profile_pet"
+                            app:layout_constraintTop_toTopOf="@+id/iv_open_chat_profile_pet" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card_solicita"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="8dp"
+                            app:layout_constraintBottom_toBottomOf="@id/card_posts"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/card_posts"
+                            app:layout_constraintTop_toTopOf="@id/card_posts">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/background_cardview_profile">
+
+                                <ImageView
+                                    android:id="@+id/iv_add_friend_search_pets"
+                                    android:layout_width="40dp"
+                                    android:layout_height="44dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_margin="16dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_coracao" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card_friend"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="8dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/card_posts"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_pet_name_owner_profile_pet">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/background_cardview_profile">
+
+                                <TextView
+                                    android:id="@+id/tv_friends_profile_pet"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:padding="3dp"
+                                    android:textAlignment="viewStart"
+                                    android:textColor="@color/color_button_login"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/tv_num_friends_profile_pet"
+                                    tools:text="Amigos" />
+
+                                <TextView
+                                    android:id="@+id/tv_num_friends_profile_pet"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp"
+                                    android:text="0"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/tv_see_pets_friends_profile_pet"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:padding="5dp"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card_posts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="8dp"
+                            app:layout_constraintBottom_toBottomOf="@id/card_friend"
+                            app:layout_constraintEnd_toStartOf="@id/card_solicita"
+                            app:layout_constraintStart_toEndOf="@id/card_friend"
+                            app:layout_constraintTop_toTopOf="@id/card_friend">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/background_cardview_profile">
+
+                                <TextView
+                                    android:id="@+id/tv_posts_profile_pet"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginEnd="16dp"
+                                    android:padding="3dp"
+                                    android:textAlignment="viewStart"
+                                    android:textColor="@color/color_button_login"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/tv_num_posts_profile_pet"
+                                    tools:text="Posts" />
+
+                                <TextView
+                                    android:id="@+id/tv_num_posts_profile_pet"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp"
+                                    android:text="0"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:id="@+id/iv_open_chat_profile_pet"
-                    android:layout_width="34dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="end"
-                    android:layout_marginStart="56dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintStart_toEndOf="@+id/iv_add_friend_search_pets"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_owner_user_profile_pet"
-                    app:srcCompat="@drawable/ic_love_chat" />
-
-                <TextView
-                    android:id="@+id/tv_num_friends_profile_pet"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/likes_post_count"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="0000"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="200dp"
+                    app:cardCornerRadius="8dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_description_profile_pet" />
+                    app:layout_constraintTop_toTopOf="@id/iv_photo_profile_pet">
 
-                <ImageView
-                    android:id="@+id/iv_icon_photo_owner_profile_pet"
-                    android:layout_width="90dp"
-                    android:layout_height="55dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="3dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintStart_toEndOf="@+id/tv_pet_name_profile_pet"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView"
-                    app:srcCompat="@drawable/animalovers_logo" />
+                    <ImageView
+                        android:id="@+id/iv_icon_photo_owner_profile_pet"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:scaleType="fitXY"
+                        app:layout_constraintStart_toEndOf="@+id/tv_pet_name_profile_pet"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_photo_profile_pet"
+                        app:srcCompat="@drawable/animalovers_logo" />
 
-                <TextView
-                    android:id="@+id/tv_num_posts_profile_pet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/likes_post_count"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="0000"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_num_friends_profile_pet" />
-
-                <TextView
-                    android:id="@+id/tv_friends_profile_pet"
-                    android:layout_width="67dp"
-                    android:layout_height="21dp"
-                    android:layout_marginTop="22dp"
-                    android:padding="3dp"
-                    android:textAlignment="viewStart"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toEndOf="@+id/tv_num_friends_profile_pet"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_description_profile_pet"
-                    tools:text="Amigos:" />
-
-                <TextView
-                    android:id="@+id/tv_see_pets_friends_profile_pet"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:layout_weight="1"
-                    android:padding="5dp"
-                    android:text="@string/ver"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/tv_friends_profile_pet"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_pet_description_profile_pet" />
-
-                <TextView
-                    android:id="@+id/tv_status_pet_profile_pet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="10dp"
-                    android:layout_marginStart="24dp"
-                    android:background="@drawable/likes_post_count"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@+id/iv_open_chat_profile_pet"
-                    app:layout_constraintTop_toTopOf="@+id/iv_open_chat_profile_pet" />
-
-                <TextView
-                    android:id="@+id/tv_posts_profile_pet"
-                    android:layout_width="51dp"
-                    android:layout_height="21dp"
-                    android:layout_marginTop="13dp"
-                    android:padding="3dp"
-                    android:textAlignment="viewStart"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toEndOf="@+id/tv_num_posts_profile_pet"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_friends_profile_pet"
-                    tools:text="Posts:" />
-
-                <ImageView
-                    android:id="@+id/iv_add_friend_search_pets"
-                    android:layout_width="40dp"
-                    android:layout_height="44dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="64dp"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintStart_toEndOf="@+id/tv_see_pets_friends_profile_pet"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_icon_photo_owner_profile_pet"
-                    app:srcCompat="@drawable/ic_coracao" />
-
-                <TextView
-                    android:id="@+id/tv_status_friendship_profile_pet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="76dp"
-                    android:layout_marginTop="16dp"
-                    android:textAlignment="viewStart"
-                    android:textSize="11sp"
-                    app:layout_constraintStart_toEndOf="@+id/tv_posts_profile_pet"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_add_friend_search_pets"
-                    tools:text="Solicitação enviada em 21/10/2020" />
-
-                <TextView
-                    android:id="@+id/tv_pet_name_profile_pet"
-                    android:layout_width="148dp"
-                    android:layout_height="23dp"
-                    android:layout_marginTop="9dp"
-                    android:textAlignment="viewStart"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView"
-                    tools:text="Nome" />
+                </androidx.cardview.widget.CardView>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_posts_profile_pet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="76dp"
+                    android:layout_marginTop="8dp"
                     android:scrollbars="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_status_friendship_profile_pet" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_infos_animal" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 

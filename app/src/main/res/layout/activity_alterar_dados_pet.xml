@@ -104,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/txt_age_pet"
-            android:inputType="text"
+            android:inputType="number"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,29 +123,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/txt_heigt_pet"
-            android:inputType="text"
+            android:inputType="number"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tipo_change_pet"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+    <Spinner
+        android:id="@+id/spinner_alter"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:focusable="true"
-        android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:background="@drawable/spinner_background"
+        android:entries="@array/racas"
+        app:layout_constraintBottom_toBottomOf="@id/raca_change_pet"
         app:layout_constraintEnd_toStartOf="@id/raca_change_pet"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/idade_change_pet">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/txt_type_pet"
-            android:inputType="text"
-            android:textSize="18sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@id/idade_change_pet" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/raca_change_pet"
@@ -155,8 +147,8 @@
         android:focusable="true"
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        app:layout_constraintStart_toEndOf="@id/tipo_change_pet"
-        app:layout_constraintTop_toTopOf="@id/tipo_change_pet">
+        app:layout_constraintStart_toEndOf="@id/spinner_alter"
+        app:layout_constraintTop_toTopOf="@id/spinner_alter">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -176,7 +168,7 @@
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/tipo_change_pet">
+        app:layout_constraintTop_toBottomOf="@id/raca_change_pet">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -204,8 +196,8 @@
         android:layout_margin="32dp"
         android:background="@drawable/background_button_red"
         android:padding="16dp"
-        android:textAllCaps="false"
         android:text="@string/txt_alterar"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.559"

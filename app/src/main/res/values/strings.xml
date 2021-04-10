@@ -27,7 +27,7 @@
     <string name="txt_sair">Sair</string>
     <string name="txt_clinicas">Clínicas Veterinarias</string>
 
-    <string name="txt_pet_search">Busque por nomes</string>
+    <string name="txt_pet_search">Busque nomes</string>
     <string name="txt_alterar">Salvar</string>
     <string name="txt_configs">Configurações</string>
     <string name="txt_nome_padrao">Guilherme</string>
@@ -137,4 +137,11 @@
     <string name="txt_alter_data_user">Alterar dados</string>
     <string name="online">Online</string>
     <string name="empty"></string>
+
+    <string-array name="racas">
+        <item>Cachorro</item>
+        <item>Gato</item>
+        <item>Pássaro</item>
+        <item>Outro</item>
+    </string-array>
 </resources>

@@ -62,7 +62,7 @@ class AlterarDadosPetActivity : AppCompatActivity() {
         nome_change_pet.editText!!.setText(petInfo.nome)
         idade_change_pet.editText!!.setText(petInfo.idade)
         peso_change_pet.editText!!.setText(petInfo.peso)
-        tipo_change_pet.editText!!.setText(petInfo.tipo)
+//        tipo_change_pet.editText!!.setText(petInfo.tipo)
         raca_change_pet.editText!!.setText(petInfo.raca)
         resumo_change_pet.editText!!.setText(petInfo.resumo)
 
@@ -111,14 +111,14 @@ class AlterarDadosPetActivity : AppCompatActivity() {
             if (nome_change_pet.editText?.text.toString().isNotEmpty() and
                 idade_change_pet.editText?.text.toString().isNotEmpty() and
                 peso_change_pet.editText?.text.toString().isNotEmpty() and
-                tipo_change_pet.editText?.text.toString().isNotEmpty() and
+//                tipo_change_pet.editText?.text.toString().isNotEmpty() and
                 raca_change_pet.editText?.text.toString().isNotEmpty() and
                 resumo_change_pet.editText?.text.toString().isNotEmpty()
             ) {
                 pet.nome = nome_change_pet.editText?.text.toString()
                 pet.idade = idade_change_pet.editText?.text.toString()
                 pet.peso = peso_change_pet.editText?.text.toString()
-                pet.tipo = tipo_change_pet.editText?.text.toString()
+//                pet.tipo = tipo_change_pet.editText?.text.toString()
                 pet.raca = raca_change_pet.editText?.text.toString()
                 pet.resumo = resumo_change_pet.editText?.text.toString()
 

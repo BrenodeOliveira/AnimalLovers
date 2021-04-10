@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/txt_age_pet"
-            android:inputType="text"
+            android:inputType="number"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,29 +85,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/txt_heigt_pet"
-            android:inputType="text"
+            android:inputType="number"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tipo_pet_register"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+    <Spinner
+        android:id="@+id/spinner_register"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:focusable="true"
-        android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:entries="@array/racas"
+        android:background="@drawable/spinner_background"
+        style="@android:style/Widget.Holo.Light.Spinner"
+        app:layout_constraintBottom_toBottomOf="@id/raca_pet_register"
         app:layout_constraintEnd_toStartOf="@id/raca_pet_register"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/idade_pet_register">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/txt_type_pet"
-            android:inputType="text"
-            android:textSize="18sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@id/idade_pet_register"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/raca_pet_register"
@@ -117,8 +110,8 @@
         android:focusable="true"
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        app:layout_constraintStart_toEndOf="@id/tipo_pet_register"
-        app:layout_constraintTop_toTopOf="@id/tipo_pet_register">
+        app:layout_constraintStart_toEndOf="@id/spinner_register"
+        app:layout_constraintTop_toTopOf="@id/spinner_register">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -138,7 +131,7 @@
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/tipo_pet_register">
+        app:layout_constraintTop_toBottomOf="@id/raca_pet_register">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"

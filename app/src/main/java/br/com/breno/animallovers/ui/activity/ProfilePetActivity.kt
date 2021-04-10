@@ -149,29 +149,22 @@ class ProfilePetActivity : AppCompatActivity() {
                     tv_num_friends_profile_pet.text = numFriends.toString()
 
                     tv_pet_name_owner_profile_pet.text = dono.usuario
-                    tv_pet_owner_user_profile_pet.text = dono.email
 
                     if (statusFriendShip != null) {
                         when (statusFriendShip.statusSolicitacao) {
-                            StatusSolicitacaoAmizade.CANCELLED.status -> tv_status_friendship_profile_pet.text = "Enviar solicitação"
 
                             StatusSolicitacaoAmizade.ACCEPTED.status -> {
                                 iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_aceitar)
-                                tv_status_friendship_profile_pet.text = "Amigos há " + petService.friendlyTextFriendshipStatusSince(pet, snapshot, applicationContext)
                             }
 
                             StatusSolicitacaoAmizade.WAITING.status -> {
                                 iv_add_friend_search_pets.setImageResource(R.drawable.ic_coracao_espera)
-                                tv_status_friendship_profile_pet.text = "Solicitação enviada há " + petService.friendlyTextFriendshipStatusSince(statusFriendShip)
                             }
 
                             StatusSolicitacaoAmizade.SENT.status -> {
                                 iv_add_friend_search_pets.setImageResource(R.drawable.ic_relogio_waiting_friend_request)
-                                tv_status_friendship_profile_pet.text = "Aguardando sua análise"
                             }
                         }
-                    } else {
-                        tv_status_friendship_profile_pet.text = "Enviar solicitação"
                     }
                     swipe_refresh_pet_profile.isRefreshing = false
                 }
