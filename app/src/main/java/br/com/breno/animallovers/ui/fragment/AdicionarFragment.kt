@@ -171,6 +171,7 @@ class AdicionarFragment : Fragment() {
             post.nomePet = tv_name_user.text as String
             post.idOwner = auth.uid.toString()
             post.idPet = myPreferences.getPetLogged().toString()
+            post.postType = 0//Quando é 0 no FeedAdapter irá tratar como post, se for 1 tratará como anúncio
 
             database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
                 .child(

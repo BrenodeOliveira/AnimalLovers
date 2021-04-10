@@ -20,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3212835187715589~1458972972"/>
         <service android:name=".broadcast.ManageDisconnectionFromApp" android:stopWithTask="false" />
         <receiver android:name=".broadcast.BroadcastReceiverNotificationFriendship"/>
         <receiver android:name=".broadcast.BroadcastReceiverNotificationChat"/>

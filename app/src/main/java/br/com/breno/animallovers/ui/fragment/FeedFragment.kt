@@ -1,10 +1,12 @@
 package br.com.breno.animallovers.ui.fragment
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -14,6 +16,7 @@ import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.ui.activity.ProfileActivity
 import br.com.breno.animallovers.utils.AnimalLoversConstants
+import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.DateUtils.Companion.convertStringToDate
 import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +28,12 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_feed.*
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class FeedFragment : Fragment() {
@@ -76,71 +85,125 @@ class FeedFragment : Fragment() {
             auth = FirebaseAuth.getInstance()
             var numChildren = 0L
 
-            dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(object : ValueEventListener {
+            dBase.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(
+                object : ValueEventListener {
 
-                override fun onDataChange(sShot: DataSnapshot) {
+                    @RequiresApi(Build.VERSION_CODES.O)
+                    override fun onDataChange(sShot: DataSnapshot) {
 
-                    if(FirebaseAuth.getInstance().currentUser == null || myPreferences.getPetLogged().equals("")) {
-                        database.removeEventListener(this)
-                        return
-                    }
+                        if (FirebaseAuth.getInstance().currentUser == null || myPreferences.getPetLogged()
+                                .equals(
+                                    ""
+                                )
+                        ) {
+                            database.removeEventListener(this)
+                            return
+                        }
 
-                    val listPosts = ArrayList<Post>()
-                    if (sShot.value != null) {
-                        pet = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
-                        pet.id = myPreferences.getPetLogged().toString()
-                        numChildren = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).childrenCount
+                        val listPosts = ArrayList<Post>()
+                        if (sShot.value != null) {
+                            pet = sShot.child(auth.uid.toString()).child(
+                                myPreferences.getPetLogged().toString()
+                            ).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome)
+                                .getValue<Pet>()!!
+                            pet.id = myPreferences.getPetLogged().toString()
+                            numChildren = sShot.child(auth.uid.toString()).child(
+                                myPreferences.getPetLogged().toString()
+                            ).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).childrenCount
 
-                        if (sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).hasChild(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)) {
+                            if (sShot.child(auth.uid.toString()).child(
+                                    myPreferences.getPetLogged().toString()
+                                ).hasChild(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome)
+                            ) {
 
-                            val owners: HashMap<String, HashMap<String, HashMap<String, String>>> = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome).value as HashMap<String, HashMap<String, HashMap<String, String>>>
+                                val owners: HashMap<String, HashMap<String, HashMap<String, String>>> =
+                                    sShot.child(
+                                        auth.uid.toString()
+                                    ).child(myPreferences.getPetLogged().toString()).child(
+                                        AnimalLoversConstants.DATABASE_NODE_FRIENDS.nome
+                                    ).value as HashMap<String, HashMap<String, HashMap<String, String>>>
 
-                            for (z in 0 until owners.size) {
-                                val idOwnerUser = owners.keys.toList()[z]
-                                for (element in owners.getValue(idOwnerUser).keys.toList()) {
+                                for (z in 0 until owners.size) {
+                                    val idOwnerUser = owners.keys.toList()[z]
+                                    for (element in owners.getValue(idOwnerUser).keys.toList()) {
 
-                                    pet = sShot.child(idOwnerUser).child(element).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
-                                    pet.id = element
-                                    val totalPostsPet = sShot.child(idOwnerUser).child(element).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).childrenCount
-                                    var maxPosts = 15
-                                    for (j in totalPostsPet downTo 1) {
-                                        if (maxPosts != 0) {
-                                            if(sShot.child(idOwnerUser).child(element).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).hasChild(j.toString())) {
-                                                val post: Post = sShot.child(idOwnerUser).child(element).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).child(j.toString()).getValue<Post>()!!
+                                        pet = sShot.child(idOwnerUser).child(element).child(
+                                            AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome
+                                        ).getValue<Pet>()!!
+                                        pet.id = element
+                                        val totalPostsPet =
+                                            sShot.child(idOwnerUser).child(element).child(
+                                                AnimalLoversConstants.CONST_ROOT_POSTS.nome
+                                            ).childrenCount
+                                        var maxPosts = 15
+                                        for (j in totalPostsPet downTo 1) {
+                                            if (maxPosts != 0) {
+                                                if (sShot.child(idOwnerUser).child(element).child(
+                                                        AnimalLoversConstants.CONST_ROOT_POSTS.nome
+                                                    ).hasChild(j.toString())
+                                                ) {
+                                                    val post: Post = sShot.child(idOwnerUser).child(
+                                                        element
+                                                    )
+                                                        .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                                                        .child(
+                                                            j.toString()
+                                                        ).getValue<Post>()!!
 
-                                                if(post.postAtivo) {
-                                                    maxPosts--
+                                                    if (post.postAtivo) {
+                                                        maxPosts--
 
-                                                    post.idPet = element
-                                                    post.nomePet = pet.nome
-                                                    post.idOwner = idOwnerUser
-                                                    listPosts.add(post)
+                                                        post.idPet = element
+                                                        post.nomePet = pet.nome
+                                                        post.idOwner = idOwnerUser
+                                                        listPosts.add(post)
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
 
-                            for (x in 0..numChildren) {
-                                if (sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).hasChild(x.toString())) {
-                                    val post: Post = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).child(x.toString()).getValue<Post>()!!
+                                for (x in 0..numChildren) {
+                                    if (sShot.child(auth.uid.toString()).child(
+                                            myPreferences.getPetLogged().toString()
+                                        ).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                                            .hasChild(x.toString())
+                                    ) {
+                                        val post: Post = sShot.child(auth.uid.toString()).child(
+                                            myPreferences.getPetLogged().toString()
+                                        ).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                                            .child(x.toString()).getValue<Post>()!!
 
                                     if(post.postAtivo) {
                                         pet = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
 
-                                        post.idPet = myPreferences.getPetLogged().toString()
-                                        post.nomePet = pet.nome
-                                        post.idOwner = auth.uid.toString()
-                                        listPosts.add(post)
+                                            post.idPet = myPreferences.getPetLogged().toString()
+                                            post.nomePet = pet.nome
+                                            post.idOwner = auth.uid.toString()
+                                            listPosts.add(post)
+                                        }
+
                                     }
-
                                 }
-                            }
+                                //Ordena os posts em ordem cronológica
+                                listPosts.sortBy { convertStringToDate(it.dataHora) }
 
-                            listPosts.sortBy { convertStringToDate(it.dataHora) }
-                            recycler_feed.layoutManager = LinearLayoutManager(requireContext())
-                            recycler_feed.adapter = FeedAdapter(listPosts, requireContext(), false)
+                                var newListPost = listPosts
+
+                                for (i in 0..listPosts.size step 4) {
+                                    var adPost = Post()
+
+                                    adPost.postType = 1
+                                    adPost.dataHora = listPosts[i].dataHora
+                                    newListPost.add(adPost)
+                                }
+
+                                //Ordena os posts em ordem cronológica
+                                newListPost.sortBy { convertStringToDate(it.dataHora) }
+
+                                recycler_feed.layoutManager = LinearLayoutManager(requireContext())
+                                recycler_feed.adapter = FeedAdapter(newListPost, requireContext(), false)
 
                             val layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                             recycler_feed.layoutManager = layoutManager

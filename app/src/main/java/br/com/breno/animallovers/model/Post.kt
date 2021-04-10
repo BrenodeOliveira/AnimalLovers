@@ -12,4 +12,5 @@ class Post : Serializable {
     var postAtivo = true
     var idPost = ""
     var uniqueIdPost = ""
+    var postType = 0
 }
