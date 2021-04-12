@@ -362,10 +362,10 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
             }
 
             if(notification.tipo == KindOfNotification.FRIENDSHIP_REQUEST_RECEIVED.nome) {
-                notificationDiscription.text = pet.nome + " enviou-lhe uma solicitação de amizade"
+                notificationDiscription.text = pet.nome + " quer ser seu amigo"
             }
             else if(notification.tipo == KindOfNotification.FRIENDSHIP_REQUEST_ACCEPTED.nome) {
-                notificationDiscription.text = pet.nome + " aceitou a sua solicitação de amizade"
+                notificationDiscription.text = pet.nome + " aceitou a sua pet amizade"
                 iconAccept.visibility = INVISIBLE
                 iconDecline.visibility = INVISIBLE
             }

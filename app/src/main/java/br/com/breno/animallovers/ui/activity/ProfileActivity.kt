@@ -40,6 +40,14 @@ class ProfileActivity : AppCompatActivity() {
         clickNewPet()
         clickChangeProfile()
         clickChangePetsAttrs()
+        clickCallHome()
+    }
+
+    private fun clickCallHome() {
+        iv_call_home.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finishMe()
+        }
     }
 
     private fun clickChangePetsAttrs() {
