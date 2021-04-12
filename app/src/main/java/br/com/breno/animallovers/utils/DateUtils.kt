@@ -3,7 +3,9 @@ package br.com.breno.animallovers.utils
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -22,8 +24,26 @@ class DateUtils {
             return SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSSSSS").parse(dateTimePost)
         }
 
-        fun dateFrmt() :String {
+        fun dateFrmt() : String {
             return "dd-MM-yyyy HH:mm:ss.SSSSSS"
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun formatDateToLocalFormat(rawDate: String) : String {
+            val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
+            val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyy", Locale.ROOT)
+            val date: LocalDate = LocalDate.parse(rawDate, inputFormatter)
+
+            return outputFormatter.format(date)
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun formatTimeToLocalFormat(rawDate: String) : String {
+            val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
+            val outputFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT)
+            val date: LocalDateTime = LocalDateTime.parse(rawDate, inputFormatter)
+
+            return outputFormatter.format(date)
         }
     }
 

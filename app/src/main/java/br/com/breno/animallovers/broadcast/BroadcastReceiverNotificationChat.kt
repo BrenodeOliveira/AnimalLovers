@@ -28,7 +28,7 @@ class BroadcastReceiverNotificationChat : BroadcastReceiver() {
 
         val chatMessage = ChatMessage(
             reference.key!!, getMessageText(intent).toString(), fromUser.id, toUser.id,
-            System.currentTimeMillis() / 1000
+            System.currentTimeMillis() / 1000, false
         )
 
         reference.setValue(chatMessage)

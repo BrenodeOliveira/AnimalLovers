@@ -137,6 +137,7 @@
     <string name="txt_alter_data_user">Alterar dados</string>
     <string name="online">Online</string>
     <string name="empty"></string>
+    <string name="txt_you_sent_last_message">Você:</string>
 
     <string-array name="racas">
         <item>Cachorro</item>

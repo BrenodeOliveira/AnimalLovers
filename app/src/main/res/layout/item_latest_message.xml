@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cons_lay_item_latest_message"
     android:layout_width="match_parent"
     android:layout_height="120dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/backgroundNotificationItem">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_latest_message"
@@ -11,9 +13,9 @@
         android:layout_height="64dp"
         android:layout_marginStart="20dp"
         android:src="@drawable/animalovers_logo_simples"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_username_latest"
@@ -33,24 +35,36 @@
         android:layout_height="10dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="2dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/likes_post_count"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:textColor="@color/colorWhite"
         android:textSize="13sp"
         android:textStyle="bold"
-        android:layout_marginRight="5dp"
         app:layout_constraintEnd_toStartOf="@+id/tv_username_latest"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_message_latest_who_sent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="4dp"
+        android:maxWidth="250dp"
+        android:text="@string/txt_you_sent_last_message"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_latest_message"
+        app:layout_constraintStart_toEndOf="@+id/iv_latest_message" />
 
     <TextView
         android:id="@+id/tv_message_latest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/empty"
-        app:layout_constraintBottom_toBottomOf="@id/iv_latest_message"
-        app:layout_constraintStart_toStartOf="@id/tv_username_latest"
+        android:layout_marginStart="6dp"
         android:maxWidth="250dp"
-        />
+        android:text="@string/empty"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_message_latest_who_sent"
+        app:layout_constraintStart_toEndOf="@+id/tv_message_latest_who_sent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

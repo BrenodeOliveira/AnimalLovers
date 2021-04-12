@@ -128,18 +128,16 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
                 loadPostPic(post)
             }
             else {
-                let {
                     name.text = post.nomePet
                     dateTime.text = dateUtils.dateDiffInTextFormat(LocalDateTime.parse(post.dataHora, DateTimeFormatter.ofPattern(DateUtils.dateFrmt())))
                     description.text = post.legenda
-                    val layoutParams: ViewGroup.LayoutParams = it.photoPost.layoutParams
+                    val layoutParams: ViewGroup.LayoutParams = photoPost.layoutParams
                     layoutParams.height = 15
                     photoPost.layoutParams = layoutParams
 
-                    val layoutParamsCard: ViewGroup.LayoutParams = it.photoPostCard.layoutParams
+                    val layoutParamsCard: ViewGroup.LayoutParams = photoPostCard.layoutParams
                     layoutParamsCard.height = 15
                     photoPostCard.layoutParams = layoutParamsCard
-                }
             }
 
             loadProfilePic(post)
@@ -299,13 +297,12 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
             try {
                 ref.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
                     val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
-                    let {
                         photoProfile.setImageBitmap(bmp)
 
-                        if(it.photoProfile.drawable == null) {
-                            it.photoProfile.visibility = View.INVISIBLE
+                        if(photoProfile.drawable == null) {
+                            photoProfile.visibility = View.INVISIBLE
                         }
-                    }
+
                 }.addOnFailureListener { itException ->
                     println(itException.toString())
                 }
@@ -323,17 +320,16 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
                 .child(post.dataHora)
             storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
                 val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
-                let {
                     name.text = post.nomePet
-                    it.dateTime.text = dateUtils.dateDiffInTextFormat(LocalDateTime.parse(post.dataHora, DateTimeFormatter.ofPattern(DateUtils.dateFrmt())))
-                    it.description.text = post.legenda
-                    it.photoPost.setImageBitmap(bmp)
+                    dateTime.text = dateUtils.dateDiffInTextFormat(LocalDateTime.parse(post.dataHora, DateTimeFormatter.ofPattern(DateUtils.dateFrmt())))
+                    description.text = post.legenda
+                    photoPost.setImageBitmap(bmp)
 
-                    if(it.photoPost.drawable == null) {
-                        it.photoPost.visibility = View.INVISIBLE
-                        it.photoPostCard.visibility = View.INVISIBLE
+                    if(photoPost.drawable == null) {
+                        photoPost.visibility = View.INVISIBLE
+                        photoPostCard.visibility = View.INVISIBLE
                     }
-                }
+
             }.addOnFailureListener {
                 println(it.toString())
             }
@@ -442,7 +438,6 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
             mAdview.loadAd(adRequest)
         }
     }
-
 
     override fun getItemCount(): Int {
         return posts.size
