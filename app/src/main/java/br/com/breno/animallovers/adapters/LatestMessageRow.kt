@@ -6,10 +6,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.model.ChatMessage
-import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.model.User
-import br.com.breno.animallovers.service.DonoService
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -17,15 +15,11 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
-import kotlinx.android.synthetic.main.action_bar_chat_log.view.*
 import kotlinx.android.synthetic.main.item_latest_message.view.*
 
 class LatestMessageRow(val chatMessage: ChatMessage) : Item<ViewHolder>() {
 
-    private lateinit var auth: FirebaseAuth
     private lateinit var storage: FirebaseStorage
-    private var accountInfo = Conta()
-    private var donoService = DonoService()
     var chatPartnerUser: User? = null
     private var base: DatabaseReference = FirebaseDatabase.getInstance().reference
 
@@ -36,11 +30,21 @@ class LatestMessageRow(val chatMessage: ChatMessage) : Item<ViewHolder>() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.tv_message_latest.text = chatMessage.text
 
+        if(!chatMessage.isRead) {
+            viewHolder.itemView.cons_lay_item_latest_message.setBackgroundColor(viewHolder.itemView.context.getColor(R.color.backgroundNotificationItemUnread))
+        }
+        else {
+            viewHolder.itemView.cons_lay_item_latest_message.setBackgroundColor(viewHolder.itemView.context.getColor(R.color.backgroundNotificationItem))
+        }
+
         val chatPartnerId: String
         if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
             chatPartnerId = chatMessage.toId
+            viewHolder.itemView.tv_message_latest_who_sent.text = viewHolder.itemView.context.getString(R.string.txt_you_sent_last_message)
         } else {
             chatPartnerId = chatMessage.fromId
+            viewHolder.itemView.tv_message_latest_who_sent.text = viewHolder.itemView.context.getString(R.string.empty)
+
         }
 
         base.child(AnimalLoversConstants.DATABASE_ENTITY_CONTROL_LOGIN.nome)

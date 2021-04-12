@@ -13,6 +13,7 @@ import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.model.User
 import br.com.breno.animallovers.utils.AnimalLoversConstants
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
@@ -26,6 +27,8 @@ import kotlinx.android.synthetic.main.item_user_row.*
 import kotlinx.android.synthetic.main.item_user_row.view.*
 
 class NewMessageActivity : AppCompatActivity() {
+
+    private var auth : FirebaseAuth = FirebaseAuth.getInstance()
 
     companion object {
         const val USER_KEY = "USER_KEY"
@@ -51,7 +54,7 @@ class NewMessageActivity : AppCompatActivity() {
                     Log.d("NewMessage", it.toString())
 
                     val user = it.child("/dono").getValue(User::class.java)
-                    if (user != null) {
+                    if (user != null && user.id != auth.uid.toString()) {
                         adapter.add(UserItem(user))
                     }
                 }

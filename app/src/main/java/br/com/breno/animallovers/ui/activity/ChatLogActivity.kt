@@ -12,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.adapters.ChatFromItem
 import br.com.breno.animallovers.adapters.ChatToItem
+import br.com.breno.animallovers.adapters.DateMessageItem
 import br.com.breno.animallovers.model.ChatMessage
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.model.User
+import br.com.breno.animallovers.service.ChatService
 import br.com.breno.animallovers.service.NotificationService
 import br.com.breno.animallovers.ui.fragment.ChatFragment
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -33,6 +35,7 @@ import kotlinx.android.synthetic.main.action_bar_chat_log.view.*
 import kotlinx.android.synthetic.main.activity_chat_log.*
 import java.time.Instant
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
 class ChatLogActivity : AppCompatActivity() {
@@ -41,6 +44,8 @@ class ChatLogActivity : AppCompatActivity() {
     private var base: DatabaseReference = FirebaseDatabase.getInstance().reference
     private lateinit var storage: FirebaseStorage
 
+    private var chatService = ChatService()
+
     companion object {
         const val TAG = "ChatLog"
     }
@@ -48,6 +53,7 @@ class ChatLogActivity : AppCompatActivity() {
     val adapter = GroupAdapter<ViewHolder>()
     var toUser: User? = null
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
@@ -124,25 +130,40 @@ class ChatLogActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun listenForMessages() {
         val fromId = FirebaseAuth.getInstance().uid
         val toId = toUser?.id
         val reference = FirebaseDatabase.getInstance()
             .getReference("/user-messages/$fromId/$toId")
 
+        var timeStampMessages = ""
+
         reference.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
+
+                var rawDateTimeMessage = Instant.ofEpochSecond(chatMessage!!.timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime()
+                val currentMessageDate = DateUtils.formatDateToLocalFormat(rawDateTimeMessage.toString())
+                if(timeStampMessages == "" || timeStampMessages != currentMessageDate) {
+                    timeStampMessages = currentMessageDate
+
+                    adapter.add(DateMessageItem(timeStampMessages))
+                }
 
                 if (chatMessage != null) {
                     Log.d(TAG, chatMessage.text)
 
                     if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
                         val currentUser = ChatFragment.currentUser ?: return
-                        adapter.add(ChatFromItem(chatMessage.text, currentUser))
+                        adapter.add(ChatFromItem(chatMessage.text, rawDateTimeMessage.toString(), currentUser))
                     } else {
-                        adapter.add(ChatToItem(chatMessage.text, toUser!!))
+                        adapter.add(ChatToItem(chatMessage.text, rawDateTimeMessage.toString(), toUser!!))
                     }
+                    //Atualiza as últimas mensagens como lidas
+                    chatMessage.isRead = true
+
+                    chatService.updateOrSetLatestFromMessage(fromId.toString(), toId.toString(), chatMessage)
                 }
 
                 recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
@@ -150,27 +171,28 @@ class ChatLogActivity : AppCompatActivity() {
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                var rawDateTimeMessage = Instant.ofEpochSecond(chatMessage!!.timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime()
+                val currentMessageDate = DateUtils.formatDateToLocalFormat(rawDateTimeMessage.toString())
+                if(timeStampMessages == "" || timeStampMessages != currentMessageDate) {
+                    timeStampMessages = currentMessageDate
+                    adapter.add(DateMessageItem(timeStampMessages))
+                }
+
                 recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
 
                 if (chatMessage != null) {
 
                     if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
                         val currentUser = ChatFragment.currentUser ?: return
-                        adapter.add(
-                            ChatFromItem(
-                                chatMessage.text,
-                                currentUser
-                            )
-                        )
+                        adapter.add(ChatFromItem(chatMessage.text, rawDateTimeMessage.toString(), currentUser))
                     } else {
-                        adapter.add(
-                            ChatToItem(
-                                chatMessage.text,
-                                toUser!!
-                            )
-                        )
+                        adapter.add(ChatToItem(chatMessage.text, rawDateTimeMessage.toString(), toUser!!))
                     }
 
+                    //Atualiza as últimas mensagens como lidas
+                    chatMessage.isRead = true
+
+                    chatService.updateOrSetLatestFromMessage(fromId.toString(), toId.toString(), chatMessage)
                 }
             }
 
@@ -184,6 +206,8 @@ class ChatLogActivity : AppCompatActivity() {
     private fun perfomeSendMessage() {
         val text = et_chat_log.text.toString()
 
+        if (text.isEmpty()) return
+
         val fromId = FirebaseAuth.getInstance().uid
         val user = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
         val toId = user!!.id
@@ -196,10 +220,8 @@ class ChatLogActivity : AppCompatActivity() {
         val toReference = FirebaseDatabase.getInstance()
             .getReference("/user-messages/$toId/$fromId").push()
 
-        val chatMessage = ChatMessage(
-            reference.key!!, text, fromId, toId,
-            System.currentTimeMillis() / 1000
-        )
+        val chatMessage = ChatMessage(reference.key!!, text, fromId, toId, System.currentTimeMillis() / 1000, false)
+
         reference.setValue(chatMessage)
             .addOnSuccessListener {
                 Log.d(TAG, "Saved our chat message: ${reference.key}")
@@ -209,13 +231,9 @@ class ChatLogActivity : AppCompatActivity() {
 
         toReference.setValue(chatMessage)
 
-        val latestMessageRef = FirebaseDatabase.getInstance()
-            .getReference("/latest-messages/$fromId/$toId")
-        latestMessageRef.setValue(chatMessage)
-
-        val latestMessageToRef = FirebaseDatabase.getInstance()
-            .getReference("/latest-messages/$toId/$fromId")
-        latestMessageToRef.setValue(chatMessage)
+        //Atualiza as últimas mensagens como lidas
+        chatMessage.isRead = false
+        chatService.updateOrSetLatestMessage(fromId, toId, chatMessage)
 
         sendNotificationOfNewMessage(fromId, toId, chatMessage)
     }
@@ -231,17 +249,11 @@ class ChatLogActivity : AppCompatActivity() {
                             snapshot.child(fromId)
                                 .child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)
                                 .getValue<Conta>()!!
-                        val toUser =
-                            snapshot.child(toId)
+                        val toUser = snapshot.child(toId)
                                 .child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)
                                 .getValue<Conta>()!!
 
-                        notificationService.sendNotificationOfNewChatMessage(
-                            fromUser,
-                            toUser,
-                            message,
-                            (System.currentTimeMillis() / 1000).toString()
-                        )
+                        notificationService.sendNotificationOfNewChatMessage(fromUser, toUser, message, (System.currentTimeMillis() / 1000).toString())
                     }
 
                     override fun onCancelled(error: DatabaseError) {
