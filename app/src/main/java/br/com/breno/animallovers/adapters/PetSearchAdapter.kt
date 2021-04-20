@@ -65,6 +65,24 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val pet = pets[(pets.size - 1) - position]
 
+        holder.let {
+            when (pet.tipo) {
+                KindOfPet.DOG.tipo -> {
+                    it.photoProfile.setImageResource(R.drawable.ic_dog_pet)
+                }
+                KindOfPet.CAT.tipo -> {
+                    it.photoProfile.setImageResource(R.drawable.ic_cat_pet)
+                }
+                KindOfPet.BIRD.tipo -> {
+                    it.photoProfile.setImageResource(R.drawable.ic_bird_pet)
+                }
+                else -> {
+                    it.photoProfile.setImageResource(R.drawable.ic_unkown_pet)
+                }
+            }
+        }
+
+
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         database = Firebase.database.reference
@@ -87,25 +105,6 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                 }
             }.addOnFailureListener {
 
-            }
-        }
-        else {
-            holder.let {
-                it.name.text = pet.nome
-                when (pet.tipo) {
-                    KindOfPet.DOG.tipo -> {
-                        it.photoProfile.setImageResource(R.drawable.ic_dog_pet)
-                    }
-                    KindOfPet.CAT.tipo -> {
-                        it.photoProfile.setImageResource(R.drawable.ic_cat_pet)
-                    }
-                    KindOfPet.BIRD.tipo -> {
-                        it.photoProfile.setImageResource(R.drawable.ic_bird_pet)
-                    }
-                    else -> {
-                        it.photoProfile.setImageResource(R.drawable.ic_unkown_pet)
-                    }
-                }
             }
         }
 

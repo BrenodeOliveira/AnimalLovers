@@ -199,7 +199,7 @@ class NotificationService(context: Context) {
         return notification
     }
 
-    private fun persistNotificationOfNewLikeInPost(notification: Notification, petReceiver: Pet, petWhoCommented : Pet, snapshot: DataSnapshot, likePost: LikePost) : Notification{
+    private fun persistNotificationOfNewLikeInPost(notification: Notification, petReceiver: Pet, petWhoCommented : Pet, snapshot: DataSnapshot, likePost: LikePost, post : Post) : Notification{
 
         //Saber se o usuário já curtiu o comentário alguma vez
         val sSnap = snapshot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString())
@@ -225,6 +225,7 @@ class NotificationService(context: Context) {
             .push()
 
 
+        notification.postNotification = post
         notification.dataHora = DateUtils.dataFormatWithMilliseconds()
         notification.petRemetente = petWhoCommented
         notification.tipo = KindOfNotification.LIKED_POST.nome
@@ -339,7 +340,7 @@ class NotificationService(context: Context) {
 
     fun sendNotificationOfLikedPost(petWhoReceivedLike : Pet, petWhoLiked : Pet, post : Post, conta : Conta, notification: Notification, likePost: LikePost, snapshot: DataSnapshot) {
 
-        val sentNotification = persistNotificationOfNewLikeInPost(notification, petWhoReceivedLike, petWhoLiked, snapshot, likePost)
+        val sentNotification = persistNotificationOfNewLikeInPost(notification, petWhoReceivedLike, petWhoLiked, snapshot, likePost, post)
 
         val bodyText = "[" + petWhoReceivedLike.nome + "]: " + petWhoLiked.nome + " curtiu a sua publicação "
         val title = petWhoLiked.nome + " " + ctx.getString(R.string.liked_your_post)

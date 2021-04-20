@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.model.*
 import br.com.breno.animallovers.service.*
 import br.com.breno.animallovers.ui.activity.ProfilePetActivity
@@ -54,6 +55,7 @@ import kotlinx.android.synthetic.main.report_comment.tv_other_report_comment
 import kotlinx.android.synthetic.main.report_comment.tv_sexual_content_comment3
 import kotlinx.android.synthetic.main.report_comment.tv_violate_rules_rgeport_comment2
 import kotlinx.android.synthetic.main.report_post.*
+import java.lang.IllegalStateException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -94,6 +96,7 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
         val post = posts[(posts.size - 1) - position]
 
         if(post.postType === VIEW_TYPE_ZERO_NORMAL_POST) {
+            holder.setIsRecyclable(false)
             (holder as ViewPostViewHolder).bind(position)
         } else {
             (holder as ViewAdPostViewHolder).bind()
@@ -117,6 +120,8 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(position: Int) {
             var post = posts[(posts.size - 1) - position]
+
+            photoProfile.setImageResource(R.drawable.ic_unkown_pet)
 
             storage = FirebaseStorage.getInstance()
             auth = FirebaseAuth.getInstance()
@@ -162,6 +167,24 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
                         val owner = dSnap.child(post.idOwner).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
 
                         pet = (dSnap.child(post.idOwner).child(post.idPet).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>())!!
+
+                        if(pet.pathFotoPerfil == "") {
+                            when (pet.tipo) {
+                                KindOfPet.DOG.tipo -> {
+                                    photoProfile.setImageResource(R.drawable.ic_dog_pet)
+                                }
+                                KindOfPet.CAT.tipo -> {
+                                    photoProfile.setImageResource(R.drawable.ic_cat_pet)
+                                }
+                                KindOfPet.BIRD.tipo -> {
+                                    photoProfile.setImageResource(R.drawable.ic_bird_pet)
+                                }
+                                else -> {
+                                    photoProfile.setImageResource(R.drawable.ic_unkown_pet)
+                                }
+                            }
+                        }
+
                         val petLoggedInfo = (dSnap.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>())!!
 
                         val snapshot = dSnap.child(post.idOwner).child(post.idPet).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
@@ -246,12 +269,17 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
                             }
                         }
 
-                        if(shouldInflateComments) {
-                            profilesLikesPostAdapter.show(manager, "likesPost")
-                        }
+                        try {
+                            if(shouldInflateComments) {
+                                profilesLikesPostAdapter.show(manager, "likesPost")
+                            }
 
-                        commentPost.setOnClickListener {
-                            profilesLikesPostAdapter.show(manager, "likesPost")
+                            commentPost.setOnClickListener {
+                                profilesLikesPostAdapter.show(manager, "likesPost")
+                            }
+                        }
+                        catch (ilEx : IllegalStateException) {
+                            println(ilEx.toString())
                         }
                     }
 
