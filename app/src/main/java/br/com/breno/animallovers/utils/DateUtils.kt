@@ -36,10 +36,27 @@ class DateUtils {
 
             return outputFormatter.format(date)
         }
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun formatDateToLocalFormatWithoutSecond(rawDate: String) : String {
+            val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.ROOT)
+            val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyy", Locale.ROOT)
+            val date: LocalDate = LocalDate.parse(rawDate, inputFormatter)
+
+            return outputFormatter.format(date)
+        }
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun formatTimeToLocalFormat(rawDate: String) : String {
             val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
+            val outputFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT)
+            val date: LocalDateTime = LocalDateTime.parse(rawDate, inputFormatter)
+
+            return outputFormatter.format(date)
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun formatTimeToLocalFormatWithoutSecond(rawDate: String) : String {
+            val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.ROOT)
             val outputFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT)
             val date: LocalDateTime = LocalDateTime.parse(rawDate, inputFormatter)
 

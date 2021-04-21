@@ -18,7 +18,7 @@ class ChatFromItem(val text: String, var dateTimeMessage : String, val user: Use
     @RequiresApi(Build.VERSION_CODES.O)
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.tv_chat_from_row.text = text
-        viewHolder.itemView.tv_chat_time_message_sent.text = DateUtils.formatTimeToLocalFormat(dateTimeMessage)
+        viewHolder.itemView.tv_chat_time_message_sent.text = dateTimeMessage
     }
 
     override fun getLayout(): Int {
@@ -30,7 +30,7 @@ class ChatToItem(val text: String, var dateTimeMessage : String, val user: User)
     @RequiresApi(Build.VERSION_CODES.O)
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.tv_chat_to_row.text = text
-        viewHolder.itemView.tv_chat_time_message_received.text = DateUtils.formatTimeToLocalFormat(dateTimeMessage)
+        viewHolder.itemView.tv_chat_time_message_received.text = dateTimeMessage
     }
 
     override fun getLayout(): Int {

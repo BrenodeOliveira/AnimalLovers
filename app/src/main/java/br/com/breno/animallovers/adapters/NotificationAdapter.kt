@@ -136,7 +136,6 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
                             KindOfNotification.COMMENTED_POST.nome -> {
                                 shouldOpenCommentsInIntent = true
                                 postInfo = notification.postNotification
-//                                postInfo = postService.getPostByUniqueIdOfCommentInPost(snapshot, notification.idActionNotification, notification.petRemetente)
                                 comentario = commentsService.getCommentByUniqueIdOfCommentInPost(snapshot, notification.idActionNotification, notification.petRemetente)
 
                                 if(comentario.textoComentario != "") {
@@ -146,7 +145,6 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
                             KindOfNotification.LIKED_POST.nome -> {
                                 shouldOpenCommentsInIntent = false
                                 postInfo = notification.postNotification
-//                                postInfo = postService.getPostByUniqueIdOfLikeInPost(snapshot, notification.idActionNotification, notification.petRemetente)
                             }
                         }
 

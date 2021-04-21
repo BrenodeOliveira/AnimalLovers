@@ -14,10 +14,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BitmapCompat
 import androidx.core.view.isEmpty
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.NumberConstants
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.service.DonoService
+import br.com.breno.animallovers.service.FotoService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
@@ -108,7 +111,9 @@ class UserDataActivity : AppCompatActivity() {
                             } else {
                                 val bitmap = (iv_photo_to_profile_owner.drawable as BitmapDrawable).bitmap
                                 val baos = ByteArrayOutputStream()
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                                var bitmapByteCount = BitmapCompat.getAllocationByteCount(bitmap)
+
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, FotoService.tratarQualidadeFoto(bitmapByteCount), baos)
                                 val dataPicture = baos.toByteArray()
 
                                 donoService.uploadProfilePhotoOwner(dataPicture, accountInfo)

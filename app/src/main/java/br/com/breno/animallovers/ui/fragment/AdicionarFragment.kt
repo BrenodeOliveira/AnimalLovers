@@ -27,6 +27,7 @@ import br.com.breno.animallovers.constants.NumberConstants
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
+import br.com.breno.animallovers.service.FotoService
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.service.PostService
 import br.com.breno.animallovers.ui.fragment.extensions.mostraToast
@@ -201,28 +202,8 @@ class AdicionarFragment : Fragment() {
                                 val bitmap = (iv_photo_to_publish.drawable as BitmapDrawable).bitmap
                                 val baos = ByteArrayOutputStream()
                                 var bitmapByteCount = BitmapCompat.getAllocationByteCount(bitmap)
-                                println(bitmapByteCount)
 
-                                var quality: Int
-
-                                when {
-                                    bitmapByteCount > NumberConstants.TEN_MILLION.value -> {
-                                        quality = 12
-                                    }
-                                    bitmapByteCount > NumberConstants.ONE_MILLION.value && bitmapByteCount < NumberConstants.TEN_MILLION.value -> {
-                                        quality = 40
-                                    }
-                                    bitmapByteCount > NumberConstants.ONE_HUNDRED_THOUSAND.value && bitmapByteCount < NumberConstants.ONE_MILLION.value -> {
-                                        quality = 70
-                                    }
-                                    bitmapByteCount > NumberConstants.TEN_THOUSAND.value && bitmapByteCount < NumberConstants.ONE_HUNDRED_THOUSAND.value -> {
-                                        quality = 82
-                                    }
-                                    else -> {
-                                        quality = 95
-                                    }
-                                }
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos)
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, FotoService.tratarQualidadeFoto(bitmapByteCount), baos)
                                 val dataPicture = baos.toByteArray()
 
                                 postService.persistNewPetPost(idPet, dataPicture, post )

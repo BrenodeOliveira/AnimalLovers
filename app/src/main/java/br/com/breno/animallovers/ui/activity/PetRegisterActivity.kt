@@ -14,8 +14,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BitmapCompat
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.NumberConstants
 import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.service.FotoService
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
@@ -98,7 +101,9 @@ class PetRegisterActivity : AppCompatActivity() {
                                 if (null != iv_photo_to_profile.drawable) {
                                     val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
                                     val baos = ByteArrayOutputStream()
-                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                                    var bitmapByteCount = BitmapCompat.getAllocationByteCount(bitmap)
+
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, FotoService.tratarQualidadeFoto(bitmapByteCount), baos)
                                     val dataPicture = baos.toByteArray()
 
                                     petService.uploadProfilePhotoPet(idPet, dataPicture, pet)

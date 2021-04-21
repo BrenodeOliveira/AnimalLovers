@@ -15,9 +15,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BitmapCompat
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.constants.KindOfPet
+import br.com.breno.animallovers.constants.NumberConstants
 import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.service.FotoService
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.AnimalLoversConstants
@@ -62,7 +65,6 @@ class AlterarDadosPetActivity : AppCompatActivity() {
         nome_change_pet.editText!!.setText(petInfo.nome)
         idade_change_pet.editText!!.setText(petInfo.idade)
         peso_change_pet.editText!!.setText(petInfo.peso)
-//        tipo_change_pet.editText!!.setText(petInfo.tipo)
         raca_change_pet.editText!!.setText(petInfo.raca)
         resumo_change_pet.editText!!.setText(petInfo.resumo)
 
@@ -111,14 +113,12 @@ class AlterarDadosPetActivity : AppCompatActivity() {
             if (nome_change_pet.editText?.text.toString().isNotEmpty() and
                 idade_change_pet.editText?.text.toString().isNotEmpty() and
                 peso_change_pet.editText?.text.toString().isNotEmpty() and
-//                tipo_change_pet.editText?.text.toString().isNotEmpty() and
                 raca_change_pet.editText?.text.toString().isNotEmpty() and
                 resumo_change_pet.editText?.text.toString().isNotEmpty()
             ) {
                 pet.nome = nome_change_pet.editText?.text.toString()
                 pet.idade = idade_change_pet.editText?.text.toString()
                 pet.peso = peso_change_pet.editText?.text.toString()
-//                pet.tipo = tipo_change_pet.editText?.text.toString()
                 pet.raca = raca_change_pet.editText?.text.toString()
                 pet.resumo = resumo_change_pet.editText?.text.toString()
 
@@ -237,7 +237,9 @@ class AlterarDadosPetActivity : AppCompatActivity() {
 
             val bitmap = (iv_photo_to_profile_change_pet.drawable as BitmapDrawable).bitmap
             val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            var bitmapByteCount = BitmapCompat.getAllocationByteCount(bitmap)
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, FotoService.tratarQualidadeFoto(bitmapByteCount), baos)
             val dataPicture = baos.toByteArray()
 
             petService.uploadOrUpdateProfilePhotoPet(dataPicture, petInfo)
