@@ -9,6 +9,7 @@ import android.os.Build
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.broadcast.BroadcastReceiverNotificationChat
 import br.com.breno.animallovers.broadcast.BroadcastReceiverNotificationFriendship
+import br.com.breno.animallovers.constants.KindOfPet
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
@@ -174,14 +175,29 @@ class FcmMessagingService: FirebaseMessagingService() {
 
     private fun sendNotificationForFriendship(messageBody: Map<String, String>) {
         var petInfo : Pet
-        var petLoggedInfo : Pet
+        var petWhoSentRequest : Pet
         var idNotification  = messageBody["idNotification"]
         if (type == "json") {
             try {
                 val gson = Gson()
 
                 petInfo = gson.fromJson(messageBody["pet"], Pet::class.java)
-                petLoggedInfo = gson.fromJson(messageBody["petLogged"], Pet::class.java)
+                petWhoSentRequest = gson.fromJson(messageBody["petLogged"], Pet::class.java)
+
+                val referenceDefaultProfilePhoto : Int = when (petWhoSentRequest.tipo) {
+                    KindOfPet.DOG.tipo -> {
+                        R.drawable.ic_dog_pet
+                    }
+                    KindOfPet.CAT.tipo -> {
+                        R.drawable.ic_cat_pet
+                    }
+                    KindOfPet.BIRD.tipo -> {
+                        R.drawable.ic_bird_pet
+                    }
+                    else -> {
+                        R.drawable.ic_unkown_pet
+                    }
+                }
 
                 var titleOfNotificationButton = ""
                 var kindOfNotification = messageBody["kindOfNotification"]
@@ -190,14 +206,14 @@ class FcmMessagingService: FirebaseMessagingService() {
                 val intent = Intent(this, ProfilePetActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-                intent.putExtra("PET_INFO_PROFILE", petInfo)
+                intent.putExtra("PET_INFO_PROFILE", petWhoSentRequest)
                 val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
                 val buttonIntent = Intent(this, BroadcastReceiverNotificationFriendship::class.java)
                 buttonIntent.apply {
                     action = "Do Pending Task"
                     putExtra("PET_INFO_PROFILE", petInfo)
-                    putExtra("PET_LOGGED_INFO_PROFILE", petLoggedInfo)
+                    putExtra("PET_LOGGED_INFO_PROFILE", petWhoSentRequest)
                     putExtra("KIND_OF_FRIENDSHIP_REQUEST", kindOfNotification)
                 }
                 val buttonPendingIntent = PendingIntent.getBroadcast(this, Random().nextInt(), buttonIntent, 0)
@@ -206,8 +222,8 @@ class FcmMessagingService: FirebaseMessagingService() {
                     val ref = storage.reference
                         .child(AnimalLoversConstants.STORAGE_ROOT.nome)
                         .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
-                        .child(petInfo.idOwner)
-                        .child(petInfo.id + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
+                        .child(petWhoSentRequest.idOwner)
+                        .child(petWhoSentRequest.id + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
 
                     ref.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
                         val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
@@ -246,10 +262,9 @@ class FcmMessagingService: FirebaseMessagingService() {
                             notificationChannel.lightColor = Color.WHITE
                             notificationChannel.enableVibration(false)
                             notificationManager.createNotificationChannel(notificationChannel)
-
                             builder = Notification.Builder(this, channelId)
                                 .setSmallIcon(R.drawable.ic_coracao)
-                                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.animalovers_logo_simples))
+                                .setLargeIcon(BitmapFactory.decodeResource(resources, referenceDefaultProfilePhoto))
                                 .setContentIntent(pendingIntent)
                                 .setContentTitle(messageBody["title"])
                                 .setContentText(messageBody["body"])
@@ -260,7 +275,7 @@ class FcmMessagingService: FirebaseMessagingService() {
                         else {
                             builder = Notification.Builder(this)
                                 .setSmallIcon(R.drawable.ic_coracao)
-                                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.animalovers_logo_simples))
+                                .setLargeIcon(BitmapFactory.decodeResource(resources, referenceDefaultProfilePhoto))
                                 .setContentIntent(pendingIntent)
                                 .setContentTitle(messageBody["title"])
                                 .setContentText(messageBody["body"])

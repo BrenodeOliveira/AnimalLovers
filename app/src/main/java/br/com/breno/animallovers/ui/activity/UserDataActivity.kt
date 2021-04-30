@@ -52,12 +52,13 @@ class UserDataActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_data)
 
+        var isFirstTimeLogging = intent.getBooleanExtra("IS_FIRST_TIME_LOGGING", false)
         requestingPermissionToUser()
         clickButtonCamera()
         clickButtonGallery()
 
         retriveOwnerInfo()
-        persistOwner()
+        persistOwner(isFirstTimeLogging)
 
         /**
          * Fazer com que o usuário se cadastre para que tenha nome, foto e local de onde
@@ -91,7 +92,7 @@ class UserDataActivity : AppCompatActivity() {
         })
     }
 
-    private fun persistOwner() {
+    private fun persistOwner(isFirstTimeLogging : Boolean) {
         btn_cadastrar_user.setOnClickListener{
             database = Firebase.database.reference
             auth = FirebaseAuth.getInstance()
@@ -123,6 +124,9 @@ class UserDataActivity : AppCompatActivity() {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
+                if(isFirstTimeLogging) {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                }
                 finish()
             } else {
                 mostraToast("Preencha os campos requeridos")

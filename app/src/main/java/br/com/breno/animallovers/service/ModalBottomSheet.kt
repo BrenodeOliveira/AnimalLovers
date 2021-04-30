@@ -99,13 +99,6 @@ class ModalBottomSheet(context: Context) : BottomSheetDialogFragment() {
     }
 
     override fun onStop() {
-//        var feed = FeedActivity()
-//
-//        context?.let { feed.getPetIdToPopulateFeed(it) }
-
-//        var profile = ProfileActivity()
-//        profile.
-
 
         super.onStop()
     }

@@ -89,7 +89,7 @@ class PostService(context : Context) {
             })
     }
 
-    fun getAllPostsPet(pet: Pet, snapshot: DataSnapshot) : List<Post> {
+    fun getAllPostsPet(pet: Pet, snapshot: DataSnapshot) : MutableList<Post> {
         val listPosts = ArrayList<Post>()
         var numChildren = 0L
 

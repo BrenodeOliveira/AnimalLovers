@@ -23,6 +23,7 @@ import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
+import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -111,6 +112,12 @@ class PetRegisterActivity : AppCompatActivity() {
                                     petService.registerNewPet(idPet, pet)
                                 }
                                 mostraToastySuccess("Novo pet registrado com sucesso")
+
+                                //É o primeiro pet cadastrado do dono, já fica logado com ele
+                                if(idPet == 1) {
+                                    val myPreferences = ProjectPreferences(this@PetRegisterActivity)
+                                    myPreferences.setPetLogged(pet.id)
+                                }
                                 finish()
                             }
 

@@ -89,13 +89,13 @@ class PetsProfileAdapter(
             it.description.setOnClickListener {
                 val myPreferences = ProjectPreferences(context)
                 myPreferences.setPetLogged(pets.id)
-                context.startActivity(Intent(context, ProfileActivity::class.java))
+                context.startActivity(Intent(context, MainActivity::class.java))
                 mbs.dismiss()
             }
             it.title.setOnClickListener {
                 val myPreferences = ProjectPreferences(context)
                 myPreferences.setPetLogged(pets.id)
-                context.startActivity(Intent(context, ProfileActivity::class.java))
+                context.startActivity(Intent(context, MainActivity::class.java))
                 mbs.dismiss()
             }
         }

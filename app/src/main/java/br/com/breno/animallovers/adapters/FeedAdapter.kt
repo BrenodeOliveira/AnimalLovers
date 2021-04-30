@@ -55,12 +55,15 @@ import kotlinx.android.synthetic.main.report_comment.tv_other_report_comment
 import kotlinx.android.synthetic.main.report_comment.tv_sexual_content_comment3
 import kotlinx.android.synthetic.main.report_comment.tv_violate_rules_rgeport_comment2
 import kotlinx.android.synthetic.main.report_post.*
-import java.lang.IllegalStateException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-class FeedAdapter(private val posts: List<Post>, private val context: Context, private val shouldInflateComments : Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FeedAdapter(
+    private val posts: MutableList<Post>,
+    private val context: Context,
+    private val shouldInflateComments: Boolean
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
 
@@ -85,9 +88,21 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         return if(viewType == VIEW_TYPE_ZERO_NORMAL_POST) {
-            ViewPostViewHolder(LayoutInflater.from(context).inflate(R.layout.feed_item, parent, false))
+            ViewPostViewHolder(
+                LayoutInflater.from(context).inflate(
+                    R.layout.feed_item,
+                    parent,
+                    false
+                )
+            )
         } else {
-            ViewAdPostViewHolder(LayoutInflater.from(context).inflate(R.layout.ad_feed_item, parent, false))
+            ViewAdPostViewHolder(
+                LayoutInflater.from(context).inflate(
+                    R.layout.ad_feed_item,
+                    parent,
+                    false
+                )
+            )
         }
     }
 
@@ -308,7 +323,7 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
             optionsOpenIcon.setOnClickListener {
 
                 if (post.idOwner == auth.uid && post.idPet == myPreferences.getPetLogged()) {
-                    showPopUpMenuForOwnerPost(itemView, post)
+                    showPopUpMenuForOwnerPost(itemView, post, position)
                 } else {
                     showPopUpMenuForOtherPosts(post)
                 }
@@ -394,7 +409,8 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
                             chooseItemReport(mAlertDialog.tv_is_fake_news_report_comment)
                         }
                         mAlertDialog.tv_i_disliked_report_comment.setOnClickListener {
-                            chooseItemReport(mAlertDialog.tv_i_disliked_report_comment)                                   }
+                            chooseItemReport(mAlertDialog.tv_i_disliked_report_comment)
+                        }
                         mAlertDialog.tv_other_report_comment.setOnClickListener {
                             chooseItemReport(mAlertDialog.tv_other_report_comment)
                         }
@@ -479,7 +495,7 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
         return position.toLong()
     }
 
-    private fun showPopUpMenuForOwnerPost(itemView: View, post : Post) {
+    private fun showPopUpMenuForOwnerPost(itemView: View, post: Post, position: Int) {
         val popupMenu = PopupMenu(context, itemView, Gravity.RIGHT)
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -518,14 +534,19 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
                 R.id.item_delete_menu_options -> {
 
                     AlertDialog.Builder(context)
-                        .setTitle(R.string.delete_comment_title)
-                        .setMessage(R.string.delete_comment_message)
+                        .setTitle(R.string.delete_post_title)
+                        .setMessage(R.string.delete_post_message)
                         .setPositiveButton(R.string.yes) { dialog, which ->
 
                             post.postAtivo = false
 
                             postService.updatePost(post)
 
+                            posts.removeAt((posts.size - 1) - position)
+
+                            notifyItemRemoved((posts.size - 1) - position)
+                            notifyItemRangeChanged((posts.size - 1) - position, posts.toMutableList().size)
+                            notifyDataSetChanged()
                         }
                         .setNegativeButton(R.string.no, null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -552,7 +573,10 @@ class FeedAdapter(private val posts: List<Post>, private val context: Context, p
             }
         }
         else {
-            tv.background = ContextCompat.getDrawable(context, R.drawable.selected_option_background)
+            tv.background = ContextCompat.getDrawable(
+                context,
+                R.drawable.selected_option_background
+            )
             tv.tag = R.drawable.selected_option_background
             listOfReasonsReportted.add(tv.text.toString())
         }

@@ -60,7 +60,7 @@ class ProfilePetActivity : AppCompatActivity() {
 
         val myPreferences = ProjectPreferences(baseContext)
 
-        if(petInfo.id != myPreferences.getPetLogged().toString() && petInfo.idOwner != auth.uid.toString()) {
+        if(petInfo.id != myPreferences.getPetLogged().toString() || petInfo.idOwner != auth.uid.toString()) {
             friendshipStatus(petInfo)
         }
     }
@@ -102,7 +102,16 @@ class ProfilePetActivity : AppCompatActivity() {
                     iv_add_friend_search_pets.setOnClickListener {
                         val petLogged = snapshot.child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
 
-                        sendFriendshipRequest(petInfo, petLogged, snapshots, solicitacaoAmizade)
+                        val owner = snapshots.child(petInfo.idOwner).child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
+                        when (solicitacaoAmizade.statusSolicitacao) {
+                            StatusSolicitacaoAmizade.ACCEPTED.status -> chamarMyDialogUndoFriendship(petInfo, solicitacaoAmizade, snapshots)
+                            StatusSolicitacaoAmizade.WAITING.status -> chamarMyDialogAnalizeFriendshipRequest(petInfo, petLogged, solicitacaoAmizade, owner, snapshots)
+                            StatusSolicitacaoAmizade.SENT.status -> chamarMyDialogCancelFriendshipRequest(petInfo, solicitacaoAmizade)
+                            else -> {
+                                sendFriendshipRequest(petInfo, petLogged, snapshots, solicitacaoAmizade)
+                            }
+                        }
+
                     }
                 }
 
@@ -523,7 +532,7 @@ class ProfilePetActivity : AppCompatActivity() {
     private fun loadPetPosts(pet: Pet) {
 
         val postService = PostService(baseContext)
-        var listPosts : List<Post>
+        var listPosts : MutableList<Post>
 
 
         database = Firebase.database.reference
