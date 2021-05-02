@@ -111,6 +111,28 @@ class PostService(context : Context) {
         return listPosts
     }
 
+    fun getAllActivePostsPet(pet: Pet, snapshot: DataSnapshot) : MutableList<Post> {
+        val listPosts = ArrayList<Post>()
+        var numChildren = 0L
+
+        numChildren = snapshot.child(pet.id)
+            .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).childrenCount
+
+        for (x in 0..numChildren) {
+            if (snapshot.child(pet.id)
+                    .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                    .hasChild(x.toString())) {
+                val post: Post = snapshot.child(pet.id).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome)
+                    .child(x.toString()).getValue<Post>()!!
+
+                if(post.postAtivo) {
+                    listPosts.add(post)
+                }
+            }
+        }
+        return listPosts
+    }
+
     fun updatePost(post : Post) {
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())

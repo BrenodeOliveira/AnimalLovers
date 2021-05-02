@@ -1,5 +1,6 @@
 package br.com.breno.animallovers.adapters
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -338,17 +339,19 @@ class FeedAdapter(
                 .child(post.idOwner)
                 .child(post.idPet + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
             try {
-                ref.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
-                    val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
-                        photoProfile.setImageBitmap(bmp)
+                GlideApp.with(context).load(ref).into(photoProfile)
 
-                        if(photoProfile.drawable == null) {
-                            photoProfile.visibility = View.INVISIBLE
-                        }
-
-                }.addOnFailureListener { itException ->
-                    println(itException.toString())
-                }
+//                ref.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
+//                    val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
+//                        photoProfile.setImageBitmap(bmp)
+//
+//                        if(photoProfile.drawable == null) {
+//                            photoProfile.visibility = View.INVISIBLE
+//                        }
+//
+//                }.addOnFailureListener { itException ->
+//                    println(itException.toString())
+//                }
             } catch (ex: Exception) {
                 println("Erro ao buscar foto de perfil: $ex")
             }
@@ -361,21 +364,10 @@ class FeedAdapter(
                 .child(post.idOwner)
                 .child(post.idPet)
                 .child(post.dataHora)
-            storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
-                val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
-                    name.text = post.nomePet
-                    dateTime.text = dateUtils.dateDiffInTextFormat(LocalDateTime.parse(post.dataHora, DateTimeFormatter.ofPattern(DateUtils.dateFrmt())))
-                    description.text = post.legenda
-                    photoPost.setImageBitmap(bmp)
-
-                    if(photoPost.drawable == null) {
-                        photoPost.visibility = View.INVISIBLE
-                        photoPostCard.visibility = View.INVISIBLE
-                    }
-
-            }.addOnFailureListener {
-                println(it.toString())
-            }
+            GlideApp.with(context).load(storageRef).into(photoPost)
+            name.text = post.nomePet
+            dateTime.text = dateUtils.dateDiffInTextFormat(LocalDateTime.parse(post.dataHora, DateTimeFormatter.ofPattern(DateUtils.dateFrmt())))
+            description.text = post.legenda
         }
 
         private fun showPopUpMenuForOtherPosts(post: Post) {

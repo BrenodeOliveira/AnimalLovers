@@ -543,16 +543,12 @@ class ProfilePetActivity : AppCompatActivity() {
             .child(pet.idOwner)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    dono = snapshot.child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)
-                        .getValue<Conta>()!!
+                    dono = snapshot.child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
 
-                    val numPosts = snapshot.child(pet.id)
-                        .child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).childrenCount
+                    listPosts = postService.getAllActivePostsPet(pet, snapshot)
 
                     tv_posts_profile_pet.text = " Posts"
-                    tv_num_posts_profile_pet.text = numPosts.toString()
-
-                    listPosts = postService.getAllPostsPet(pet, snapshot)
+                    tv_num_posts_profile_pet.text = listPosts.size.toString()
 
                     val recyclerView = findViewById<RecyclerView>(R.id.recycler_posts_profile_pet)
                     recyclerView.layoutManager = LinearLayoutManager(this@ProfilePetActivity)

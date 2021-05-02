@@ -23,6 +23,7 @@ import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
 import br.com.breno.animallovers.model.SolicitacaoAmizade
 import br.com.breno.animallovers.service.FriendShipService
+import br.com.breno.animallovers.service.GlideApp
 import br.com.breno.animallovers.service.NotificationService
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.ProfilePetActivity
@@ -93,20 +94,9 @@ class PetSearchAdapter(private val pets: List<Pet>, private val context: Context
                 .child(AnimalLoversConstants.STORAGE_ROOT_PROFILE_PHOTOS.nome)
                 .child(pet.idOwner)
                 .child(pet.id + AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
-            storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
-                val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
-                holder.let {
-                    it.name.text = pet.nome
-                    it.photoProfile.setImageBitmap(bmp)
-
-                    if(it.photoProfile.drawable == null) {
-                        it.photoProfile.visibility = View.INVISIBLE
-                    }
-                }
-            }.addOnFailureListener {
-
-            }
+            GlideApp.with(context).load(storageRef).into(holder.photoProfile)
         }
+        holder.name.text = pet.nome
 
         holder.let {
             database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).addListenerForSingleValueEvent(
