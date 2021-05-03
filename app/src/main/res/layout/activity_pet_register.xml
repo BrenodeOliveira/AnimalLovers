@@ -58,7 +58,7 @@
         android:layout_marginTop="8dp"
         android:focusable="true"
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        app:layout_constraintEnd_toStartOf="@id/peso_pet_register"
+        app:layout_constraintEnd_toStartOf="@id/spinner_idade"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
         app:layout_constraintTop_toBottomOf="@id/nome_pet_register">
 
@@ -70,6 +70,20 @@
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <Spinner
+        android:id="@+id/spinner_idade"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:entries="@array/tempo"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="2dp"
+        android:background="@drawable/spinner_background"
+        app:layout_constraintTop_toTopOf="@id/idade_pet_register"
+        app:layout_constraintStart_toEndOf="@id/idade_pet_register"
+        app:layout_constraintBottom_toBottomOf="@id/idade_pet_register"
+        app:layout_constraintEnd_toStartOf="@id/peso_pet_register"
+        />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/peso_pet_register"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -77,8 +91,8 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        app:layout_constraintEnd_toStartOf="@id/guideline_end"
-        app:layout_constraintStart_toEndOf="@id/idade_pet_register"
+        app:layout_constraintEnd_toStartOf="@id/spinner_peso"
+        app:layout_constraintStart_toEndOf="@id/spinner_idade"
         app:layout_constraintTop_toTopOf="@id/idade_pet_register">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -90,17 +104,30 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Spinner
+        android:id="@+id/spinner_peso"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="2dp"
+        android:background="@drawable/spinner_background"
+        android:entries="@array/pesos"
+        app:layout_constraintBottom_toBottomOf="@id/peso_pet_register"
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintStart_toEndOf="@id/peso_pet_register"
+        app:layout_constraintTop_toTopOf="@id/peso_pet_register" />
+
+    <Spinner
         android:id="@+id/spinner_register"
+        style="@android:style/Widget.Holo.Light.Spinner"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:entries="@array/racas"
+        android:layout_marginEnd="4dp"
         android:background="@drawable/spinner_background"
-        style="@android:style/Widget.Holo.Light.Spinner"
+        android:entries="@array/racas"
         app:layout_constraintBottom_toBottomOf="@id/raca_pet_register"
         app:layout_constraintEnd_toStartOf="@id/raca_pet_register"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/idade_pet_register"/>
+        app:layout_constraintTop_toBottomOf="@id/idade_pet_register" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/raca_pet_register"
@@ -226,8 +253,8 @@
         android:layout_marginTop="148dp"
         android:background="@drawable/background_button_red"
         android:padding="16dp"
-        android:textAllCaps="false"
         android:text="@string/txt_alterar"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"

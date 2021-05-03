@@ -148,4 +148,16 @@
         <item>Pássaro</item>
         <item>Outro</item>
     </string-array>
+
+    <string-array name="pesos" >
+        <item>Kilos</item>
+        <item>Gramas</item>
+        <item>Miligramas</item>
+    </string-array>
+
+    <string-array name="tempo">
+        <item>Anos</item>
+        <item>Meses</item>
+        <item>Semanas</item>
+    </string-array>
 </resources>

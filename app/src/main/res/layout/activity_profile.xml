@@ -159,21 +159,9 @@
                             android:textColor="@color/colorBlack"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tv_age"
+                            app:layout_constraintEnd_toEndOf="@id/tv_animal_age"
                             app:layout_constraintStart_toStartOf="@id/tv_animal_age"
                             app:layout_constraintTop_toBottomOf="@id/tv_animal_age" />
-
-                        <TextView
-                            android:id="@+id/tv_age"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/txt_anos"
-                            android:textColor="@color/colorBlack"
-                            android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="@id/tv_animal_age"
-                            app:layout_constraintStart_toEndOf="@+id/tv_animal_age_write"
-                            app:layout_constraintTop_toTopOf="@+id/tv_animal_age_write" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
@@ -217,21 +205,9 @@
                             android:textColor="@color/colorBlack"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tv_kilos"
+                            app:layout_constraintEnd_toEndOf="@+id/tv_animal_weight"
                             app:layout_constraintStart_toStartOf="@+id/tv_animal_weight"
                             app:layout_constraintTop_toBottomOf="@id/tv_animal_weight" />
-
-                        <TextView
-                            android:id="@+id/tv_kilos"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/txt_kilos"
-                            android:textColor="@color/colorBlack"
-                            android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="@id/tv_animal_weight"
-                            app:layout_constraintStart_toEndOf="@+id/tv_animal_weight_write"
-                            app:layout_constraintTop_toTopOf="@+id/tv_animal_weight_write" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
