@@ -57,7 +57,7 @@
                     android:padding="2dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_animal_name"
-                    app:srcCompat="@drawable/ic_action_refresh" />
+                    app:srcCompat="@drawable/ic_action_pen" />
 
                 <TextView
                     android:id="@+id/tv_animal_name"

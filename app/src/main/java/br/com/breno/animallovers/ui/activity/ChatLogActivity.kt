@@ -19,6 +19,7 @@ import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.model.User
 import br.com.breno.animallovers.service.ChatService
 import br.com.breno.animallovers.service.NotificationService
+import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.ui.fragment.ChatFragment
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
@@ -206,7 +207,10 @@ class ChatLogActivity : AppCompatActivity() {
     private fun perfomeSendMessage() {
         val text = et_chat_log.text.toString()
 
-        if (text.isEmpty()) return
+        if (text.isEmpty()) {
+            mostraToast("Digite uma mensagem para essa conversa")
+            return
+        }
 
         val fromId = FirebaseAuth.getInstance().uid
         val user = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
