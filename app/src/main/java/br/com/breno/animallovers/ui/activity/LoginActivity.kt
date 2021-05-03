@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
+
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -73,15 +74,20 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
+                    val isNew: Boolean
+
+                    val metadata = auth.currentUser!!.metadata
+                    isNew = metadata!!.creationTimestamp == metadata.lastSignInTimestamp
+
                     val user = auth.currentUser
-                    updateUI(user)
+                    updateUI(user, isNew)
                 } else {
-                    updateUI(null)
+                    updateUI(null, false)
                 }
             }
     }
 
-    private fun updateUI(currentUser: FirebaseUser?) {
+    private fun updateUI(currentUser: FirebaseUser?, isFirstTimeLogging: Boolean) {
         if (currentUser != null) {
             if (currentUser.isEmailVerified) {
                 val myPreferences = ProjectPreferences(baseContext)
@@ -95,8 +101,15 @@ class LoginActivity : AppCompatActivity() {
                 login.authUid = auth.uid.toString()
 
                 donoService.persistOwnerLoginStatus(login)
-
-                startActivity(Intent(this, MainActivity::class.java))
+                var intent : Intent
+                if(isFirstTimeLogging) {
+                    intent = Intent(this, UserDataActivity::class.java)
+                    intent.putExtra("IS_FIRST_TIME_LOGGING", true)
+                }
+                else {
+                    intent = Intent(this, MainActivity::class.java)
+                }
+                startActivity(intent)
                 finish()
             } else {
                 buttonEnablingLogin()

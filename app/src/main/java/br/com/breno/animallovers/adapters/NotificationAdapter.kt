@@ -136,7 +136,6 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
                             KindOfNotification.COMMENTED_POST.nome -> {
                                 shouldOpenCommentsInIntent = true
                                 postInfo = notification.postNotification
-//                                postInfo = postService.getPostByUniqueIdOfCommentInPost(snapshot, notification.idActionNotification, notification.petRemetente)
                                 comentario = commentsService.getCommentByUniqueIdOfCommentInPost(snapshot, notification.idActionNotification, notification.petRemetente)
 
                                 if(comentario.textoComentario != "") {
@@ -146,7 +145,6 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
                             KindOfNotification.LIKED_POST.nome -> {
                                 shouldOpenCommentsInIntent = false
                                 postInfo = notification.postNotification
-//                                postInfo = postService.getPostByUniqueIdOfLikeInPost(snapshot, notification.idActionNotification, notification.petRemetente)
                             }
                         }
 
@@ -237,6 +235,7 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
 
                                         notifyItemRemoved(position)
                                         notifyItemRangeChanged(position, list.toMutableList().size)
+                                        notifyDataSetChanged()
                                         itemView.visibility = INVISIBLE
                                         return@setOnMenuItemClickListener true
                                     }
@@ -395,7 +394,7 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
                                 layoutFriendship.setBackgroundColor(itemView.context.getColor(R.color.backgroundNotificationItem))
                                 isNotificationUnread.setImageResource((R.drawable.ic_read_notiication))
                                 if (notification.tipo == KindOfNotification.FRIENDSHIP_REQUEST_RECEIVED.nome) {
-                                    acceptFriendshipRequest(notification.petRemetente, petLogged, solicitacaoAmizade, owner, snapshot)
+                                    acceptFriendshipRequest(notification.petRemetente, petLogged, solicitacaoAmizade, owner, snapshot, position, itemView)
                                     changeNotificationStatusAndActive(notification, status = true, active = false)
                                 }
                             }
@@ -406,7 +405,7 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
                                 layoutFriendship.setBackgroundColor(itemView.context.getColor(R.color.backgroundNotificationItem))
                                 isNotificationUnread.setImageResource((R.drawable.ic_read_notiication))
                                 if (notification.tipo == KindOfNotification.FRIENDSHIP_REQUEST_RECEIVED.nome) {
-                                    declineFriendshipRequest(pet, solicitacaoAmizade)
+                                    declineFriendshipRequest(pet, solicitacaoAmizade, position, itemView)
                                     changeNotificationStatusAndActive(notification, status = true, active = false)
                                 }
                             }
@@ -467,7 +466,7 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
 
     }
 
-    fun acceptFriendshipRequest(pet: Pet, petLogged : Pet, solicitacao: SolicitacaoAmizade, owner : Conta, snapshots : DataSnapshot) {
+    fun acceptFriendshipRequest(pet: Pet, petLogged : Pet, solicitacao: SolicitacaoAmizade, owner : Conta, snapshots : DataSnapshot, position: Int, itemView: View) {
             val dataInicioAmizade = DateUtils.dataFormatWithMilliseconds()
             solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.ACCEPTED.status
             //Persiste a solicitação aceita no usuário
@@ -485,15 +484,25 @@ class NotificationAdapter(context: Context, list: MutableList<Notification>) : R
             friendShipService.saveNewFriendShipSender(dataInicioAmizade, pet)
 
             notificationService.sendNotificationOfFriendshipAccepted(pet, petLogged, owner)
+
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, list.toMutableList().size)
+        notifyDataSetChanged()
+        itemView.visibility = INVISIBLE
     }
 
-    fun declineFriendshipRequest(pet: Pet, solicitacao: SolicitacaoAmizade) {
+    fun declineFriendshipRequest(pet: Pet, solicitacao: SolicitacaoAmizade, position: Int, itemView: View) {
         solicitacao.statusSolicitacao = StatusSolicitacaoAmizade.CANCELLED.status
         //Desfaz a solicitação no usuário
         friendShipService.undoFriendshipInSender(pet, solicitacao)
 
         //Desfaz a solicitação no perfil do pet que enviou
         friendShipService.undoFriendShipRequestInReceiver(pet, solicitacao)
+
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, list.toMutableList().size)
+        notifyDataSetChanged()
+        itemView.visibility = INVISIBLE
     }
 
     private fun changeNotificationStatus(notification: Notification, status : Boolean) {

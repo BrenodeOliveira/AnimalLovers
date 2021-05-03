@@ -110,6 +110,9 @@
     <string name="report_post">Denunciar Publicação</string>
     <string name="tv_instructions_report_post">Informe o motivo pelo qual você acha que essa publicação não deve ser aceita no AnimalLovers</string>
 
+    <string name="delete_post_title">Excluir publicação</string>
+    <string name="delete_post_message">Deseja realmente excluir sua publicação?</string>
+
     <string name="ver">Ver</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>

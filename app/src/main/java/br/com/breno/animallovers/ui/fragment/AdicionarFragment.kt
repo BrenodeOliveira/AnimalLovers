@@ -18,13 +18,16 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.graphics.BitmapCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.constants.KindOfPet
+import br.com.breno.animallovers.constants.NumberConstants
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.model.Post
+import br.com.breno.animallovers.service.FotoService
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.service.PostService
 import br.com.breno.animallovers.ui.fragment.extensions.mostraToast
@@ -33,6 +36,7 @@ import br.com.breno.animallovers.ui.fragment.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.DateUtils
 import br.com.breno.animallovers.utils.ProjectPreferences
+import com.google.android.gms.common.util.NumberUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -42,6 +46,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_publish.*
 import java.io.ByteArrayOutputStream
 
@@ -181,13 +186,11 @@ class AdicionarFragment : Fragment() {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                    accountInfo =
-                        dataSnapshot.getValue<Conta>()!!
+                    accountInfo = dataSnapshot.getValue<Conta>()!!
 
                     val myPreferences = ProjectPreferences(requireContext())
 
-                    idPet =
-                        myPreferences.getPetLogged().toString()
+                    idPet = myPreferences.getPetLogged().toString()
                     if (idPet != "") {
                         iv_photo_to_publish.isDrawingCacheEnabled = true
                         iv_photo_to_publish.buildDrawingCache()
@@ -198,11 +201,12 @@ class AdicionarFragment : Fragment() {
                             if (null != iv_photo_to_publish.drawable) {
                                 val bitmap = (iv_photo_to_publish.drawable as BitmapDrawable).bitmap
                                 val baos = ByteArrayOutputStream()
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                                var bitmapByteCount = BitmapCompat.getAllocationByteCount(bitmap)
+
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, FotoService.tratarQualidadeFoto(bitmapByteCount), baos)
                                 val dataPicture = baos.toByteArray()
 
-                                postService.persistNewPetPost(
-                                    idPet, dataPicture, post )
+                                postService.persistNewPetPost(idPet, dataPicture, post )
                             } else {
                                 //Como não há foto/vídeo, a data/hora da pub será definida aqui, se houvesse seria a data/hora de upload
                                 post.dataHora =
@@ -219,10 +223,10 @@ class AdicionarFragment : Fragment() {
                     }
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-                    mostraToastyError("Erro ao carregar informações do perfil")
-                }
-            })
+                    override fun onCancelled(error: DatabaseError) {
+                        mostraToastyError("Erro ao carregar informações do perfil")
+                    }
+                })
         }
     }
 

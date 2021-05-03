@@ -191,6 +191,10 @@ class FeedFragment : Fragment() {
 
                                 var newListPost = listPosts
 
+                                if(listPosts.isNullOrEmpty()) {
+                                    return
+                                }
+
                                 for (i in 0..listPosts.size step 4) {
                                     var adPost = Post()
 

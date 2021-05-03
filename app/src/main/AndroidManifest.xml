@@ -24,7 +24,7 @@
         <service android:name=".broadcast.ManageDisconnectionFromApp" android:stopWithTask="false" />
         <receiver android:name=".broadcast.BroadcastReceiverNotificationFriendship"/>
         <receiver android:name=".broadcast.BroadcastReceiverNotificationChat"/>
-        <activity android:name=".ui.activity.SinglePostActivity"></activity>
+        <activity android:name=".ui.activity.SinglePostActivity" android:theme="@style/Theme.AppCompat.Light" />
         <activity android:name=".ui.activity.ProfilePetActivity" />
         <activity android:name=".service.PetFriendsService" />
         <activity android:name=".ui.activity.AlterarDadosPetActivity" />

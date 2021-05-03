@@ -52,8 +52,8 @@ class LatestMessageRow(val chatMessage: ChatMessage) : Item<ViewHolder>() {
                 @RequiresApi(Build.VERSION_CODES.O)
                 @SuppressLint("UseCompatLoadingForDrawables")
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.hasChild(chatMessage.fromId)) {
-                        val ownerLogin = snapshot.child(chatMessage.fromId).getValue<Login>()!!
+                    if (snapshot.hasChild(chatPartnerId)) {
+                        val ownerLogin = snapshot.child(chatPartnerId).getValue<Login>()!!
 
                         if (ownerLogin.logged) {
                             viewHolder.itemView.tv_status_pet_chat_list.background =

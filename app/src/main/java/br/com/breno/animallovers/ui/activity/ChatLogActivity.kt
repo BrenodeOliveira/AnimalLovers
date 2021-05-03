@@ -145,7 +145,13 @@ class ChatLogActivity : AppCompatActivity() {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
 
                 var rawDateTimeMessage = Instant.ofEpochSecond(chatMessage!!.timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime()
-                val currentMessageDate = DateUtils.formatDateToLocalFormat(rawDateTimeMessage.toString())
+                val currentMessageDate : String
+
+                currentMessageDate = if(rawDateTimeMessage.second == 0) {
+                    DateUtils.formatDateToLocalFormatWithoutSecond(rawDateTimeMessage.toString())
+                } else {
+                    DateUtils.formatDateToLocalFormat(rawDateTimeMessage.toString())
+                }
                 if(timeStampMessages == "" || timeStampMessages != currentMessageDate) {
                     timeStampMessages = currentMessageDate
 
@@ -155,11 +161,17 @@ class ChatLogActivity : AppCompatActivity() {
                 if (chatMessage != null) {
                     Log.d(TAG, chatMessage.text)
 
+                    val currentMessageTime : String = if(rawDateTimeMessage.second == 0) {
+                        DateUtils.formatTimeToLocalFormatWithoutSecond(rawDateTimeMessage.toString())
+                    } else {
+                        DateUtils.formatTimeToLocalFormat(rawDateTimeMessage.toString())
+                    }
+
                     if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
                         val currentUser = ChatFragment.currentUser ?: return
-                        adapter.add(ChatFromItem(chatMessage.text, rawDateTimeMessage.toString(), currentUser))
+                        adapter.add(ChatFromItem(chatMessage.text, currentMessageTime, currentUser))
                     } else {
-                        adapter.add(ChatToItem(chatMessage.text, rawDateTimeMessage.toString(), toUser!!))
+                        adapter.add(ChatToItem(chatMessage.text, currentMessageTime, toUser!!))
                     }
                     //Atualiza as últimas mensagens como lidas
                     chatMessage.isRead = true

@@ -51,7 +51,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class CommentsPostAdapter(
-    private val comments: List<Comentario>,
+    private val comments: MutableList<Comentario>,
     private val context: Context,
     private val post: Post
 ) : RecyclerView.Adapter<CommentsPostAdapter.ViewHolder>() {
@@ -134,7 +134,7 @@ class CommentsPostAdapter(
 
                         numLikesCommentClick(holder, comentario, snapshot, ownersPets)
 
-                        openMenusComment(holder, comentario)
+                        openMenusComment(holder, comentario, position)
 
                     }
 
@@ -145,7 +145,7 @@ class CommentsPostAdapter(
                 })
     }
 
-    private fun openMenusComment(holder : ViewHolder, comentario : Comentario) {
+    private fun openMenusComment(holder : ViewHolder, comentario : Comentario, position : Int) {
         holder.optionsOpenIcon.setOnClickListener {
             if (comentario.idOwner == auth.uid && comentario.idPet == myPreferences.getPetLogged()) {
                 val popupMenu = PopupMenu(context, holder.itemView, Gravity.LEFT)
@@ -191,6 +191,12 @@ class CommentsPostAdapter(
                                     comentario.comentarioAtivo = false
 
                                     commentService.updateOrDeleteComment(post, comentario)
+
+                                    comments.removeAt(position)
+
+                                    notifyItemRemoved(position)
+                                    notifyItemRangeChanged(position, comments.toMutableList().size)
+                                    notifyDataSetChanged()
                                 }
                                 .setNegativeButton(R.string.no, null)
                                 .setIcon(android.R.drawable.ic_dialog_alert)

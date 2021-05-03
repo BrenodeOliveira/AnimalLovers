@@ -14,12 +14,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BitmapCompat
 import br.com.breno.animallovers.R
+import br.com.breno.animallovers.constants.NumberConstants
 import br.com.breno.animallovers.model.Pet
+import br.com.breno.animallovers.service.FotoService
 import br.com.breno.animallovers.service.PetService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.ui.activity.extensions.mostraToastySuccess
 import br.com.breno.animallovers.utils.AnimalLoversConstants
+import br.com.breno.animallovers.utils.ProjectPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -28,7 +32,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_pet_register.*
-import kotlinx.android.synthetic.main.fragment_publish.*
 import java.io.ByteArrayOutputStream
 
 
@@ -67,7 +70,6 @@ class PetRegisterActivity : AppCompatActivity() {
             if (nome_pet_register.editText?.text.toString().isNotEmpty() and
                 idade_pet_register.editText?.text.toString().isNotEmpty() and
                 peso_pet_register.editText?.text.toString().isNotEmpty() and
-//                tipo_pet_register.editText?.text.toString().isNotEmpty() and
                 raca_pet_register.editText?.text.toString().isNotEmpty() and
                 resumo_pet_register.editText?.text.toString().isNotEmpty()) {
 
@@ -92,7 +94,7 @@ class PetRegisterActivity : AppCompatActivity() {
                                 pet.nome = nome_pet_register.editText?.text.toString()
                                 pet.peso = peso_pet_register.editText?.text.toString()
                                 pet.raca = raca_pet_register.editText?.text.toString()
-//                                pet.tipo = tipo_pet_register.editText?.text.toString()
+                                pet.tipo = spinner_register.selectedItem.toString()
                                 pet.sexo = checkedBox
                                 pet.id = AnimalLoversConstants.DATABASE_NODE_PET.nome + idPet.toString()
                                 pet.idOwner = auth.uid.toString()
@@ -100,7 +102,9 @@ class PetRegisterActivity : AppCompatActivity() {
                                 if (null != iv_photo_to_profile.drawable) {
                                     val bitmap = (iv_photo_to_profile.drawable as BitmapDrawable).bitmap
                                     val baos = ByteArrayOutputStream()
-                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                                    var bitmapByteCount = BitmapCompat.getAllocationByteCount(bitmap)
+
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, FotoService.tratarQualidadeFoto(bitmapByteCount), baos)
                                     val dataPicture = baos.toByteArray()
 
                                     petService.uploadProfilePhotoPet(idPet, dataPicture, pet)
@@ -108,6 +112,12 @@ class PetRegisterActivity : AppCompatActivity() {
                                     petService.registerNewPet(idPet, pet)
                                 }
                                 mostraToastySuccess("Novo pet registrado com sucesso")
+
+                                //É o primeiro pet cadastrado do dono, já fica logado com ele
+                                if(idPet == 1) {
+                                    val myPreferences = ProjectPreferences(this@PetRegisterActivity)
+                                    myPreferences.setPetLogged(pet.id)
+                                }
                                 finish()
                             }
 
