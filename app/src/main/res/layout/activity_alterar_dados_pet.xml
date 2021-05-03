@@ -96,7 +96,7 @@
         android:layout_marginTop="8dp"
         android:focusable="true"
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        app:layout_constraintEnd_toStartOf="@id/peso_change_pet"
+        app:layout_constraintEnd_toStartOf="@id/spinner_idade_alter"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
         app:layout_constraintTop_toBottomOf="@id/nome_change_pet">
 
@@ -108,6 +108,19 @@
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <Spinner
+        android:id="@+id/spinner_idade_alter"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="2dp"
+        android:background="@drawable/spinner_background"
+        android:entries="@array/tempo"
+        app:layout_constraintEnd_toStartOf="@id/peso_change_pet"
+        app:layout_constraintBottom_toBottomOf="@id/idade_change_pet"
+        app:layout_constraintStart_toEndOf="@id/idade_change_pet"
+        app:layout_constraintTop_toTopOf="@id/idade_change_pet" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/peso_change_pet"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -115,8 +128,8 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        app:layout_constraintEnd_toStartOf="@id/guideline_end"
-        app:layout_constraintStart_toEndOf="@id/idade_change_pet"
+        app:layout_constraintEnd_toStartOf="@id/spinner_peso_alter"
+        app:layout_constraintStart_toEndOf="@id/spinner_idade_alter"
         app:layout_constraintTop_toTopOf="@id/idade_change_pet">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -126,6 +139,18 @@
             android:inputType="number"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinner_peso_alter"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="2dp"
+        android:background="@drawable/spinner_background"
+        android:entries="@array/pesos"
+        app:layout_constraintBottom_toBottomOf="@id/peso_change_pet"
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintStart_toEndOf="@id/peso_change_pet"
+        app:layout_constraintTop_toTopOf="@id/peso_change_pet" />
 
     <Spinner
         android:id="@+id/spinner_alter"

@@ -117,8 +117,10 @@ class AlterarDadosPetActivity : AppCompatActivity() {
                 resumo_change_pet.editText?.text.toString().isNotEmpty()
             ) {
                 pet.nome = nome_change_pet.editText?.text.toString()
-                pet.idade = idade_change_pet.editText?.text.toString()
-                pet.peso = peso_change_pet.editText?.text.toString()
+                pet.idade = idade_change_pet.editText?.text.toString() +
+                        spinner_idade_alter.selectedItem.toString()
+                pet.peso = peso_change_pet.editText?.text.toString() +
+                        spinner_peso_alter.selectedItem.toString()
                 pet.raca = raca_change_pet.editText?.text.toString()
                 pet.resumo = resumo_change_pet.editText?.text.toString()
 
