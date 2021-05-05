@@ -217,7 +217,9 @@ class FeedFragment : Fragment() {
                                 if (sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).hasChild(x.toString())) {
                                     val post: Post = sShot.child(auth.uid.toString()).child(myPreferences.getPetLogged().toString()).child(AnimalLoversConstants.CONST_ROOT_POSTS.nome).child(x.toString()).getValue<Post>()!!
 
-                                    listPosts.add(post)
+                                    if(post.postAtivo) {
+                                        listPosts.add(post)
+                                    }
 
                                     recycler_feed.layoutManager = LinearLayoutManager(requireContext())
                                     recycler_feed.adapter = FeedAdapter(listPosts, requireContext(), false)

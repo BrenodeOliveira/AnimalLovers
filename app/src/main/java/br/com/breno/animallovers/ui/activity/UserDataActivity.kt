@@ -76,7 +76,11 @@ class UserDataActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if(dataSnapshot.hasChild(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)) {
                     accountInfo = dataSnapshot.child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
-                    tv_nome_dono.setText(accountInfo.usuario)
+
+                    if(accountInfo.usuario != accountInfo.email) {
+                        tv_nome_dono.setText(accountInfo.usuario)
+                    }
+
                     tv_cidade_dono.setText(accountInfo.cidade)
                     tv_pais_dono.setText(accountInfo.pais)
 
@@ -125,7 +129,7 @@ class UserDataActivity : AppCompatActivity() {
                         }
                     })
                 if(isFirstTimeLogging) {
-                    startActivity(Intent(this, ProfileActivity::class.java))
+                    startActivity(Intent(this, PetRegisterActivity::class.java))
                 }
                 finish()
             } else {

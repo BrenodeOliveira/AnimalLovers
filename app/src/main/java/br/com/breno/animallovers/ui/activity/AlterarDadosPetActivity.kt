@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.BitmapCompat
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.constants.KindOfPet
-import br.com.breno.animallovers.constants.NumberConstants
 import br.com.breno.animallovers.model.Pet
 import br.com.breno.animallovers.service.FotoService
 import br.com.breno.animallovers.service.PetService
@@ -67,6 +66,16 @@ class AlterarDadosPetActivity : AppCompatActivity() {
         peso_change_pet.editText!!.setText(petInfo.peso)
         raca_change_pet.editText!!.setText(petInfo.raca)
         resumo_change_pet.editText!!.setText(petInfo.resumo)
+        for (i in 0 until spinner_idade_alter.adapter.count) {
+            if (spinner_idade_alter.adapter.getItem(i).toString().contains(petInfo.unidadeMedidaIdade)) {
+                spinner_idade_alter.setSelection(i)
+            }
+        }
+        for (i in 0 until spinner_peso_alter.adapter.count) {
+            if (spinner_peso_alter.adapter.getItem(i).toString().contains(petInfo.unidadeMedidaPeso)) {
+                spinner_peso_alter.setSelection(i)
+            }
+        }
 
         if (petInfo.sexo == AnimalLoversConstants.FEMALE.nome) {
             radio_sexo_animal_change_pet.check(R.id.femea_change_pet)
@@ -117,10 +126,10 @@ class AlterarDadosPetActivity : AppCompatActivity() {
                 resumo_change_pet.editText?.text.toString().isNotEmpty()
             ) {
                 pet.nome = nome_change_pet.editText?.text.toString()
-                pet.idade = idade_change_pet.editText?.text.toString() +
-                        spinner_idade_alter.selectedItem.toString()
-                pet.peso = peso_change_pet.editText?.text.toString() +
-                        spinner_peso_alter.selectedItem.toString()
+                pet.idade = idade_change_pet.editText?.text.toString()
+                pet.unidadeMedidaIdade = spinner_idade_alter.selectedItem.toString()
+                pet.peso = peso_change_pet.editText?.text.toString()
+                pet.unidadeMedidaPeso = spinner_peso_alter.selectedItem.toString()
                 pet.raca = raca_change_pet.editText?.text.toString()
                 pet.resumo = resumo_change_pet.editText?.text.toString()
 

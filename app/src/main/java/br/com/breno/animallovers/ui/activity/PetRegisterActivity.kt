@@ -79,12 +79,6 @@ class PetRegisterActivity : AppCompatActivity() {
                             ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                                val idadeAnimal = idade_pet_register.editText?.text.toString() +
-                                        spinner_idade.selectedItem.toString()
-
-                                val pesoAnimal = peso_pet_register.editText?.text.toString() +
-                                        spinner_peso.selectedItem.toString()
-
                                 idPet = petService.idLastPet(dataSnapshot) + 1 //Incrementa os ids dos pets
                                 val checkedRadio: Int = radio_sexo_animal.checkedRadioButtonId
                                 val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
@@ -96,9 +90,11 @@ class PetRegisterActivity : AppCompatActivity() {
                                 }
 
                                 pet.resumo = resumo_pet_register.editText?.text.toString()
-                                pet.idade = idadeAnimal
+                                pet.idade = idade_pet_register.editText?.text.toString()
+                                pet.unidadeMedidaIdade = spinner_idade.selectedItem.toString()
                                 pet.nome = nome_pet_register.editText?.text.toString()
-                                pet.peso = pesoAnimal
+                                pet.peso = peso_pet_register.editText?.text.toString()
+                                pet.unidadeMedidaPeso = spinner_peso.selectedItem.toString()
                                 pet.raca = raca_pet_register.editText?.text.toString()
                                 pet.tipo = spinner_register.selectedItem.toString()
                                 pet.sexo = checkedBox
