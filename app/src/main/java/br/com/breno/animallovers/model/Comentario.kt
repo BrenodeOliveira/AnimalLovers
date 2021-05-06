@@ -8,4 +8,7 @@ class Comentario {
     var idPet : String = ""
     var comentarioAtivo = true
     var uniqueIdComment = ""
+    override fun toString(): String {
+        return "Comentario(dataHora='$dataHora', textoComentario='$textoComentario', idComentario='$idComentario', idOwner='$idOwner', idPet='$idPet', comentarioAtivo=$comentarioAtivo, uniqueIdComment='$uniqueIdComment')"
+    }
 }

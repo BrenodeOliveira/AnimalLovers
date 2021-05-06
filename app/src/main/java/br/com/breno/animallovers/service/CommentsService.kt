@@ -1,6 +1,7 @@
 package br.com.breno.animallovers.service
 
 import android.content.Context
+import android.util.Log
 import br.com.breno.animallovers.model.*
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import br.com.breno.animallovers.utils.ProjectPreferences
@@ -34,15 +35,19 @@ class CommentsService(context : Context) {
                 var numOfComments = dataSnapshot.child(i.toString()).child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome).childrenCount
 
                 for(j in 1 until numOfComments + 1) {
-                    var commentPost = dataSnapshot.child(i.toString())
+                    var nodeComment = dataSnapshot.child(i.toString())
                         .child(AnimalLoversConstants.DATABASE_NODE_POST_COMMENT.nome)
                         .child(j.toString())
                         .child(AnimalLoversConstants.DATABASE_NODE_COMMENT.nome)
-                        .child(petRemetente.idOwner)
-                        .child(petRemetente.id)
-                        .getValue<Comentario>()
-                    if(commentPost!!.uniqueIdComment == uniquePostId && commentPost.comentarioAtivo) {
-                        return commentPost
+                    if(nodeComment.hasChild(petRemetente.idOwner)) {
+                        var commentPost = nodeComment.child(petRemetente.idOwner).child(petRemetente.id).getValue<Comentario>()
+                        if(commentPost == null) {
+                            Log.i("CommentsService:getCommentByUniqueIdOfCommentInPost", "commentPost veio nulo")
+                        }
+                        Log.i("CommentsService:getCommentByUniqueIdOfCommentInPost", "Comentario: $commentPost \n id action: $uniquePostId")
+                        if(commentPost!!.uniqueIdComment == uniquePostId && commentPost.comentarioAtivo) {
+                            return commentPost
+                        }
                     }
                 }
             }

@@ -100,7 +100,7 @@ class UserDataActivity : AppCompatActivity() {
                     object :
                         ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
-
+                            accountInfo = dataSnapshot.child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
                             accountInfo.usuario = tv_nome_dono.text.toString()
                             accountInfo.cidade = tv_cidade_dono.text.toString()
                             accountInfo.pais = tv_pais_dono.text.toString()
