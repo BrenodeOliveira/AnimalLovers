@@ -4,37 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
     android:layout_margin="5dp"
-    android:maxHeight="250dp">
+    android:maxHeight="350dp">
 
-    <LinearLayout
-        android:layout_width="182dp"
-        android:layout_height="193dp"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
         <TextView
             android:id="@+id/note_item_title"
             android:layout_width="183dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_icon_foto_perfil"
+            app:layout_constraintEnd_toEndOf="@id/iv_icon_foto_perfil"
+            app:layout_constraintStart_toStartOf="@id/iv_icon_foto_perfil"
             android:textSize="30sp"
             tools:text="Titulo" />
 
-        <TextView
-            android:id="@+id/note_item_description"
-            android:layout_width="184dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            tools:text="Descrição" />
-
         <ImageView
             android:id="@+id/iv_icon_foto_perfil"
-            android:layout_width="184dp"
-            android:layout_height="96dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_margin="8dp"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/animalovers_logo" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

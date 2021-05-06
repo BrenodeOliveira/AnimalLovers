@@ -389,7 +389,6 @@ class CommentsPostAdapter(
         val likeComment = itemView.iv_action_fav_comment_modal_comment
         var photo = itemView.iv_icon_foto_perfil_pet_modal_comment
         var optionsOpenIcon = itemView.iv_icon_options_modal_comment
-        var layoutItem = itemView.lin_layout_comment_item
         val abc = itemView.recycler_pets_likes_post
 
         fun bindView(comment: Comentario) {

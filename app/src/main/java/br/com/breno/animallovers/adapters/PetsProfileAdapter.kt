@@ -34,7 +34,7 @@ class PetsProfileAdapter(
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        if(pet.isEmpty()) {
+        if (pet.isEmpty()) {
             println("Não há pets")
         }
         if (pets.pathFotoPerfil != "") {
@@ -48,17 +48,14 @@ class PetsProfileAdapter(
                 val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
                 holder.let {
                     it.title.text = pets.nome
-                    it.description.text = pets.resumo
                     it.photo.setImageBitmap(bmp)
                 }
             }.addOnFailureListener {
 
             }
-        }
-        else {
+        } else {
             holder.let {
                 it.title.text = pets.nome
-                it.description.text = pets.resumo
 
                 when (pets.tipo) {
                     KindOfPet.DOG.tipo -> {
@@ -86,12 +83,6 @@ class PetsProfileAdapter(
 
                 mbs.dismiss()
             }
-            it.description.setOnClickListener {
-                val myPreferences = ProjectPreferences(context)
-                myPreferences.setPetLogged(pets.id)
-                context.startActivity(Intent(context, MainActivity::class.java))
-                mbs.dismiss()
-            }
             it.title.setOnClickListener {
                 val myPreferences = ProjectPreferences(context)
                 myPreferences.setPetLogged(pets.id)
@@ -112,15 +103,12 @@ class PetsProfileAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title = itemView.note_item_title
-        val description = itemView.note_item_description
         var photo = itemView.iv_icon_foto_perfil
 
         fun bindView(pet: Pet) {
             val title = itemView.note_item_title
-            val description = itemView.note_item_description
 
             title.text = pet.nome
-            description.text = pet.resumo
         }
     }
 
