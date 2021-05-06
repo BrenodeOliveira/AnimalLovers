@@ -47,28 +47,24 @@
         android:id="@+id/txt_possui_conta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="114dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:text="@string/txt_have_account"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/btn_inscrever"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/btn_inscrever"
         app:layout_constraintTop_toBottomOf="@id/btn_inscrever" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:background="@drawable/background_button_transparent_login"
         android:text="@string/txt_login_button"
         android:textAllCaps="false"
         android:textColor="@color/color_login_button_transparent"
-        app:layout_constraintBottom_toBottomOf="@id/txt_possui_conta"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@id/txt_possui_conta"
-        app:layout_constraintTop_toBottomOf="@id/btn_inscrever" />
+        app:layout_constraintEnd_toEndOf="@+id/txt_possui_conta"
+        app:layout_constraintStart_toStartOf="@+id/txt_possui_conta"
+        app:layout_constraintTop_toBottomOf="@+id/txt_possui_conta" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
