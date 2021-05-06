@@ -24,6 +24,7 @@ import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.service.DonoService
 import br.com.breno.animallovers.ui.activity.extensions.mostraToast
 import br.com.breno.animallovers.utils.AnimalLoversConstants
+import br.com.breno.animallovers.utils.ProjectPreferences
 import br.com.breno.animallovers.viewModel.EstadoAppViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -192,6 +193,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
 
+        if(auth.uid.isNullOrEmpty()) {
+            val myPreferences = ProjectPreferences(applicationContext)
+            myPreferences.setPetLogged("")
+            Log.w("MainActivity(retrieveUserInfo", "Não foi identificado o usuário logado, redirecionando ao login")
+            startActivity(Intent(applicationContext, LoginActivity::class.java))
+            finish()
+            return
+        }
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object :
             ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

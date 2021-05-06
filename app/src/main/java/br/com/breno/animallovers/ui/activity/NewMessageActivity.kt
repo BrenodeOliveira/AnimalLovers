@@ -127,12 +127,15 @@ class UserItem(val user: User) : Item<ViewHolder>() {
                         val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
                         viewHolder.itemView.iv_profile_user_picture_row.setImageBitmap(bmp)
                     }.addOnFailureListener {
-
+                        Log.e("NewMessageActivity", "erro ao buscar foto $it")
                     }
                 }
             }
 
-            override fun onCancelled(error: DatabaseError) {}
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("NewMessageActivity", "erro ${error.toException()}")
+
+            }
 
         })
 

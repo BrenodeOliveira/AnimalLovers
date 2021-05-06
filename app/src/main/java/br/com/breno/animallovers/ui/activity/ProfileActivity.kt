@@ -1,8 +1,10 @@
 package br.com.breno.animallovers.ui.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.constants.KindOfPet
@@ -77,14 +79,22 @@ class ProfileActivity : AppCompatActivity() {
 
         val petService = PetService(applicationContext)
 
+        if(auth.uid.isNullOrEmpty()) {
+            Log.w("ProfileActivity", "Não tem dono logado, direcionando ao login")
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            startActivity(intent)
+            finishMe()
+        }
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+            @SuppressLint("SetTextI18n")
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 accountInfo = dataSnapshot.child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome).getValue<Conta>()!!
 
                 val myPreferences = ProjectPreferences(baseContext)
 
                 idPet = myPreferences.getPetLogged().toString()
-                if (idPet != "") {
+                if (idPet.isNotEmpty()) {
+                    Log.i("ProfilePetActivity", "Buscando os dados do pet. Id do pet:$idPet")
                     petInfo = petService.retrievePetInfo(idPet, dataSnapshot)
 
                     if (petInfo.pathFotoPerfil != "") {
@@ -113,8 +123,8 @@ class ProfileActivity : AppCompatActivity() {
 
                 tv_animal_name.text = petInfo.nome
                 tv_animal_sex_write.text = petInfo.sexo
-                tv_animal_age_write.text = petInfo.idade
-                tv_animal_weight_write.text = petInfo.peso
+                tv_animal_age_write.text = "${petInfo.idade} ${petInfo.unidadeMedidaIdade}"
+                tv_animal_weight_write.text = "${petInfo.peso} ${petInfo.unidadeMedidaPeso}"
                 tv_summary_text.text = petInfo.resumo
                 tv_name_contact_person.text = accountInfo.usuario
                 tv_email_contact_person.text = accountInfo.email
