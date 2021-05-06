@@ -240,7 +240,7 @@ class ChatLogActivity : AppCompatActivity() {
 
         reference.setValue(chatMessage)
             .addOnSuccessListener {
-                Log.d(TAG, "Saved our chat message: ${reference.key}")
+                Log.i(TAG, "Saved our chat message: ${reference.key}")
                 et_chat_log.text.clear()
                 recycler_chat_log.scrollToPosition(adapter.itemCount - 1)
             }

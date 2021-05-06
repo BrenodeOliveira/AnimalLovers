@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
 import br.com.breno.animallovers.constants.KindOfPet
@@ -78,6 +79,12 @@ class ProfileActivity : AppCompatActivity() {
 
         val petService = PetService(applicationContext)
 
+        if(auth.uid.isNullOrEmpty()) {
+            Log.w("ProfileActivity", "Não tem dono logado, direcionando ao login")
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            startActivity(intent)
+            finishMe()
+        }
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome).child(auth.uid.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("SetTextI18n")
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -86,7 +93,8 @@ class ProfileActivity : AppCompatActivity() {
                 val myPreferences = ProjectPreferences(baseContext)
 
                 idPet = myPreferences.getPetLogged().toString()
-                if (idPet != "") {
+                if (idPet.isNotEmpty()) {
+                    Log.i("ProfilePetActivity", "Buscando os dados do pet. Id do pet:$idPet")
                     petInfo = petService.retrievePetInfo(idPet, dataSnapshot)
 
                     if (petInfo.pathFotoPerfil != "") {

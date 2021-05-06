@@ -1,5 +1,6 @@
 package br.com.breno.animallovers.service
 
+import android.util.Log
 import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.model.Post
@@ -20,6 +21,10 @@ class DonoService {
     private var storage: FirebaseStorage = FirebaseStorage.getInstance()
 
     fun persistOwner(conta : Conta) {
+        if(auth.uid.isNullOrEmpty()) {
+            Log.e("DonoService:(persistOwner", "Tentativa de salvar/alterar dono com uid não identificado, cancelando persistência. Id conta: ${conta.id}, usuário: ${conta.usuario}, email: ${conta.email}")
+            return
+        }
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTA.nome)
             .child(auth.uid.toString())
             .child(AnimalLoversConstants.DATABASE_NODE_OWNER.nome)
@@ -78,5 +83,6 @@ class DonoService {
         database.child(AnimalLoversConstants.DATABASE_ENTITY_CONTROL_LOGIN.nome)
             .child(login.authUid)
             .setValue(login)
+        Log.i("DonoService(persistOwnerLoginStatus)", "Usuário logado=${login.logged} ${login.authUid}")
     }
 }

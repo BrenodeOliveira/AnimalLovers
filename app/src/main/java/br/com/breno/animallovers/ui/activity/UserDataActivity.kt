@@ -59,12 +59,6 @@ class UserDataActivity : AppCompatActivity() {
 
         retriveOwnerInfo()
         persistOwner(isFirstTimeLogging)
-
-        /**
-         * Fazer com que o usuário se cadastre para que tenha nome, foto e local de onde
-         * está usando o app
-         */
-
     }
 
     private fun retriveOwnerInfo() {

@@ -2,6 +2,7 @@ package br.com.breno.animallovers.service
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.model.Pet
@@ -44,6 +45,7 @@ class PetService(context : Context) : AppCompatActivity() {
 
     fun retrievePetInfo (id: String, dataSnapshot: DataSnapshot): Pet {
         pet = dataSnapshot.child(id).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
+        Log.i("PetService(retrievePetInfo): Busca de pet", "Foi buscado o seguinte pet: ${pet.id} nome: ${pet.nome}")
         return pet
     }
 
@@ -58,6 +60,8 @@ class PetService(context : Context) : AppCompatActivity() {
                     .child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome)
                     .getValue<Pet>()!!
 
+                Log.i("PetService(retrievePets): Busca de pets", "Foi buscado o seguinte pet: ${pet.id} nome: ${pet.nome}")
+
                 petsArray.add(pet)
             }
         }
@@ -66,6 +70,7 @@ class PetService(context : Context) : AppCompatActivity() {
 
     fun retrievePetInfoFromUnknownOwner (idOwner : String, idPet: String, dataSnapshot: DataSnapshot): Pet {
         pet = dataSnapshot.child(idOwner).child(idPet).child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome).getValue<Pet>()!!
+        Log.i("PetService(retrievePetInfo): Busca de pet", "Foi buscado o seguinte pet: ${pet.id} nome: ${pet.nome}, id do dono: $idOwner")
         return pet
     }
 
@@ -78,6 +83,7 @@ class PetService(context : Context) : AppCompatActivity() {
             .child(AnimalLoversConstants.DATABASE_NODE_PET.nome + id)
             .child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome)
             .setValue(pet)
+        Log.i("PetService(registerNewPet)", "Foi registrado um novo pet para o dono: ${auth.uid.toString()}. Id do pet: $id")
     }
 
     fun updatePetInfo(pet: Pet) {
@@ -89,6 +95,8 @@ class PetService(context : Context) : AppCompatActivity() {
             .child(pet.id)
             .child(AnimalLoversConstants.DATABASE_NODE_PET_ATTR.nome)
             .setValue(pet)
+        Log.i("PetService(updatePetInfo)", "Foi atualizado um pet para o dono: ${auth.uid.toString()}. Id do pet: ${pet.id}")
+
     }
 
     fun uploadProfilePhotoPet(id : Int, dataPicture : ByteArray, pet : Pet) {
@@ -110,7 +118,7 @@ class PetService(context : Context) : AppCompatActivity() {
             println(uploadTask.exception.toString())
         }.addOnSuccessListener {
             pet.pathFotoPerfil = storageRef.toString()
-
+            Log.i("PetService(uploadProfilePhotoPet)", "Foi realizado o upload da foto de perfil do pet ${pet.id} do dono ${pet.idOwner}")
             registerNewPet(id, pet)
         }
     }
@@ -134,6 +142,7 @@ class PetService(context : Context) : AppCompatActivity() {
             println(uploadTask.exception.toString())
         }.addOnSuccessListener {
             pet.pathFotoPerfil = storageRef.toString()
+            Log.i("PetService(uploadOrUpdateProfilePhotoPet)", "Foi realizado o upload da foto de perfil do pet ${pet.id} do dono ${pet.idOwner}")
 
             updatePetInfo(pet)
         }
@@ -153,6 +162,7 @@ class PetService(context : Context) : AppCompatActivity() {
                     }
                 }
         }
+        Log.i("PetService(numberOfFriendsPet)", "Foi buscado o total de amigos do pet ${petInfo.id} do dono ${petInfo.idOwner}. Total de amigos é $numFriends")
         return numFriends
     }
 
@@ -182,8 +192,9 @@ class PetService(context : Context) : AppCompatActivity() {
 
             }
         }
+        Log.i("PetService(getFriendsOfPet)", "Foram buscadostodos os amigos do pet ${petProfile.id} do dono ${petProfile.idOwner}. Total de amigos é ${listPetsFriends.size}")
 
-            return listPetsFriends
+        return listPetsFriends
     }
 
     fun statusFriendShip (pet: Pet, snapshot: DataSnapshot, context: Context) : SolicitacaoAmizade? {
