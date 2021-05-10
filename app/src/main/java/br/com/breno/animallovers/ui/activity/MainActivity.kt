@@ -116,12 +116,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.get_out -> {
 
                 var login = Login()
+                var id = auth.uid.toString()
+
+                if(id.isNullOrEmpty()) {
+                    Log.w("MainActivity", "O uid é nulo, não vai mexer no banco")
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                    return true
+                }
                 login.logged = false
                 login.lastLogin = System.currentTimeMillis() / 1000
-                login.authUid = auth.uid.toString()
+                login.authUid = id
 
                 donoService.persistOwnerLoginStatus(login)
 
+                accountInfo.id = id
                 donoService.unsaveOwnerDeviceToken(accountInfo)//Ao fazer logout, remove o token salvo para não receber mais notificações
                 FirebaseAuth.getInstance().signOut()
                 finish()

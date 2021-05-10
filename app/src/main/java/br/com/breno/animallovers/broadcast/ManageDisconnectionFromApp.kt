@@ -37,7 +37,9 @@ class ManageDisconnectionFromApp : Service() {
             loginModel.logged = false
             loginModel.lastLogin = System.currentTimeMillis() / 1000
 
-            donoService.persistOwnerLoginStatus(loginModel)
+            if(!loginModel.authUid.isNullOrEmpty()) {
+                donoService.persistOwnerLoginStatus(loginModel)
+            }
         }
 
         super.onDestroy()

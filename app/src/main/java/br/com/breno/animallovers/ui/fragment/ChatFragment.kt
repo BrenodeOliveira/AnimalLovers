@@ -2,6 +2,7 @@ package br.com.breno.animallovers.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,6 +70,10 @@ class ChatFragment:Fragment() {
         val fromId = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
 
+        if(fromId.isNullOrEmpty()) {
+            Log.w("ChatFragment", "O id do usuário logado é nulo, retornando sem buscar a última mensagem")
+            return
+        }
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
