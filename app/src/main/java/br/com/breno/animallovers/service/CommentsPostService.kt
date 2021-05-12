@@ -92,12 +92,12 @@ class CommentsPostService(private val post: Post, private val listComentario: Ar
                     tvComment.addTextChangedListener(object : TextWatcher {
                         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                            if (s.length == 0) {
+                            if (s.isEmpty()) {
                                 ivIconPostComment.visibility = View.GONE
                                 tvComment.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
                             } else {
                                 ivIconPostComment.visibility = View.VISIBLE
-                                tvComment.layoutParams.width = (377 * context?.resources?.displayMetrics!!.density).toInt()
+                                tvComment.layoutParams.width = (330 * context?.resources?.displayMetrics!!.density).toInt()
                             }
                         }
 
