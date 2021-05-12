@@ -51,7 +51,6 @@
         android:text="@string/txt_have_account"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/btn_inscrever"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/btn_inscrever"
         app:layout_constraintTop_toBottomOf="@id/btn_inscrever" />
 

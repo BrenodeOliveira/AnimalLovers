@@ -55,8 +55,8 @@
                             android:id="@+id/tv_pet_description_profile_pet"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
                             android:layout_marginTop="12dp"
+                            app:layout_constraintHorizontal_bias="0"
                             android:maxWidth="250dp"
                             android:maxHeight="64dp"
                             android:padding="2dp"
@@ -64,7 +64,7 @@
                             android:textColor="@color/colorBlack"
                             android:textSize="14sp"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/tv_pet_name_profile_pet"
                             app:layout_constraintTop_toBottomOf="@+id/tv_pet_name_profile_pet"
                             tools:text="Descrição" />
 
@@ -89,7 +89,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginTop="32dp"
-                            android:maxWidth="130dp"
+                            android:maxWidth="110dp"
                             android:padding="2dp"
                             android:textAlignment="viewStart"
                             android:textColor="@color/colorBlack"
