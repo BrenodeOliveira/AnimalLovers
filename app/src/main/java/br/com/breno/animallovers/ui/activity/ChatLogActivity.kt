@@ -238,6 +238,10 @@ class ChatLogActivity : AppCompatActivity() {
 
         val chatMessage = ChatMessage(reference.key!!, text, fromId, toId, System.currentTimeMillis() / 1000, false)
 
+        if(chatMessage.fromId.isNullOrEmpty() || chatMessage.toId.isNullOrEmpty() || reference.key.isNullOrEmpty()) {
+            Log.w("ChatLogActivity", "Alguma chave veio nula, não será possível guardar a mensagem. Remetente: ${chatMessage.fromId.toString()}, destinatário: ${chatMessage.toId.toString()}, referencia do banco: ${chatMessage.id.toString()}")
+            return
+        }
         reference.setValue(chatMessage)
             .addOnSuccessListener {
                 Log.i(TAG, "Saved our chat message: ${reference.key}")
