@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_pet_register.*
 import java.io.ByteArrayOutputStream
 
@@ -80,6 +82,14 @@ class PetRegisterActivity : AppCompatActivity() {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                                 idPet = petService.idLastPet(dataSnapshot) + 1 //Incrementa os ids dos pets
+
+                                if(auth.uid.toString().isNullOrEmpty() || idPet == 0) {
+                                    Log.w("PetRegisterActivity", "Algum id está nulo, vou redirecionar a outra tela. UID: ${auth.uid.toString()}, idPet: ${idPet.toString()}")
+                                    Toasty.warning(baseContext, "Ocorreu um erro ao salvar o pet, tente novamente", Toasty.LENGTH_SHORT).show()
+                                    startActivity(Intent(this@PetRegisterActivity, ProfileActivity::class.java))
+                                    finish()
+                                }
+
                                 val checkedRadio: Int = radio_sexo_animal.checkedRadioButtonId
                                 val checkedRadioButton = findViewById<RadioButton>(checkedRadio)
                                 var checkedBox: String
@@ -98,7 +108,7 @@ class PetRegisterActivity : AppCompatActivity() {
                                 pet.raca = raca_pet_register.editText?.text.toString()
                                 pet.tipo = spinner_register.selectedItem.toString()
                                 pet.sexo = checkedBox
-                                pet.id = AnimalLoversConstants.DATABASE_NODE_PET.nome + idPet.toString()
+                                pet.id = "${AnimalLoversConstants.DATABASE_NODE_PET.nome}${idPet.toString()}"
                                 pet.idOwner = auth.uid.toString()
 
                                 if (null != iv_photo_to_profile.drawable) {

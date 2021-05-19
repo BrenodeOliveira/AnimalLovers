@@ -312,7 +312,7 @@ class FcmMessagingService: FirebaseMessagingService() {
                 val intent = Intent(this, ChatLogActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-                val user = User(ownerInfo.id, ownerInfo.email, ownerInfo.usuario, ownerInfo.cidade, ownerInfo.pais, ownerInfo.pathFotoPerfil)
+                val user = User(ownerLoggedInfo.id, ownerLoggedInfo.email, ownerLoggedInfo.usuario, ownerLoggedInfo.cidade, ownerLoggedInfo.pais, ownerLoggedInfo.pathFotoPerfil)
 
                 intent.putExtra("USER_KEY", user)
                 val pendingIntent = PendingIntent.getActivity(

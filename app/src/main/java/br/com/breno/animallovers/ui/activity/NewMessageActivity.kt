@@ -2,22 +2,20 @@ package br.com.breno.animallovers.ui.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import br.com.breno.animallovers.R
-import br.com.breno.animallovers.model.Conta
 import br.com.breno.animallovers.model.Login
 import br.com.breno.animallovers.model.User
+import br.com.breno.animallovers.service.GlideApp
 import br.com.breno.animallovers.utils.AnimalLoversConstants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
-import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -123,12 +121,7 @@ class UserItem(val user: User) : Item<ViewHolder>() {
                         .child(user?.id.toString() +
                                 AnimalLoversConstants.STORAGE_PICTURE_EXTENSION.nome)
 
-                    storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytesPrm ->
-                        val bmp = BitmapFactory.decodeByteArray(bytesPrm, 0, bytesPrm.size)
-                        viewHolder.itemView.iv_profile_user_picture_row.setImageBitmap(bmp)
-                    }.addOnFailureListener {
-                        Log.e("NewMessageActivity", "erro ao buscar foto $it")
-                    }
+                    GlideApp.with(viewHolder.itemView.context).load(storageRef).into(viewHolder.itemView.iv_profile_user_picture_row)
                 }
             }
 

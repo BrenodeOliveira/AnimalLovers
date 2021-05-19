@@ -27,7 +27,7 @@
         android:layout_marginBottom="16dp"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
-        android:text="@string/txt_nome_padrao"
+        android:text="@string/empty"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorBlack"
         app:layout_constraintBottom_toBottomOf="@id/img_profile_nav_main"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
-        android:text="@string/txt_local_padrao"
+        android:text="@string/empty"
         android:textColor="@color/colorBlack"
         app:layout_constraintStart_toEndOf="@id/img_profile_nav_main"
         app:layout_constraintTop_toBottomOf="@id/txt_name_owner_account_main" />
